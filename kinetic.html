@@ -343,11 +343,28 @@ button, input { font: inherit; color: inherit; }
   .voices__big { width: auto; }
   .voices__big span + span { display: none; }
 }
+
+/* mobile pass */
+.nav__mark, .foot a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.nav .btn, .chip { min-height: 44px; }
+.reel__btn { min-height: 48px; } /* the reel is scaled down on load */
+.foot nav { gap: 0 20px; }
+@media (max-width: 560px) {
+  .areas__cols { grid-template-columns: minmax(0, 1fr); height: auto; gap: 12px; }
+  .col { display: grid; grid-template-columns: 6.5em minmax(0, 1fr) 2em; grid-template-areas: "n bar v" "w bar v"; column-gap: 12px; height: auto; text-align: left; align-items: center; }
+  .col > span { grid-area: n; margin: 0; }
+  .col > small { grid-area: w; }
+  .col > b { grid-area: v; margin: 0; text-align: right; }
+  .col__bar { grid-area: bar; width: calc(var(--h) * 1%); height: 16px; border-radius: 6px 12px 12px 6px; }
+}
+@media (max-width: 860px) { .mnav-btn { display: inline-flex; } .nav__links { margin-left: auto; } }
+@media (max-width: 400px) { .nav .btn { padding-inline: 16px; } }
 </style>
+<link rel="stylesheet" href="assets/mnav.css">
 </head>
 <body>
 
-<header class="nav" id="nav">
+<header class="nav" id="nav" data-mnav=".nav__links a:not(.btn)" data-mnav-after=".nav__links">
   <a class="nav__mark" href="#top">The Offer Engine</a>
   <nav class="nav__links" aria-label="Main">
     <a href="#areas">Areas</a>
@@ -769,7 +786,7 @@ button, input { font: inherit; color: inherit; }
       }
 
       // Score columns grow from zero when the section arrives.
-      gsap.from(".col__bar", { scaleY: 0, transformOrigin: "50% 100%", duration: 1.2, ease: "expo.out", stagger: .06, scrollTrigger: { trigger: "#cols", start: "top 80%", once: true } });
+      gsap.from(".col__bar", { ...(matchMedia("(max-width: 560px)").matches ? { scaleX: 0, transformOrigin: "0 50%" } : { scaleY: 0, transformOrigin: "50% 100%" }), duration: 1.2, ease: "expo.out", stagger: .06, scrollTrigger: { trigger: "#cols", start: "top 80%", once: true } });
 
       // Entrances for each section's parts.
       gsap.from(".hero [data-rise]:not(.reel)", { y: 24, opacity: 0, duration: .9, ease: "expo.out", stagger: .1, delay: .5 });
@@ -806,5 +823,6 @@ button, input { font: inherit; color: inherit; }
   }
 })();
 </script>
+<script src="assets/mnav.js"></script>
 </body>
 </html>

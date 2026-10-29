@@ -273,12 +273,20 @@ a { color: inherit; }
 .foot nav { display: flex; flex-wrap: wrap; gap: 12px 24px; }
 .foot nav a { text-decoration: none; }
 .foot nav a:hover { color: var(--ink); }
+
+/* mobile pass */
+.bar { position: relative; }
+.mark, .foot nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.foot nav { gap: 0 24px; }
+@media (max-width: 900px) { .mnav-btn { display: inline-flex; } .bar .btn { margin-left: auto; } }
+@media (max-width: 420px) { .bar .btn { padding: 0 16px; font-size: 15px; } .mark { font-size: 17px; } .trk { grid-template-columns: minmax(0, 1fr); } .trk li { display: flex; align-items: baseline; gap: 12px; padding: 10px 14px; } .trk b { font-size: 24px; } }
 </style>
+<link rel="stylesheet" href="assets/mnav.css">
 </head>
 <body>
 
 <header class="wrap hero" id="top">
-  <div class="bar">
+  <div class="bar" data-mnav="nav a" data-mnav-after=".btn">
     <a class="mark" href="#top"><i aria-hidden="true"></i>The Offer Engine</a>
     <nav aria-label="Site">
       <a href="#cv-check">CV Checker</a>
@@ -692,5 +700,6 @@ a { color: inherit; }
   document.fonts && document.fonts.ready.then(() => { build(); motion ? ScrollTrigger.refresh() : full(); });
 })();
 </script>
+<script src="assets/mnav.js"></script>
 </body>
 </html>

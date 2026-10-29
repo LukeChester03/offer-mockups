@@ -228,11 +228,21 @@ button { font: inherit; color: inherit; }
 .foot nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .9375rem; }
 .foot nav a { text-decoration: none; } .foot nav a:hover { color: var(--ink); }
 .foot small { flex-basis: 100%; color: var(--muted); font-size: .875rem; }
+
+/* mobile pass */
+.mark, .top__login, .foot nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.btn--sm, .tracks button { min-height: 44px; }
+.foot nav { gap: 0 1.5rem; }
+@media (max-width: 880px) { .mnav-btn { display: inline-flex; } }
+.mark { flex: none; }
+@media (max-width: 480px) { .top { gap: 8px; } .top .mnav-btn { margin-left: 0; } .mark { font-size: 16px; } .top__go .btn { padding-inline: .8rem; } .top__go .top__login { display: none; } }
+@media (min-width: 481px) { .mnav .top__login { display: none; } }
 </style>
+<link rel="stylesheet" href="assets/mnav.css">
 </head>
 <body>
 
-<header class="top">
+<header class="top" data-mnav="nav a, .top__login" data-mnav-after=".top__go">
   <a class="mark" href="#"><i aria-hidden="true"></i>The Offer Engine</a>
   <nav aria-label="Main">
     <a href="#how-it-works">How it works</a>
@@ -734,5 +744,6 @@ $$("[data-q]").forEach((b) => b.addEventListener("click", () => {
   if (motion) gsap.fromTo(".tm figure > *", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .45, stagger: .05, ease: "expo.out" });
 }));
 </script>
+<script src="assets/mnav.js"></script>
 </body>
 </html>

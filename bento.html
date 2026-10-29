@@ -237,12 +237,18 @@ section.sec { padding-block: clamp(80px, 10vw, 140px); }
   .did .btn { padding: 0 14px; }
   .hero__ctas .btn { flex: 1 1 100%; }
 }
+
+/* mobile pass */
+.mark, .foot a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.grow { width: 44px; height: 44px; }
+@media (max-width: 1000px) { .mnav-btn { display: inline-flex; } .nav > .wrap > .btn { margin-left: auto; } }
 </style>
+<link rel="stylesheet" href="assets/mnav.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7ef6"/><stop offset="1" stop-color="#6c3ef6"/></linearGradient></defs></svg>
 
-<header class="nav">
+<header class="nav" data-mnav=".nav__links a" data-mnav-after=".nav > .wrap > .btn">
   <div class="wrap">
     <a class="mark" href="#">The Offer Engine</a>
     <nav class="nav__links" aria-label="Site">
@@ -662,5 +668,6 @@ section.sec { padding-block: clamp(80px, 10vw, 140px); }
   }
 })();
 </script>
+<script src="assets/mnav.js"></script>
 </body>
 </html>

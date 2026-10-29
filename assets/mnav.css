@@ -1,0 +1,13 @@
+:where(.mnav-btn) { display: none; }
+.mnav-btn { flex-direction: column; justify-content: center; align-items: center; gap: 6px; width: 44px; height: 44px; margin-left: 8px; flex: none; padding: 0; border: 0; border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; cursor: pointer; }
+.mnav-btn span { width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s; }
+.mnav-btn[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
+.mnav-btn[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
+.mnav-btn:focus-visible, .mnav a:focus-visible { outline: 2px solid #3b7ef6; outline-offset: 2px; }
+nav.mnav { position: absolute; gap: 0; margin: 0; top: 100%; left: 16px; right: 16px; z-index: 60; display: grid; padding: 8px; border-radius: 20px; background: #0f1626; box-shadow: 0 20px 40px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.08); }
+nav.mnav[hidden] { display: none; }
+nav.mnav a { display: flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 12px; color: #f4f6fb; text-decoration: none; font-weight: 500; font-size: 17px; }
+nav.mnav a:hover { background: rgba(255,255,255,.06); }
+@media (max-width: 480px) { [data-mnav] .mnav-btn ~ *, [data-mnav] :is(.mark, .nav__mark, .btn, .top__go, .top__login) { white-space: nowrap; } }
+[data-mnav] :is(.mark, .nav__mark) { flex: none; }
+@media (max-width: 420px) { [data-mnav], [data-mnav] > .wrap { gap: 8px; } [data-mnav] :is(.mark, .nav__mark) { font-size: 16px; } [data-mnav] .btn { padding-inline: 14px; font-size: 14px; } [data-mnav] .mnav-btn { margin-left: 0; } }
