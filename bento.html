@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Offer Engine: become offer ready</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("m");</script>
+<style>
+/* Live bento mockup. Tokens: website/app/globals.css + dashboard v2 surfaces. */
+:root {
+  --bg: #080c14; --bg-alt: #0d1220;
+  --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
+  --line: rgba(255,255,255,.08);
+  --ink: #f8fafc; --muted: #94a3b8;
+  --accent: #3b7ef6; --violet: #6c3ef6; --accent-soft: #8fb4ff;
+  --good: #34d399; --bad: #fb7185;
+  --grad: linear-gradient(120deg, var(--accent), var(--violet));
+  --f: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --m: clamp(16px, 4vw, 48px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --r: 22px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--f); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1280px; margin-inline: auto; padding-inline: var(--m); }
+.muted { color: var(--muted); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px; cursor: pointer; background: var(--grad); color: var(--ink); text-decoration: none; font-weight: 600; transition: transform .2s var(--ease), box-shadow .2s; }
+.btn:hover { transform: translateY(-1px); }
+.btn--ghost { background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
+.btn--ghost:hover { background: var(--s4); box-shadow: inset 0 0 0 1px var(--line); }
+.btn--sm { min-height: 44px; padding: 0 18px; font-size: 15px; }
+.eyebrow { color: var(--accent-soft); font-size: 14px; font-weight: 600; letter-spacing: .02em; }
+.h2 { font: 800 clamp(36px, 5vw, 64px)/1 var(--f); letter-spacing: -.035em; }
+
+/* ---------- Nav + hero ---------- */
+.nav { position: sticky; top: 0; z-index: 20; background: rgba(8,12,20,.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+.nav__links { display: flex; gap: 24px; font-size: 15px; }
+.nav__links a { color: var(--muted); text-decoration: none; }
+.nav__links a:hover { color: var(--ink); }
+.mark { font-weight: 800; letter-spacing: -.02em; text-decoration: none; }
+.hero { position: relative; padding-block: clamp(56px, 9vw, 112px) 0; text-align: center; overflow: hidden; }
+.hero::before { content: ""; position: absolute; left: 50%; top: 38%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108,62,246,.35), rgba(59,126,246,.18) 50%, transparent); pointer-events: none; }
+.hero__h { position: relative; font: 900 clamp(48px, 14vw, 120px)/.9 var(--f); letter-spacing: -.05em; }
+.hero__h em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero__p { position: relative; max-width: 38ch; margin: 24px auto 0; font-size: clamp(17px, 1.6vw, 21px); color: #cbd5e1; }
+.hero__ctas { position: relative; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 32px; }
+
+/* Dashboard frame */
+.frame { position: relative; margin: clamp(48px, 7vw, 80px) auto 0; max-width: 1120px; border-radius: 24px 24px 0 0; background: var(--bg-alt); border: 1px solid var(--line); border-bottom: 0; padding: 14px; text-align: left; }
+.frame__bar { display: flex; gap: 6px; padding: 4px 6px 14px; }
+.frame__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--s4); }
+.frame__grid { display: grid; grid-template-columns: 180px 1.3fr 1fr; gap: 12px; }
+.side { display: grid; align-content: start; gap: 4px; padding: 8px; font-size: 14px; color: var(--muted); }
+.side span { padding: 8px 10px; border-radius: 8px; }
+.side .on { background: var(--s4); color: var(--ink); }
+.pane { background: var(--s1); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+.pane__t { font-size: 14px; color: var(--muted); }
+.pane__h { font-weight: 600; margin-top: 4px; }
+.col { display: grid; gap: 12px; align-content: start; }
+.hscore { display: flex; gap: 20px; align-items: center; margin-top: 12px; }
+.mini { display: grid; gap: 9px; flex: 1; font-size: 14px; }
+.mini li { display: grid; grid-template-columns: 74px 1fr 24px; gap: 10px; align-items: center; }
+.meter { height: 6px; border-radius: 3px; background: var(--s4); overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--w); background: var(--grad); border-radius: 3px; transform-origin: left; }
+.weak { color: var(--bad); }
+.weak .meter i { background: var(--bad); }
+
+/* Ring (shared by hero + readiness tile) */
+.ring { position: relative; flex: none; width: var(--rs, 140px); aspect-ratio: 1; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.ring circle { fill: none; stroke-width: 20; stroke: var(--s4); transition: stroke-dasharray .6s var(--ease), stroke-dashoffset .6s var(--ease), stroke .3s; }
+.ring circle.is-max { stroke: url(#g); }
+.ring__c { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring__n { font-size: calc(var(--rs, 140px) * .3); font-weight: 800; line-height: 1; letter-spacing: -.03em; }
+.ring__c small { font-size: 13px; color: var(--muted); }
+
+/* ---------- Bento ---------- */
+.try { padding-block: clamp(96px, 11vw, 150px) 48px; }
+.try__head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: end; margin-bottom: 40px; }
+.try__head > p { max-width: 46ch; justify-self: end; }
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; }
+.tile { position: relative; grid-column: span 2; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: var(--r); background: var(--s1); border: 1px solid var(--line); overflow: hidden; }
+.tile--xl { grid-column: span 4; grid-row: span 2; }
+.tile--wide { grid-column: span 4; }
+.tile--full { grid-column: 1 / -1; }
+.tile.is-big { grid-column: 1 / -1; }
+.tile.is-done { border-color: rgba(143,180,255,.35); }
+.tile__top { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.tile h3 { font-size: 22px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.tile__p { color: var(--muted); font-size: 15px; max-width: 46ch; }
+.grow { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: var(--s4); cursor: pointer; display: grid; place-items: center; transition: background-color .2s, transform .3s var(--ease); }
+.grow:hover { background: var(--accent); }
+.grow svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+.is-big .grow { transform: rotate(45deg); }
+.demo { margin-top: auto; }
+.chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: var(--s3); cursor: pointer; font-size: 15px; font-weight: 500; transition: background-color .2s; }
+.chip:hover { background: var(--s4); }
+.chip[aria-selected="true"], .chip[aria-pressed="true"] { background: var(--grad); }
+.reset { background: none; border: 0; color: var(--accent-soft); font-size: 14px; cursor: pointer; padding: 10px 0; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Readiness tile */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.rs { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; margin-top: 8px; }
+.rs .ring { --rs: 280px; }
+.tile--xl .tile__p { font-size: 17px; }
+.tile--xl .rs { margin-top: 24px; }
+.wt { display: grid; gap: 10px; font-size: 15px; }
+.wt li { display: grid; grid-template-columns: 82px 1fr 40px; gap: 12px; align-items: center; }
+.wt li b { text-align: right; font-weight: 600; color: var(--accent-soft); }
+.wt .meter { height: 8px; }
+.wt .meter i { transition: width .6s var(--ease); }
+.wt li.is-max { color: var(--ink); font-weight: 600; }
+.maxbox { margin-top: 4px; padding: 12px 14px; border-radius: 12px; background: var(--s3); font-size: 15px; }
+
+/* CV tile */
+.cvline { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; border-radius: 14px; background: var(--s3); min-height: 96px; }
+.cvline b { font-size: 34px; font-weight: 800; letter-spacing: -.03em; color: var(--bad); transition: color .3s; }
+.cvline.is-hi b { color: var(--good); }
+.cvbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; }
+
+/* Tracker tile */
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lane { min-height: 168px; padding: 10px; border-radius: 14px; background: var(--s2); display: flex; flex-direction: column; gap: 6px; transition: background-color .2s, box-shadow .2s; }
+.lane.is-over { background: var(--s4); box-shadow: inset 0 0 0 2px var(--accent); }
+.lane__h { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 2px 2px 4px; }
+.ghost { height: 34px; border-radius: 9px; background: var(--s3); }
+.card { touch-action: none; width: 100%; min-height: 44px; padding: 8px 10px; border: 0; border-radius: 9px; background: var(--grad); text-align: left; font-size: 14px; font-weight: 600; cursor: grab; position: relative; z-index: 2; }
+.card small { display: block; font-weight: 500; font-size: 12px; }
+.out { min-height: 24px; font-size: 14px; color: var(--muted); }
+.out.is-on { color: var(--good); }
+
+/* Academy tile */
+.steps { display: grid; gap: 6px; }
+.step { display: flex; gap: 12px; align-items: center; width: 100%; min-height: 48px; padding: 8px 12px; border: 0; border-radius: 12px; background: var(--s2); text-align: left; cursor: pointer; font-size: 14px; transition: background-color .2s; }
+.step:hover { background: var(--s4); }
+.step i { flex: none; width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--muted); display: grid; place-items: center; }
+.step[aria-checked="true"] i { border: 0; background: var(--grad); }
+.step[aria-checked="true"] i::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--ink); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.step[aria-checked="true"] span { color: var(--muted); text-decoration: line-through; }
+.step small { margin-left: auto; color: var(--muted); white-space: nowrap; }
+
+/* Weakest + maths tiles */
+.areas6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.areas6 li { padding: 10px; border-radius: 10px; background: var(--s2); font-size: 13px; transition: background-color .3s, opacity .3s; }
+.areas6 b { display: block; font-size: 20px; }
+.areas6.is-found li:not(.w) { opacity: .45; }
+.areas6.is-found li.w { background: rgba(251,113,133,.16); box-shadow: inset 0 0 0 2px var(--bad); }
+.sum { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 28px; font-weight: 700; }
+.sum input { width: 5ch; min-height: 52px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--s2); font-size: 26px; font-weight: 700; }
+.sum input:focus-visible { outline-offset: 0; }
+
+/* Sticky summary */
+.did { position: fixed; z-index: 30; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 140%); width: min(720px, calc(100% - 24px)); display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 20px; border-radius: 999px; background: rgba(19,32,58,.92); backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 20px 60px -20px rgba(0,0,0,.8); transition: transform .5s var(--ease); }
+.did.is-on { transform: translate(-50%, 0); }
+.did__t { flex: 1; min-width: 0; font-size: 14px; }
+.did__t b { display: block; font-size: 15px; }
+.did__list { display: block; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Pricing, quotes, FAQ, CTA ---------- */
+section.sec { padding-block: clamp(80px, 10vw, 140px); }
+.plans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 48px; }
+.plan { display: flex; flex-direction: column; gap: 6px; padding: 28px; border-radius: var(--r); background: var(--s1); border: 1px solid var(--line); }
+.plan--top { background: var(--grad); border: 0; }
+.plan h3 { font-size: 19px; font-weight: 700; }
+.plan__price { font-size: 52px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; }
+.plan ul { display: grid; gap: 10px; margin: 14px 0 24px; font-size: 15px; }
+.plan li { padding-left: 22px; position: relative; }
+.plan li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 6px; border: 2px solid var(--accent-soft); border-top: 0; border-right: 0; transform: rotate(-45deg); }
+.plan--top li::before { border-color: var(--ink); }
+.plan .btn { margin-top: auto; }
+.plan--top .btn { background: var(--ink); color: var(--bg); }
+.quotes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 48px; }
+.q { grid-column: span 3; display: flex; flex-direction: column; gap: 20px; padding: 28px; border-radius: var(--r); background: var(--s1); border: 1px solid var(--line); }
+.q:nth-child(1), .q:nth-child(4) { grid-column: span 4; }
+.q:nth-child(2), .q:nth-child(3) { grid-column: span 2; }
+.q blockquote { font-size: clamp(18px, 1.6vw, 22px); font-weight: 500; line-height: 1.4; letter-spacing: -.01em; }
+.q__out { font-size: 40px; font-weight: 800; letter-spacing: -.04em; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.q__who { margin-top: auto; font-size: 14px; color: var(--muted); }
+.q__who b { display: block; color: var(--ink); font-size: 16px; }
+.faq { max-width: 860px; margin-inline: auto; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 64px; padding: 12px 0; cursor: pointer; list-style: none; font-size: 19px; font-weight: 600; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 26px; font-weight: 400; color: var(--accent-soft); transition: transform .3s var(--ease); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding-bottom: 24px; color: #cbd5e1; max-width: 64ch; }
+.cta { position: relative; overflow: hidden; text-align: center; border-radius: 32px; margin: 0 var(--m) 48px; padding: clamp(64px, 9vw, 128px) var(--m); background: var(--grad); }
+.cta .h2 { font-size: clamp(44px, 8vw, 112px); }
+.cta .hero__ctas .btn--ghost { background: var(--bg); box-shadow: none; }
+.cta p { margin-top: 18px; }
+.foot { border-top: 1px solid var(--line); padding-block: 28px 120px; font-size: 14px; color: var(--muted); }
+.foot .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; }
+.foot a { color: var(--muted); text-decoration: none; margin-right: 18px; }
+.foot a:hover { color: var(--ink); }
+
+/* Motion start states (JS adds .m only when motion is allowed) */
+.m [data-in] { opacity: 0; }
+
+@media (max-width: 1000px) {
+  .frame__grid { grid-template-columns: 1fr 1fr; }
+  .side { display: none; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile, .tile--wide { grid-column: span 1; }
+  .tile--xl, .tile--wide, .tile.is-big { grid-column: 1 / -1; grid-row: auto; }
+  .plans { grid-template-columns: 1fr 1fr; }
+  .q, .q:nth-child(n) { grid-column: span 3; }
+  .nav__links { display: none; }
+}
+@media (max-width: 680px) {
+  .frame__grid { grid-template-columns: 1fr; }
+  .frame .col:last-child { display: none; }
+  .hscore .ring { --rs: 110px; }
+  .try__head { grid-template-columns: 1fr; }
+  .try__head > p { justify-self: start; }
+  .bento { grid-template-columns: 1fr; }
+  .tile { grid-column: 1 / -1 !important; padding: 20px; }
+  .rs { grid-template-columns: 1fr; justify-items: center; }
+  .rs .ring { --rs: 180px; }
+  .rs > div:last-child { width: 100%; }
+  .plans, .quotes { grid-template-columns: 1fr; }
+  .q, .q:nth-child(n) { grid-column: 1 / -1; }
+  .did { border-radius: 20px; }
+  .did .btn { padding: 0 14px; }
+  .hero__ctas .btn { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7ef6"/><stop offset="1" stop-color="#6c3ef6"/></linearGradient></defs></svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#">The Offer Engine</a>
+    <nav class="nav__links" aria-label="Site">
+      <a href="#features">Features</a><a href="#readiness-score">Readiness Score</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--sm" href="#">Sign up free</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap">
+    <h1 class="hero__h" id="hero-h" data-in>Become <em>offer ready</em></h1>
+    <p class="hero__p" data-in>The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.</p>
+    <div class="hero__ctas" data-in>
+      <a class="btn" href="#">Sign up free</a>
+      <a class="btn btn--ghost" href="#">Check my CV free</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="frame" aria-label="The Offer Engine dashboard, example data" role="img" data-in>
+      <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="frame__grid" aria-hidden="true">
+        <div class="side" data-a><span class="on">Dashboard</span><span>Academy</span><span>Application Tracker</span><span>CV Checker</span></div>
+        <div class="col">
+          <div class="pane" data-a>
+            <p class="pane__t">Provisional readiness · 6 of 6 areas assessed</p>
+            <div class="hscore">
+              <div class="ring" data-hring>
+                <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" pathLength="100" stroke-dasharray="0 100" data-hfill style="stroke:url(#g)"/></svg>
+                <div class="ring__c"><span class="ring__n num" data-hnum>61</span><small>of 100</small></div>
+              </div>
+              <ul class="mini num">
+                <li><span>Thesis</span><span class="meter"><i style="--w:82%"></i></span><span>82</span></li>
+                <li><span>Profile</span><span class="meter"><i style="--w:68%"></i></span><span>68</span></li>
+                <li><span>Execution</span><span class="meter"><i style="--w:71%"></i></span><span>71</span></li>
+                <li><span>Aptitude</span><span class="meter"><i style="--w:55%"></i></span><span>55</span></li>
+                <li><span>Interview</span><span class="meter"><i style="--w:60%"></i></span><span>60</span></li>
+                <li class="weak"><span>Traction</span><span class="meter"><i style="--w:45%"></i></span><span>45</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pane" data-a>
+            <p class="pane__t">Your next step</p>
+            <p class="pane__h">Traction, 45: your weakest area. Add 3 applications to your tracker this week.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pane" data-a>
+            <p class="pane__t">Graduate Applications · Stage 3 of 12</p>
+            <p class="pane__h">Make your experience easy to assess</p>
+            <div class="meter" style="margin-top:12px"><i style="--w:16.7%"></i></div>
+            <p class="pane__t" style="margin-top:8px">2 stages complete, 10 to go.</p>
+          </div>
+          <div class="pane" data-a>
+            <p class="pane__t">Application Tracker · 4 applications</p>
+            <p class="pane__h" style="margin-top:8px"><span data-hstage>Deloitte · Planned</span></p>
+            <p class="pane__t" data-hchase style="opacity:0">Chase reminder set</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="try" id="features" aria-labelledby="try-h">
+  <div class="wrap">
+    <div class="try__head">
+      <div><p class="eyebrow">Try it here</p><h2 class="h2" id="try-h">Every feature, live on the page</h2></div>
+      <p class="muted">Each tile is a working demo with fixed example content. Nothing is sent or saved. Open a tile to see it larger.</p>
+    </div>
+
+    <div class="bento" data-bento>
+      <!-- Readiness -->
+      <article class="tile tile--xl" id="readiness-score" aria-labelledby="t1-h">
+        <div class="tile__top"><div><h3 id="t1-h">One score, weighted for you</h3><p class="tile__p">Your Readiness Score covers six areas. Each track weighs them differently: Interview is a fifth of a Spring Week score and over a third of a Graduate one. Pick a track.</p></div>
+          <button class="grow" aria-expanded="false" aria-label="Open readiness demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <div class="demo" id="tracks">
+          <div class="tabs" role="tablist" aria-label="Track">
+            <button class="chip" role="tab" data-track="spring" aria-selected="false" tabindex="-1">Spring Week</button>
+            <button class="chip" role="tab" data-track="summer" aria-selected="false" tabindex="-1">Summer Internship</button>
+            <button class="chip" role="tab" data-track="placement" aria-selected="false" tabindex="-1">Placement Year</button>
+            <button class="chip" role="tab" data-track="grad" aria-selected="true">Graduate Programme</button>
+          </div>
+          <div class="rs" role="tabpanel" aria-label="Provisional readiness for the chosen track">
+            <div class="ring">
+              <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/><circle class="seg" cx="100" cy="100" r="80" pathLength="100"/></svg>
+              <div class="ring__c"><span class="ring__n num" data-score>61</span><small>of 100</small></div>
+            </div>
+            <div>
+              <p class="muted" style="font-size:14px" data-who>Final year &amp; graduates</p>
+              <ul class="wt num" data-wt></ul>
+              <p class="maxbox"><span class="muted">Counts most on this track: </span><b data-max>Interview, 36%</b></p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Weakest -->
+      <article class="tile" aria-labelledby="t5-h">
+        <div class="tile__top"><h3 id="t5-h">Find your weakest area first</h3>
+          <button class="grow" aria-expanded="false" aria-label="Open weakest area demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <div class="demo">
+          <ul class="areas6 num" data-areas>
+            <li><b>82</b>Thesis</li><li><b>68</b>Profile</li><li><b>71</b>Execution</li><li><b>55</b>Aptitude</li><li><b>60</b>Interview</li><li class="w"><b>45</b>Traction</li>
+          </ul>
+          <div class="cvbar"><button class="btn btn--sm" data-find>Find my weakest area</button><button class="reset" data-find-reset hidden>Start again</button></div>
+          <p class="out" data-find-out aria-live="polite"></p>
+        </div>
+      </article>
+
+      <!-- Maths -->
+      <article class="tile" aria-labelledby="t6-h">
+        <div class="tile__top"><h3 id="t6-h">Drill mental maths without a calculator</h3>
+          <button class="grow" aria-expanded="false" aria-label="Open mental maths demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <form class="demo" data-maths novalidate>
+          <label class="sum"><span>17 × 24 =</span><input inputmode="numeric" autocomplete="off" aria-label="Your answer to 17 times 24" data-ans></label>
+          <div class="cvbar"><button class="btn btn--sm" type="submit">Check</button><button class="reset" type="button" data-maths-reset hidden>Start again</button></div>
+          <p class="out" data-maths-out aria-live="polite"></p>
+        </form>
+      </article>
+
+      <!-- CV -->
+      <article class="tile tile--wide" id="cv-check" aria-labelledby="t2-h">
+        <div class="tile__top"><div><h3 id="t2-h">Rewrite a weak CV line into evidence</h3><p class="tile__p">The CV Checker gives you a 100-point score, a rubric breakdown for impact, clarity and relevance, and rewritten bullets ready to copy.</p></div>
+          <button class="grow" aria-expanded="false" aria-label="Open CV demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <div class="demo">
+          <div class="cvline" data-cv aria-live="polite">
+            <span data-cv-text>Helped with events for the finance society.</span>
+            <b class="num" data-cv-score>3/10</b>
+          </div>
+          <div class="cvbar">
+            <button class="chip" aria-pressed="false" data-cv-btn>Show the rewrite</button>
+            <span class="muted" style="font-size:14px" data-cv-why>Vague verb, no numbers, no result.</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Academy -->
+      <article class="tile" aria-labelledby="t4-h">
+        <div class="tile__top"><h3 id="t4-h">Advance level by level</h3>
+          <button class="grow" aria-expanded="false" aria-label="Open Academy demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <div class="demo">
+          <p class="muted" style="font-size:14px">Graduate Applications · <span data-ac-n>2 stages complete, 10 to go</span></p>
+          <div class="meter" style="margin:8px 0 12px"><i data-ac-bar style="--w:16.7%;transition:width .5s var(--ease)"></i></div>
+          <div class="steps" role="group" aria-label="Academy stages">
+            <button class="step" role="checkbox" aria-checked="true"><i></i><span>Choose your direction and explain your fit</span></button>
+            <button class="step" role="checkbox" aria-checked="true"><i></i><span>Build a target list you can act on</span></button>
+            <button class="step" role="checkbox" aria-checked="false"><i></i><span>Make your experience easy to assess</span><small>90 to 120 min</small></button>
+            <button class="step" role="checkbox" aria-checked="false"><i></i><span>Submit well and prepare for the next step</span><small>90 to 120 min</small></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Tracker -->
+      <article class="tile tile--full" aria-labelledby="t3-h">
+        <div class="tile__top"><div><h3 id="t3-h">Remind you when to chase a reply</h3><p class="tile__p">Drag Deloitte to Submitted, or tap it, and the tracker reminds you when to chase.</p></div>
+          <button class="grow" aria-expanded="false" aria-label="Open tracker demo larger"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></button></div>
+        <div class="demo">
+          <div class="board" data-board>
+            <div class="lane" data-lane="Planned"><p class="lane__h"><span>Planned</span><span class="num" data-c>2</span></p><button class="card" data-card aria-label="Deloitte, Planned. Press to move to the next stage"><span>Deloitte</span><small>Planned</small></button><div class="ghost"></div></div>
+            <div class="lane" data-lane="Submitted"><p class="lane__h"><span>Submitted</span><span class="num" data-c>1</span></p><div class="ghost"></div></div>
+            <div class="lane" data-lane="Interview"><p class="lane__h"><span>Interview</span><span class="num" data-c>1</span></p><div class="ghost"></div></div>
+          </div>
+          <div class="cvbar"><p class="out" data-trk-out aria-live="polite">2 planned, 1 submitted, 1 at interview.</p><button class="reset" data-trk-reset hidden>Start again</button></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="tm-h">
+  <div class="wrap">
+    <p class="eyebrow">Students who executed</p>
+    <h2 class="h2" id="tm-h">What students say</h2>
+    <div class="quotes">
+      <figure class="q"><p class="q__out num">38% → 84%</p><blockquote>“I went from not knowing where to start to having Goldman, Macquarie and Lazard in my pipeline in week three. The weekly plan is exactly what I needed.”</blockquote><figcaption class="q__who"><b>Amara</b>Penultimate Year, Economics, LSE · Target firm: Goldman Sachs</figcaption></figure>
+      <figure class="q"><p class="q__out num">45% → 90%</p><blockquote>“The Readiness Score told me I was spending too long on my CV and not enough on case practice. That one insight changed my whole approach.”</blockquote><figcaption class="q__who"><b>James</b>Final Year, Engineering, Imperial · Target firm: McKinsey &amp; Company</figcaption></figure>
+      <figure class="q"><p class="q__out num">33% → 79%</p><blockquote>“I'd been rejected at video interview stage three times without knowing why. The rejection-to-action system flagged my answer bank immediately.”</blockquote><figcaption class="q__who"><b>Priya</b>First Year, PPE, Oxford · Target firm: J.P. Morgan</figcaption></figure>
+      <figure class="q"><p class="q__out num">41% → 91%</p><blockquote>“My Readiness Score went from 41% to 91% in three weeks. I only drilled the gaps the platform flagged, nothing else.”</blockquote><figcaption class="q__who"><b>Olivia</b>Second Year, Economics, Warwick · Target firm: PwC</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="pricing" aria-labelledby="price-h" style="background:var(--bg-alt);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <p class="eyebrow">Pricing</p>
+    <h2 class="h2" id="price-h">Free to start</h2>
+    <p class="muted" style="margin-top:16px;max-width:52ch">The dashboard, tracker and CV Checker are free. The paid plans are one programme, priced by how long your access runs.</p>
+    <div class="plans">
+      <article class="plan"><h3>Free</h3><p class="plan__price num">£0</p><ul><li>Full dashboard with your live Readiness Score</li><li>Application Tracker with deadline alerts</li><li>AI CV Checker</li></ul><a class="btn btn--ghost" href="#">Sign up free</a></article>
+      <article class="plan"><h3>1-Month Programme</h3><p class="plan__price num">£49</p><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>1 month of access</li></ul><a class="btn btn--ghost" href="#">Choose 1 month</a></article>
+      <article class="plan"><h3>6-Month Programme</h3><p class="plan__price num">£149</p><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>6 months of access</li></ul><a class="btn btn--ghost" href="#">Choose 6 months</a></article>
+      <article class="plan plan--top"><h3>12-Month Programme</h3><p class="plan__price num">£249</p><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>12 months of access, enough to run the programme through a full recruiting cycle</li></ul><a class="btn" href="#">Choose 12 months</a></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq" aria-labelledby="faq-h">
+  <div class="wrap faq">
+    <h2 class="h2" id="faq-h" style="margin-bottom:32px">Before you sign up</h2>
+    <details open><summary>Which track is right for me?</summary><p>If you're in first or second year, start with Spring Week. Penultimate year students should choose Summer Internship. Placement Year and Graduate Programme tracks are built for sandwich-course and final-year students. The Offer Engine maps your timeline automatically so you stop guessing and start executing against real recruiting deadlines.</p></details>
+    <details><summary>Why does the platform focus so heavily on execution?</summary><p>Because recruiting is heavily driven by timing and consistency. Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. A great candidate with no system often loses to an average candidate with consistent execution. The Offer Engine exists to close that gap.</p></details>
+    <details><summary>Is this only for consulting and investment banking?</summary><p>The Offer Engine is designed around consulting, IB, and PE recruiting mechanics: rolling deadlines, psychometric testing, networking, interviews, and application volume. The system also works for Big 4, strategy, asset management, and other competitive graduate roles because the execution principles are the same.</p></details>
+    <details><summary>What makes The Offer Engine different from careers advice or YouTube prep?</summary><p>Most recruiting resources help you prepare. Very few help you execute consistently. The Offer Engine gives you a structured weekly system, a live readiness score, deadline tracking, accountability, and measurable progress. The students who convert offers are rarely the ones consuming the most content. They are usually the ones executing the most consistently.</p></details>
+    <details><summary>Can The Offer Engine guarantee me an offer?</summary><p>No platform can guarantee offers. What The Offer Engine does provide is the structure, accountability, and execution system that dramatically improves your probability of converting. Students who consistently complete weekly tasks, practise interviews, and maintain application volume outperform students relying on unstructured preparation.</p></details>
+  </div>
+</section>
+
+<section class="cta" aria-labelledby="cta-h" data-cta>
+  <h2 class="h2" id="cta-h">Which one first?</h2>
+  <div class="hero__ctas"><a class="btn btn--ghost" href="#">Sign up free</a><a class="btn btn--ghost" href="#">Check my CV free</a></div>
+  <p>Both are free. Only the Academy is paid.</p>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <nav aria-label="Footer"><a href="#features">Features</a><a href="#readiness-score">Readiness Score</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#">Log in</a></nav>
+    <p>© 2026 The Offer Engine. No platform can guarantee offers.</p>
+  </div>
+</footer>
+
+<aside class="did" data-did aria-label="What you just did">
+  <p class="did__t"><b>What you just did</b><span class="did__list" data-did-list aria-live="polite"></span></p>
+  <a class="btn btn--sm" href="#">Sign up free</a>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const hasGsap = !!window.gsap;
+  const motion = document.documentElement.classList.contains("m") && hasGsap;
+  if (!motion) document.documentElement.classList.remove("m");
+  if (hasGsap) gsap.registerPlugin(Flip, Draggable);
+
+  /* What you just did */
+  const done = new Map();
+  const did = $("[data-did]"), didList = $("[data-did-list]");
+  let ctaVisible = false;
+  function log(key, text, tile) {
+    done.set(key, text);
+    tile && tile.classList.add("is-done");
+    didList.textContent = [...done.values()].join(" · ");
+    did.classList.toggle("is-on", !ctaVisible);
+  }
+  new IntersectionObserver(([e]) => { ctaVisible = e.isIntersecting; did.classList.toggle("is-on", done.size > 0 && !ctaVisible); }).observe($("[data-cta]"));
+
+  /* Hero: the dashboard assembles itself */
+  const hfill = $("[data-hfill]"), hnum = $("[data-hnum]");
+  if (motion) {
+    const tl = gsap.timeline({ defaults: { ease: "expo.out" }, delay: .1 });
+    gsap.set("[data-in]", { opacity: 1 });
+    tl
+      .from(".hero__h", { y: 60, opacity: 0, duration: 1.1 }, 0)
+      .from(".hero__p, .hero__ctas", { y: 24, opacity: 0, duration: .9, stagger: .1 }, .15)
+      .from(".frame", { y: 120, opacity: 0, duration: 1.2 }, .3)
+      .from("[data-a]", { y: 30, opacity: 0, scale: .96, duration: .8, stagger: .09 }, .6)
+      .from(".mini .meter i", { scaleX: 0, duration: .9, stagger: .06 }, .9)
+      .fromTo(hfill, { attr: { "stroke-dasharray": "0 100" } }, { attr: { "stroke-dasharray": "61 39" }, duration: 1.4, ease: "power3.out" }, .9)
+      .from({ n: 0 }, { n: 0, duration: 1.4, ease: "power3.out", onUpdate() { hnum.textContent = Math.round(this.progress() * 61); } }, .9)
+      .add(() => { $("[data-hstage]").textContent = "Deloitte · Submitted"; }, 2.1)
+      .to("[data-hchase]", { opacity: 1, duration: .5 }, 2.2);
+  } else {
+    hfill.setAttribute("stroke-dasharray", "61 39");
+    $("[data-hstage]").textContent = "Deloitte · Submitted";
+    $("[data-hchase]").style.opacity = 1;
+  }
+
+  /* Tile focus (Flip): opened tile spans the full row */
+  const bento = $("[data-bento]");
+  $$(".grow", bento).forEach((b) => b.addEventListener("click", () => {
+    const tile = b.closest(".tile");
+    const state = hasGsap ? Flip.getState(".tile") : null;
+    const open = !tile.classList.contains("is-big");
+    $$(".tile", bento).forEach((t) => { t.classList.remove("is-big"); $(".grow", t).setAttribute("aria-expanded", "false"); });
+    tile.classList.toggle("is-big", open);
+    b.setAttribute("aria-expanded", open);
+    if (state) Flip.from(state, { duration: motion ? .7 : 0, ease: "expo.inOut", absolute: true, nested: true, scale: false, onComplete: () => open && tile.scrollIntoView({ block: "nearest", behavior: motion ? "smooth" : "auto" }) });
+  }));
+
+  /* Readiness: track re-weights the ring */
+  const AREAS = ["Thesis", "Profile", "Execution", "Aptitude", "Interview", "Traction"];
+  const VALUES = [82, 68, 71, 55, 60, 45];
+  const TRACKS = {
+    spring: { name: "Spring Week", who: "First & second year", w: [15, 20, 15, 20, 20, 10] },
+    summer: { name: "Summer Internship", who: "Penultimate year", w: [10, 15, 14, 20, 29, 12] },
+    placement: { name: "Placement Year", who: "12-month structured placements", w: [10, 14, 12, 20, 32, 12] },
+    grad: { name: "Graduate Programme", who: "Final year & graduates", w: [8, 10, 11, 22, 36, 13] },
+  };
+  const wt = $("[data-wt]");
+  wt.innerHTML = AREAS.map((a) => `<li><span>${a}</span><span class="meter"><i></i></span><b>0%</b></li>`).join("");
+  const tabs = $$("[data-track]"), scoreEl = $("[data-score]");
+  let shown = 61, first = true;
+  function setTrack(id) {
+    const t = TRACKS[id], max = t.w.indexOf(Math.max(...t.w));
+    tabs.forEach((b) => { const on = b.dataset.track === id; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; });
+    let start = 0;
+    $$(".seg").forEach((c, i) => { c.style.strokeDasharray = `${t.w[i] - .8} ${100 - t.w[i] + .8}`; c.style.strokeDashoffset = -start; c.classList.toggle("is-max", i === max); start += t.w[i]; });
+    $$("li", wt).forEach((li, i) => { li.classList.toggle("is-max", i === max); $("i", li).style.width = `${t.w[i] / 36 * 100}%`; $("b", li).textContent = `${t.w[i]}%`; });
+    const score = Math.round(VALUES.reduce((s, v, i) => s + v * t.w[i], 0) / 100);
+    if (motion) gsap.to({ n: shown }, { n: score, duration: .6, ease: "power2.out", onUpdate() { scoreEl.textContent = Math.round(this.targets()[0].n); } });
+    else scoreEl.textContent = score;
+    shown = score;
+    $("[data-who]").textContent = `Provisional readiness · ${t.who}`;
+    $("[data-max]").textContent = `${AREAS[max]}, ${t.w[max]}%`;
+    if (!first) log("track", `Picked ${t.name}: ${score}`, tabs[0].closest(".tile"));
+    first = false;
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener("click", () => setTrack(b.dataset.track));
+    b.addEventListener("keydown", (e) => {
+      const k = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (k === undefined) return;
+      e.preventDefault();
+      const n = tabs[(k + tabs.length) % tabs.length];
+      n.focus(); setTrack(n.dataset.track);
+    });
+  });
+  setTrack("grad");
+
+  /* CV line toggle */
+  const cv = $("[data-cv]"), cvBtn = $("[data-cv-btn]");
+  const LINES = {
+    lo: ["Helped with events for the finance society.", 3, "Vague verb, no numbers, no result."],
+    hi: ["Ran 6 finance society events for 240 students, raising £3,200 in sponsorship.", 9, "The same line, rewritten into evidence."],
+  };
+  cvBtn.addEventListener("click", () => {
+    const hi = cvBtn.getAttribute("aria-pressed") !== "true";
+    const [text, score, why] = LINES[hi ? "hi" : "lo"];
+    cvBtn.setAttribute("aria-pressed", hi);
+    cvBtn.textContent = hi ? "Show the original" : "Show the rewrite";
+    $("[data-cv-why]").textContent = why;
+    const swap = () => { $("[data-cv-text]").textContent = text; cv.classList.toggle("is-hi", hi); };
+    const sc = $("[data-cv-score]");
+    if (motion) {
+      gsap.timeline().to("[data-cv-text]", { opacity: 0, y: -8, duration: .2, onComplete: swap }).to("[data-cv-text]", { opacity: 1, y: 0, duration: .35 })
+        .to({ n: hi ? 3 : 9 }, { n: score, duration: .6, ease: "power2.out", onUpdate() { sc.textContent = `${Math.round(this.targets()[0].n)}/10`; } }, 0);
+    } else { swap(); sc.textContent = `${score}/10`; }
+    if (hi) log("cv", "Rewrote a CV line: 3/10 → 9/10", cv.closest(".tile"));
+  });
+
+  /* Weakest area */
+  const areas = $("[data-areas]"), findBtn = $("[data-find]"), findReset = $("[data-find-reset]"), findOut = $("[data-find-out]");
+  findBtn.addEventListener("click", () => {
+    areas.classList.add("is-found");
+    findOut.textContent = "Traction, 45: your weakest area. Your next step: add 3 applications to your tracker this week.";
+    findBtn.hidden = true; findReset.hidden = false; findReset.focus();
+    log("weak", "Found your weakest area", areas.closest(".tile"));
+  });
+  findReset.addEventListener("click", () => { areas.classList.remove("is-found"); findOut.textContent = ""; findBtn.hidden = false; findReset.hidden = true; findBtn.focus(); });
+
+  /* Mental maths */
+  const maths = $("[data-maths]"), ans = $("[data-ans]"), mOut = $("[data-maths-out]"), mReset = $("[data-maths-reset]");
+  maths.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ok = ans.value.trim() === "408";
+    mOut.classList.toggle("is-on", ok);
+    mOut.textContent = ok ? "408. Quick way: 17 × 25 = 425, then take away 17." : "Not quite. Quick way: 17 × 25 = 425, then take away 17.";
+    mReset.hidden = false;
+    if (motion && !ok) gsap.fromTo(ans, { x: -6 }, { x: 0, duration: .4, ease: "elastic.out(1,.3)" });
+    log("maths", ok ? "Solved 17 × 24" : "Tried 17 × 24", maths.closest(".tile"));
+  });
+  mReset.addEventListener("click", () => { ans.value = ""; mOut.textContent = ""; mReset.hidden = true; ans.focus(); });
+
+  /* Academy steps */
+  const steps = $$(".step"), acN = $("[data-ac-n]"), acBar = $("[data-ac-bar]");
+  steps.forEach((s) => s.addEventListener("click", () => {
+    s.setAttribute("aria-checked", s.getAttribute("aria-checked") !== "true");
+    const n = steps.filter((x) => x.getAttribute("aria-checked") === "true").length;
+    acN.textContent = `${n} stages complete, ${12 - n} to go`;
+    acBar.style.setProperty("--w", `${n / 12 * 100}%`);
+    log("academy", `Academy: ${n} of 12 stages`, s.closest(".tile"));
+  }));
+
+  /* Tracker: drag or press Deloitte through stages */
+  const board = $("[data-board]"), card = $("[data-card]"), lanes = $$("[data-lane]", board);
+  const tOut = $("[data-trk-out]"), tReset = $("[data-trk-reset]");
+  const BASE = [2, 1, 1];
+  let at = 0;
+  function moveTo(i) {
+    const state = hasGsap ? Flip.getState(card) : null;
+    at = i;
+    const lane = lanes[i];
+    lane.insertBefore(card, $(".lane__h", lane).nextSibling);
+    const stage = lane.dataset.lane;
+    $("small", card).textContent = stage;
+    card.setAttribute("aria-label", `Deloitte, ${stage}.${i < 2 ? " Press to move to the next stage" : ""}`);
+    lanes.forEach((l, j) => { $("[data-c]", l).textContent = BASE[j] + (j === i ? 1 : 0) - (j === 0 ? 1 : 0); });
+    if (state) Flip.from(state, { duration: motion ? .5 : 0, ease: "expo.out" });
+    const c = lanes.map((l) => +$("[data-c]", l).textContent);
+    tOut.classList.toggle("is-on", i > 0);
+    tOut.textContent = i === 0 ? "2 planned, 1 submitted, 1 at interview." : `Deloitte marked ${stage.toLowerCase()}. ${i === 1 ? "Chase reminder set." : `${c[0]} planned, ${c[1]} submitted, ${c[2]} at interview.`}`;
+    tReset.hidden = i === 0;
+    if (i > 0) log("trk", `Moved Deloitte to ${stage}`, board.closest(".tile"));
+  }
+  let dragged = false;
+  card.addEventListener("click", () => { if (dragged) { dragged = false; return; } if (at < 2) moveTo(at + 1); });
+  tReset.addEventListener("click", () => { moveTo(0); card.focus(); });
+  if (hasGsap) {
+    Draggable.create(card, {
+      bounds: board, zIndexBoost: true, minimumMovement: 6,
+      onDrag() { lanes.forEach((l) => l.classList.toggle("is-over", this.hitTest(l, "40%"))); },
+      onDragEnd() {
+        dragged = true;
+        const hit = lanes.findIndex((l) => this.hitTest(l, "40%"));
+        lanes.forEach((l) => l.classList.remove("is-over"));
+        gsap.set(card, { x: 0, y: 0 });
+        if (hit >= 0 && hit !== at) moveTo(hit);
+        setTimeout(() => { dragged = false; }, 0);
+      },
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Offer Engine: Kinetic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..900&display=swap" rel="stylesheet">
+<style>
+/* Tokens: the live site's palette (website/app/globals.css) plus the dashboard surfaces. */
+:root {
+  --bg: #080c14; --bg-alt: #0d1220;
+  --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
+  --ink: #f8fafc; --muted: #94a3b8;
+  --accent: #3b7ef6; --violet: #6c3ef6; --accent-soft: #8fb4ff;
+  --good: #34d399; --bad: #fb7185;
+  --line: rgba(255,255,255,.08);
+  --grad: linear-gradient(120deg, #3b7ef6, #6c3ef6);
+  --gut: clamp(16px, 3vw, 40px);
+  --ease: cubic-bezier(.16,1,.3,1);
+  /* Type: five text steps; display sizes are clamps. */
+  --t-s: 14px; --t-ui: 15px; --t-b: 17px; --t-l: 20px; --t-xl: clamp(24px, 2.4vw, 36px);
+  --d1: clamp(64px, 15vw, 250px); --d2: clamp(40px, 6.5vw, 104px); --d3: clamp(44px, 5.2vw, 84px);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 var(--t-b)/1.55 "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+a { color: inherit; }
+h1, h2, h3, p, ol, ul, blockquote, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button, input { font: inherit; color: inherit; }
+.wrap { padding-inline: var(--gut); }
+:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 3px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Buttons: one shape (full round), gradient fill = the site's signature. */
+.btn {
+  display: inline-flex; align-items: center; gap: .6em; min-height: 52px; padding: 0 1.6em;
+  border-radius: 999px; border: 0; cursor: pointer; text-decoration: none;
+  font-weight: 600; font-size: var(--t-b); line-height: 1; color: #fff; background: var(--grad);
+  transition: transform .4s var(--ease), filter .3s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.12); }
+.btn:active { transform: scale(.97); }
+.btn--ghost { background: var(--s2); color: var(--ink); }
+.btn--ghost:hover { background: var(--s4); filter: none; }
+.btn--sm { min-height: 44px; font-size: var(--t-ui); padding: 0 1.2em; }
+
+/* Nav */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 50; display: flex; align-items: center; justify-content: space-between;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gut) 14px; transition: background .3s;
+}
+.nav.is-solid { background: rgba(8,12,20,.92); }
+.nav__mark { font-weight: 800; letter-spacing: -.02em; text-decoration: none; font-size: var(--t-b); }
+.nav__links { display: flex; gap: 28px; align-items: center; }
+.nav__links a:not(.btn) { text-decoration: none; color: var(--muted); font-weight: 500; font-size: var(--t-ui); }
+.nav__links a:not(.btn):hover { color: var(--ink); }
+.nav .btn { min-height: 42px; font-size: var(--t-ui); }
+
+/* ---------- Hero: headline, then the product film front and centre ---------- */
+.hero { display: grid; justify-items: center; text-align: center; padding-block: 128px 72px; }
+.hero__h { font-size: clamp(48px, 8.4vw, 136px); line-height: .92; letter-spacing: -.05em; font-weight: 800; font-kerning: none; }
+.hero__h .ln { display: inline-block; white-space: nowrap; }
+.hero__h .char { display: inline-block; will-change: transform; }
+.hero__p { margin-top: 24px; max-width: 46ch; font-size: var(--t-l); line-height: 1.45; color: var(--muted); }
+.hero__cta { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.reel { margin-top: 64px; width: min(100%, 1180px); position: relative; border-radius: 24px; overflow: hidden; background: var(--s1); }
+.reel video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+.reel__btn {
+  position: absolute; right: 16px; bottom: 16px; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; cursor: pointer;
+  background: rgba(8,12,20,.8); color: var(--ink); font-size: var(--t-s); font-weight: 600;
+}
+.reel__btn:hover { background: var(--s4); }
+
+/* ---------- Statement: words light up with scroll ---------- */
+.stmt { padding-block: clamp(96px, 12vw, 160px); display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; align-items: end; }
+.stmt__p { font-size: var(--t-xl); line-height: 1.22; letter-spacing: -.025em; font-weight: 600; max-width: 30ch; }
+.stmt__note { color: var(--muted); max-width: 40ch; }
+
+/* ---------- Horizontal chapter: the six areas ---------- */
+.chap__intro { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; padding-block: 0 56px; }
+.h2 { font-size: var(--d2); line-height: .92; letter-spacing: -.045em; font-weight: 800; }
+.lede { font-size: var(--t-b); max-width: 46ch; }
+.lede strong { color: var(--accent-soft); font-weight: 600; }
+.chap { position: relative; overflow: clip; }
+.panel { position: relative; display: grid; align-content: end; gap: 40px; padding: 96px var(--gut); background: var(--bg); }
+.is-h .chap__track { display: flex; width: max-content; }
+.is-h .panel { width: 76vw; height: 100svh; flex: none; overflow: clip; padding: 72px var(--gut) 40px; gap: 24px; }
+.is-h .panel__word { font-size: clamp(64px, min(12vw, 16svh), 190px); }
+.panel:nth-child(even) { background: var(--bg-alt); }
+.panel__word {
+  font-size: clamp(64px, 12vw, 190px); font-weight: 900; letter-spacing: -.065em; line-height: .8;
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  white-space: nowrap; margin-left: -.04em;
+}
+.panel__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 48px; align-items: end; }
+.panel__sub { font-size: var(--t-xl); letter-spacing: -.03em; line-height: 1.1; font-weight: 700; max-width: 18ch; }
+.panel__copy p:not(.panel__sub) { margin-top: 14px; max-width: 40ch; }
+.panel__score { display: flex; align-items: baseline; gap: 10px; margin-top: 24px; color: var(--muted); }
+.panel__score b { font-size: var(--d3); color: var(--ink); font-weight: 800; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1; }
+.panel__wts { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 16px; color: var(--muted); font-size: var(--t-ui); }
+.panel__wts span { white-space: nowrap; }
+.panel__wts b { margin-left: 8px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Product fragments: rebuilt from the app's own screens (borders allowed inside [data-ui]). */
+[data-ui] { background: var(--s1); border: 1px solid var(--line); border-radius: 18px; padding: 22px; font-size: var(--t-ui); }
+.ui__top { display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); font-size: var(--t-s); margin-bottom: 16px; gap: 12px; }
+.ui__top b { color: var(--ink); font-weight: 600; font-size: var(--t-ui); }
+.ui__row { display: flex; justify-content: space-between; align-items: center; gap: 14px; background: var(--s2); border-radius: 12px; padding: 12px 14px; }
+.ui__row + .ui__row { margin-top: 8px; }
+.ui__row--bad { background: color-mix(in srgb, var(--bad) 10%, var(--s2)); }
+.ui__row--bad span:last-child { color: var(--bad); font-weight: 700; }
+.ui__row--good { background: color-mix(in srgb, var(--good) 12%, var(--s2)); }
+.ui__row--good span:last-child { color: var(--good); font-weight: 700; }
+.pill { font-size: var(--t-s); padding: 4px 10px; border-radius: 999px; background: var(--s4); color: var(--accent-soft); white-space: nowrap; }
+.ok { color: var(--good); }
+.ui__cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ui__cells div { background: var(--s2); border-radius: 12px; padding: 14px; }
+.ui__cells b { display: block; font-size: var(--t-xl); font-weight: 800; letter-spacing: -.03em; }
+.ui__cells span { color: var(--muted); font-size: var(--t-s); }
+.ui__cells--6 b { font-size: var(--t-l); }
+.ui__label { margin-top: 18px; color: var(--muted); font-size: var(--t-s); }
+.ui__acts { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.pill--good { color: var(--good); }
+.pill--bad { color: var(--bad); }
+.cvs__score { display: flex; align-items: baseline; gap: 8px; }
+.cvs__score b { font-size: 64px; font-weight: 800; letter-spacing: -.05em; line-height: 1; }
+.cvs__score span { color: var(--muted); }
+.crit { margin-top: 10px; display: grid; gap: 10px; }
+.crit li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) 3em; gap: 12px; align-items: center; font-size: var(--t-s); }
+.crit i { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--accent) calc(var(--v) * 5%), var(--s3) 0); }
+.crit b { text-align: right; font-variant-numeric: tabular-nums; }
+.trk { margin-top: 8px; display: grid; gap: 8px; }
+.trk__row { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--s2); border-radius: 12px; padding: 12px 14px; }
+.trk__row b { display: block; }
+.trk__row > span:first-child { color: var(--muted); font-size: var(--t-s); }
+.trk__row b { color: var(--ink); font-size: var(--t-ui); }
+.np__title { font-size: var(--t-xl); font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.np__why { margin-top: 16px; background: var(--s2); border-radius: 12px; padding: 14px; }
+.np__why small { color: var(--muted); font-size: var(--t-s); }
+.np__why p { margin-top: 4px; }
+.np__after { margin-top: 12px; color: var(--muted); font-size: var(--t-ui); }
+.np .btn { margin-top: 16px; }
+
+/* Academy road: the stage path from the course page. */
+.road__list { display: grid; position: relative; }
+.road__list::before { content: ""; position: absolute; left: 19px; top: 20px; bottom: 20px; width: 2px; background: var(--s4); }
+.road__list li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding-block: 8px; position: relative; }
+.road__list i {
+  font-style: normal; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--s3); border: 2px solid var(--s4); font-weight: 700; color: var(--muted); position: relative;
+}
+.road__list .is-done i { background: var(--grad); border-color: transparent; color: #fff; }
+.road__list .is-now i { background: var(--bg); border-color: var(--accent); color: var(--ink); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); }
+.road__list small { display: block; color: var(--muted); font-size: var(--t-s); }
+.road__list b { display: block; font-weight: 600; line-height: 1.3; }
+.road__list span { display: block; margin-top: 2px; font-size: var(--t-s); color: var(--muted); }
+.road__list .is-now span { color: var(--accent-soft); }
+.road__list .is-done span { color: var(--good); }
+.road .btn { margin-top: 16px; }
+
+/* Mental maths drill: answer it. */
+.drill { padding: 0; overflow: hidden; }
+.drill__bar { display: flex; justify-content: space-between; padding: 16px 22px 14px; }
+.drill__bar span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.drill__prog { display: block; height: 3px; background: var(--s3); }
+.drill__prog i { display: block; height: 100%; width: var(--p, 92%); background: var(--grad); transition: width 1s linear; }
+.drill__body { padding: 28px 22px 24px; text-align: center; }
+.drill__meta { display: flex; gap: 18px; justify-content: center; color: var(--muted); font-size: var(--t-s); }
+.drill__q { display: block; margin-top: 12px; font-size: clamp(32px, 8.4vw, 48px); text-wrap: balance; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.drill__in { margin-top: 20px; display: flex; gap: 8px; }
+.drill__in input {
+  flex: 1; min-width: 0; min-height: 56px; border-radius: 12px; border: 1px solid var(--accent); background: var(--s2);
+  padding: 0 16px; font-size: var(--t-l); font-variant-numeric: tabular-nums;
+}
+.drill__in input::placeholder { color: var(--muted); }
+.drill__in input:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+.drill__in .btn { min-height: 56px; }
+.drill__fb { margin-top: 14px; min-height: 2.6em; font-size: var(--t-ui); color: var(--good); }
+.drill__fb.is-bad { color: var(--bad); }
+
+/* Behavioural Top 20: tick them off. */
+.beh__head { display: flex; align-items: baseline; gap: 10px; }
+.beh__head b { font-size: 48px; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.beh__head span { color: var(--muted); }
+.beh__dots { display: flex; gap: 5px; margin-top: 14px; }
+.beh__dots i { flex: 1; height: 6px; border-radius: 99px; background: var(--s4); transition: background .3s; }
+.beh__dots i.on { background: var(--ink); }
+.beh__note { margin-top: 10px; color: var(--muted); font-size: var(--t-s); }
+.beh__list { margin-top: 18px; display: grid; gap: 8px; }
+.beh__list li { display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; gap: 10px; align-items: center; background: var(--s2); border-radius: 12px; padding: 8px 8px 8px 14px; }
+.beh__list li > span:first-child { color: var(--muted); font-variant-numeric: tabular-nums; font-size: var(--t-s); }
+.chip {
+  min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--s4); background: var(--s3); cursor: pointer;
+  font-size: var(--t-s); font-weight: 600; color: var(--muted); transition: background .25s, color .25s, border-color .25s;
+}
+.chip[aria-pressed="true"] { background: var(--good); border-color: var(--good); color: #062018; }
+.chip[aria-pressed="true"]::before { content: "✓ "; }
+
+/* ---------- Score: the readiness page, live ---------- */
+.score { padding-block: clamp(120px, 14vw, 200px); }
+.score__head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab {
+  font-weight: 600; font-size: var(--t-ui); min-height: 46px; padding: 0 18px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--s2); color: var(--muted); transition: background .3s, color .3s, transform .3s var(--ease);
+}
+.tab:hover { color: var(--ink); background: var(--s4); }
+.tab:active { transform: scale(.96); }
+.tab[aria-pressed="true"] { background: var(--grad); color: #fff; }
+.score__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); gap: 16px; margin-top: 48px; }
+.card { display: grid; align-content: space-between; gap: 24px; }
+.score__big { font-size: var(--d1); font-weight: 900; letter-spacing: -.07em; line-height: .8; font-variant-numeric: tabular-nums; }
+.score__big small { font-size: .16em; letter-spacing: -.02em; color: var(--muted); font-weight: 600; margin-left: .3em; }
+.card__meta { color: var(--muted); }
+.card__meta b { color: var(--ink); font-weight: 600; }
+.cov { margin-top: 10px; height: 8px; border-radius: 99px; background: var(--s4); overflow: hidden; }
+.cov i { display: block; width: 100%; height: 100%; background: var(--grad); }
+.areas__cols { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; align-items: end; height: 340px; margin-top: 8px; }
+.col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; text-align: center; }
+.col > b { font-variant-numeric: tabular-nums; font-weight: 600; margin-bottom: 8px; }
+.col__bar { width: min(64px, 100%); height: calc(var(--h) * var(--u, 2.4px)); border-radius: 12px 12px 6px 6px; background: linear-gradient(#eef2ff, #c7d0ec); position: relative; overflow: hidden; }
+.col.is-top .col__bar { background: var(--good); }
+.col > span { margin-top: 12px; font-weight: 600; font-size: var(--t-ui); }
+.col > small { color: var(--muted); font-size: var(--t-s); font-variant-numeric: tabular-nums; }
+
+/* ---------- Steps ---------- */
+.steps { padding-block: 0 clamp(120px, 14vw, 200px); }
+.steps__list { margin-top: 48px; display: grid; gap: 8px; counter-reset: s; }
+.step { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; align-items: center; padding: 28px 32px; border-radius: 24px; background: var(--s1); transition: background .4s; }
+.step:hover { background: var(--s3); }
+.step h3 { font-size: clamp(32px, 3.8vw, 56px); letter-spacing: -.04em; line-height: 1; text-wrap: balance; font-weight: 800; transition: color .4s; }
+.step:hover h3 { color: var(--accent-soft); }
+.step p { max-width: 44ch; }
+
+/* ---------- CV check ---------- */
+.cv { background: var(--bg-alt); padding-block: clamp(100px, 13vw, 180px); }
+.cv__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+.cv__grid > div > p { margin-top: 20px; max-width: 44ch; }
+.cv__grid .btn { margin-top: 32px; }
+.rw { background: var(--s1); border-radius: 24px; padding: clamp(24px, 3vw, 40px); }
+.rw__h { font-size: var(--t-l); font-weight: 700; }
+.rw__sub { margin-top: 6px; text-wrap: pretty; color: var(--muted); font-size: var(--t-ui); }
+.rw__old { margin-top: 28px; font-size: var(--t-l); color: var(--muted); text-decoration: line-through; text-decoration-color: var(--bad); }
+.rw__new { margin-top: 16px; font-size: var(--t-xl); font-weight: 700; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
+
+/* ---------- Testimonials: velocity marquee ---------- */
+.voices { padding-block: clamp(120px, 14vw, 200px) 0; overflow: clip; }
+.mq { margin-top: 48px; display: flex; width: max-content; will-change: transform; }
+.mq__set { display: flex; gap: 20px; padding-right: 20px; }
+.vq {
+  width: min(560px, 82vw); flex: none; background: var(--s1); border-radius: 24px; padding: 32px;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 24px;
+}
+.vq__out { font-size: var(--d3); font-weight: 900; letter-spacing: -.05em; line-height: .9; }
+.vq__out em { font-style: normal; color: var(--muted); font-weight: 600; }
+.vq__out strong { color: var(--accent-soft); }
+.vq blockquote { font-size: var(--t-l); line-height: 1.4; letter-spacing: -.01em; }
+.vq figcaption { color: var(--muted); font-size: var(--t-ui); }
+.vq figcaption b { color: var(--ink); font-weight: 600; }
+.voices__big {
+  margin-top: 56px; font-size: var(--d1); font-weight: 900; letter-spacing: -.065em; line-height: .8;
+  white-space: nowrap; color: var(--s3); display: flex; width: max-content;
+}
+
+/* ---------- Pricing ---------- */
+.price { padding-block: clamp(120px, 14vw, 200px); }
+.price__head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.plans { margin-top: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.plan { background: var(--s1); border-radius: 24px; padding: 28px; display: grid; gap: 20px; align-content: start; transition: transform .5s var(--ease), background .3s; }
+.plan:hover { transform: translateY(-6px); background: var(--s3); }
+.plan:nth-child(2) { min-height: 470px; } .plan:nth-child(3) { min-height: 520px; } .plan:nth-child(4) { min-height: 570px; }
+.plan h3 { font-size: var(--t-l); font-weight: 700; letter-spacing: -.01em; margin-top: -8px; }
+.plan__p { font-size: var(--d3); font-weight: 900; letter-spacing: -.06em; line-height: .85; font-variant-numeric: tabular-nums; }
+.plan ul { display: grid; gap: 10px; font-size: var(--t-ui); }
+.plan li { padding-left: 22px; position: relative; }
+.plan li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; border-radius: 50%; background: var(--grad); }
+.plan .btn { justify-self: start; align-self: end; margin-top: auto; }
+.plan--top { background: var(--s2); }
+
+/* ---------- FAQ ---------- */
+.faq { padding-block: 0 clamp(120px, 14vw, 200px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 48px; align-items: start; }
+.faq details { background: var(--s1); border-radius: 18px; }
+.faq details + details { margin-top: 10px; }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 22px 24px; display: flex; justify-content: space-between; gap: 20px; align-items: center;
+  font-size: var(--t-l); font-weight: 600; letter-spacing: -.015em;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 28px; font-weight: 400; color: var(--accent-soft); transition: transform .4s var(--ease); flex: none; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 24px 24px; max-width: 64ch; }
+.faq summary:hover { color: var(--accent-soft); }
+
+/* ---------- Full-screen CTA ---------- */
+.end { min-height: 100svh; display: grid; place-content: center; text-align: center; padding-block: 120px; background: var(--bg-alt); position: relative; overflow: clip; }
+.end__h { font-size: var(--d1); font-weight: 900; letter-spacing: -.065em; line-height: .82; }
+.end__h .ln { display: block; }
+.end__h .ln--2 { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.end__cta { margin-top: 48px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.end__note { margin-top: 20px; color: var(--muted); }
+.foot { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding-block: 32px calc(32px + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: var(--t-ui); }
+.foot nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.foot a { text-decoration: none; } .foot a:hover { color: var(--ink); }
+
+/* ---------- Tablet and phone ---------- */
+@media (max-width: 1100px) {
+  .score__grid { grid-template-columns: minmax(0, 1fr); }
+  .is-h .panel { width: 92vw; }
+  .panel__body { grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 32px; }
+}
+@media (max-width: 860px) {
+  .nav__links a:not(.btn) { display: none; }
+  .hero { padding-block: 104px 48px; }
+  .reel { margin-top: 40px; border-radius: 16px; }
+  .stmt, .chap__intro, .score__head, .step, .cv__grid, .price__head, .faq { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 64px var(--gut); gap: 28px; grid-template-columns: minmax(0, 1fr); }
+  .panel__word { font-size: 18vw; }
+  .score__big, .end__h { font-size: 17.5vw; }
+  .panel__body { grid-template-columns: minmax(0, 1fr); }
+  .plans { grid-template-columns: minmax(0, 1fr); }
+  .plan:nth-child(n) { min-height: 0; }
+  .step { gap: 12px; padding: 24px; }
+  .step h3 { font-size: 32px; }
+  .areas__cols { gap: 6px; height: 280px; --u: 1.6px; }
+  .col > small { font-size: 12px; }
+  .vq { padding: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; scroll-behavior: auto !important; }
+  .mq { flex-direction: column; width: auto; }
+  .mq__set { flex-wrap: wrap; padding: 0 var(--gut); }
+  .mq__set[aria-hidden] { display: none; }
+  .vq { width: auto; flex: 1 1 320px; }
+  .voices__big { width: auto; }
+  .voices__big span + span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a class="nav__mark" href="#top">The Offer Engine</a>
+  <nav class="nav__links" aria-label="Main">
+    <a href="#areas">Areas</a>
+    <a href="#score">Readiness Score</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn" href="#pricing">Choose a plan</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="hero wrap" aria-labelledby="hero-h">
+    <h1 class="hero__h" id="hero-h" aria-label="Become offer ready"><span class="ln" data-split>Become</span> <span class="ln" data-split>offer ready</span></h1>
+    <p class="hero__p" data-rise>The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.</p>
+    <div class="hero__cta" data-rise>
+      <a class="btn" href="#pricing" id="signup">Choose a plan</a>
+      <a class="btn btn--ghost" href="#cv">Check my CV</a>
+    </div>
+    <figure class="reel" data-rise>
+      <video id="reel" src="assets/intro.mp4" poster="assets/intro-poster.jpg" muted loop playsinline preload="metadata" aria-label="How Offer Engine works: the Readiness Score, the CV Checker and the Academy"></video>
+      <button class="reel__btn" id="reel-btn" type="button" aria-label="Play or pause the film">Play</button>
+    </figure>
+  </section>
+
+  <!-- Statement -->
+  <section class="stmt wrap" aria-label="Why execution">
+    <p class="stmt__p" data-words>Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first.</p>
+    <p class="stmt__note" data-rise>A great candidate with no system often loses to an average candidate with consistent execution. The Offer Engine exists to close that gap.</p>
+  </section>
+
+  <!-- Six areas -->
+  <section id="areas" aria-labelledby="areas-h">
+    <div class="chap__intro wrap">
+      <h2 class="h2" id="areas-h" data-rise>Six areas</h2>
+      <p class="lede" data-rise>Six readiness areas scored across the full recruiting funnel, shown as one <strong>Provisional readiness</strong> score with how much of it is assessed.</p>
+    </div>
+    <div class="chap" id="chap">
+      <div class="chap__track" id="track">
+
+        <article class="panel" aria-labelledby="a-thesis">
+          <h3 class="panel__word" id="a-thesis">Thesis</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Pathway clarity and narrative.</p>
+              <p>Choose your direction and explain your fit. The Academy's twelve stages take you from a career story to an offer decision.</p>
+              <div class="panel__score"><b data-count="82">82</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>15%</b></span> <span>Summer Internship <b>10%</b></span> <span>Placement Year <b>10%</b></span> <span>Graduate Programme <b>8%</b></span></div>
+            </div>
+            <div data-ui class="road">
+              <div class="ui__top"><b>Graduate Applications</b><span>Stage 3 of 12</span></div>
+              <ol class="road__list">
+                <li class="is-done"><i aria-hidden="true">✓</i><div><small>Stage 1</small><b>Choose your direction and explain your fit</b><span>Complete</span></div></li>
+                <li class="is-done"><i aria-hidden="true">✓</i><div><small>Stage 2</small><b>Build a target list you can act on</b><span>Complete</span></div></li>
+                <li class="is-now"><i>3</i><div><small>Stage 3</small><b>Make your experience easy to assess</b><span>In progress. Up next: Translate different experiences into relevant evidence</span></div></li>
+                <li><i>4</i><div><small>Stage 4</small><b>Submit well and prepare for the next step</b><span>Not started</span></div></li>
+              </ol>
+              <div class="ui__acts"><a class="btn btn--sm" href="#signup">Continue lesson 3.2</a><a class="btn btn--sm btn--ghost" href="#signup">View course</a></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="a-profile">
+          <h3 class="panel__word" id="a-profile">Profile</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Your CV, scored against the rubric.</p>
+              <p>The CV Checker scores your CV out of 100 across five criteria, then lists quick wins to do first.</p>
+              <div class="panel__score"><b data-count="68">68</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>20%</b></span> <span>Summer Internship <b>15%</b></span> <span>Placement Year <b>14%</b></span> <span>Graduate Programme <b>10%</b></span></div>
+            </div>
+            <div data-ui>
+              <div class="ui__top"><b>CV Checker</b><span class="pill pill--good">Competitive</span></div>
+              <div class="cvs__score"><b>72</b><span>/ 100</span></div>
+              <p class="ui__label">Score breakdown</p>
+              <ul class="crit">
+                <li style="--v:12"><span>Bullet Impact</span><i></i><b>12/20</b></li>
+                <li style="--v:16"><span>Relevance</span><i></i><b>16/20</b></li>
+                <li style="--v:14"><span>Ownership</span><i></i><b>14/20</b></li>
+                <li style="--v:17"><span>Structure</span><i></i><b>17/20</b></li>
+                <li style="--v:13"><span>Balance</span><i></i><b>13/20</b></li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="a-exec">
+          <h3 class="panel__word" id="a-exec">Execution</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Targets, deadlines and applications.</p>
+              <p>Log every application with its status, priority and deadline. The tracker counts the days left and flags anything you have not updated.</p>
+              <div class="panel__score"><b data-count="71">71</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>15%</b></span> <span>Summer Internship <b>14%</b></span> <span>Placement Year <b>12%</b></span> <span>Graduate Programme <b>11%</b></span></div>
+            </div>
+            <div data-ui>
+              <div class="ui__top"><b>Application Tracker</b><span>Table · Board</span></div>
+              <div class="ui__cells ui__cells--6">
+                <div><b>6</b><span>Total</span></div>
+                <div><b>2</b><span>In Progress</span></div>
+                <div><b>1</b><span>Testing</span></div>
+                <div><b>1</b><span>Interview</span></div>
+                <div><b>0</b><span>Offers</span></div>
+                <div><b>1</b><span>Rejections</span></div>
+              </div>
+              <div class="trk">
+                <div class="trk__row"><span><b>Deloitte</b>Submitted · Realistic</span><span class="pill">12 days left</span></div>
+                <div class="trk__row"><span><b>PwC</b>Planned · Dream</span><span class="pill pill--bad">Due today</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="a-apt">
+          <h3 class="panel__word" id="a-apt">Aptitude</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Numerical and psychometric performance.</p>
+              <p>Two-minute mental maths sessions with no calculator, at Easy, Medium or Challenging, plus timed psychometric test sections. Try a question.</p>
+              <div class="panel__score"><b data-count="55">55</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>20%</b></span> <span>Summer Internship <b>20%</b></span> <span>Placement Year <b>20%</b></span> <span>Graduate Programme <b>22%</b></span></div>
+            </div>
+            <form data-ui class="drill" id="drill" novalidate>
+              <div class="drill__bar"><b>Mental maths, medium</b><span id="clock">1:11 left</span></div>
+              <span class="drill__prog" aria-hidden="true"><i id="prog"></i></span>
+              <div class="drill__body">
+                <p class="drill__meta"><span>Question 8</span><span id="correct">7 correct</span><span>No calculator</span></p>
+                <label class="drill__q" for="ans">What is 22 × 17?</label>
+                <div class="drill__in"><input id="ans" inputmode="numeric" autocomplete="off" placeholder="Your answer"><button class="btn btn--sm" type="submit">Enter to submit</button></div>
+                <p class="drill__fb" id="fb" aria-live="polite">✓ Correct</p>
+                <p class="beh__note">Feeds your Aptitude score</p>
+              </div>
+            </form>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="a-int">
+          <h3 class="panel__word" id="a-int">Interview</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Behavioural questions and case practice.</p>
+              <p>Interview is a fifth of a Spring Week score and over a third of a Graduate one. Prepare a real answer for each of the 20 most likely questions, then practise cases at Beginner, Intermediate or Challenging.</p>
+              <div class="panel__score"><b data-count="60">60</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>20%</b></span> <span>Summer Internship <b>29%</b></span> <span>Placement Year <b>32%</b></span> <span>Graduate Programme <b>36%</b></span></div>
+            </div>
+            <div data-ui>
+              <div class="ui__top"><b>Behavioural questions</b><span>Top 20 · Extra questions 509</span></div>
+              <div class="beh__head"><b id="prep">7</b><span>of 20 · Top 20 prepared</span></div>
+              <div class="beh__dots" id="dots" aria-hidden="true"></div>
+              <p class="beh__note"><span id="next">Next up: question 8</span> · Feeds your Interview score</p>
+              <ul class="beh__list">
+                <li><span>01</span><span>Tell me about yourself.</span><button class="chip" type="button" aria-pressed="true">Prepared</button></li>
+                <li><span>02</span><span>Walk me through your CV.</span><button class="chip" type="button" aria-pressed="true">Prepared</button></li>
+                <li><span>03</span><span>Why do you want to work in this industry?</span><button class="chip" type="button" aria-pressed="true">Prepared</button></li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" aria-labelledby="a-tr">
+          <h3 class="panel__word" id="a-tr">Traction</h3>
+          <div class="panel__body">
+            <div class="panel__copy">
+              <p class="panel__sub">Real employer responses.</p>
+              <p>Interviews, assessment centres and offers you log in the tracker. When it is your weakest area, the Readiness page makes it your next priority.</p>
+              <div class="panel__score"><b data-count="45">45</b> example score</div>
+              <div class="panel__wts"><span>Spring Week <b>10%</b></span> <span>Summer Internship <b>12%</b></span> <span>Placement Year <b>12%</b></span> <span>Graduate Programme <b>13%</b></span></div>
+            </div>
+            <div data-ui class="np">
+              <div class="ui__top"><b>Your next priority</b><span>Readiness</span></div>
+              <p class="np__title">Log interviews and offers in your tracker</p>
+              <div class="np__why"><small>Why this first</small><p>Traction is your weakest area at 45.</p></div>
+              <p class="np__after">After that: Practise timed aptitude work (Aptitude).</p>
+              <a class="btn btn--sm" href="#signup">Open tracker</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Live score -->
+  <section class="score wrap" id="score" aria-labelledby="score-h">
+    <div class="score__head">
+      <h2 class="h2" id="score-h" data-rise>One score, weighted for you</h2>
+      <div data-rise>
+        <p class="lede">Each track weighs the six areas differently. Pick a track.</p>
+        <div class="tabs" role="group" aria-label="Track" style="margin-top:20px">
+          <button class="tab" type="button" data-t="spring" aria-pressed="false">Spring Week</button>
+          <button class="tab" type="button" data-t="summer" aria-pressed="false">Summer Internship</button>
+          <button class="tab" type="button" data-t="placement" aria-pressed="false">Placement Year</button>
+          <button class="tab" type="button" data-t="grad" aria-pressed="true">Graduate Programme</button>
+        </div>
+      </div>
+    </div>
+    <div class="score__grid">
+      <div data-ui class="card">
+        <div class="ui__top"><span class="pill">Provisional readiness</span><span id="who">Final year &amp; graduates</span></div>
+        <div class="score__big"><span id="big">61</span><small>of 100</small></div>
+        <div>
+          <p class="card__meta">Counts most on this track: <b id="max">Interview, 36%</b></p>
+          <p class="card__meta" style="margin-top:12px"><b>6 of 6</b> areas assessed · 100% coverage</p>
+          <div class="cov" aria-hidden="true"><i></i></div>
+        </div>
+        <p class="card__meta">A preparation indicator, not a prediction of an offer.</p>
+        <p class="sr" aria-live="polite" id="live"></p>
+      </div>
+      <div data-ui>
+        <div class="ui__top"><b>Your six areas</b><span id="wname">Graduate weightings</span></div>
+        <div class="areas__cols" id="cols"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="steps wrap" aria-labelledby="steps-h">
+    <h2 class="h2" id="steps-h" data-rise>From track to offer</h2>
+    <ol class="steps__list">
+      <li class="step" data-rise><h3>Choose your track</h3><p>Spring Week, Summer Internship, Placement Year or Graduate Programme. Your track sets the deadlines you work to and how your score is weighted.</p></li>
+      <li class="step" data-rise><h3>Complete onboarding</h3><p>Tell us your university, graduation year and dream firms so we can tailor everything to you.</p></li>
+      <li class="step" data-rise><h3>Get your Readiness Score</h3><p>Six readiness areas scored across the full recruiting funnel, shown as one Provisional readiness score with how much of it is assessed.</p></li>
+      <li class="step" data-rise><h3>Advance level by level</h3><p>Exact actions, prioritised by your weakest areas. The Academy's twelve stages take you from a career story to an offer decision.</p></li>
+    </ol>
+  </section>
+
+  <!-- CV check -->
+  <section class="cv" id="cv" aria-labelledby="cv-h">
+    <div class="cv__grid wrap">
+      <div>
+        <h2 class="h2" id="cv-h" data-rise>Check your CV</h2>
+        <p data-rise>Upload your CV as a PDF, Word file or plain text and choose your track. You get a score out of 100, a breakdown across Bullet Impact, Relevance, Ownership, Structure and Balance, quick wins, and three of your weakest bullets rewritten.</p>
+        <a class="btn" href="#cv" data-rise>Check my CV</a>
+      </div>
+      <div class="rw" data-rise>
+        <p class="rw__h">Your bulletpoints, rewritten</p>
+        <p class="rw__sub">Three of your weakest bullets, upgraded to Action + Context + Result.</p>
+        <p class="rw__old">Helped with events for the finance society.</p>
+        <p class="rw__new">Ran 6 finance society events for 240 students, raising £3,200 in sponsorship.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="voices" aria-labelledby="voices-h">
+    <h2 class="h2 wrap" id="voices-h" data-rise>Students who moved first</h2>
+    <div class="mq" id="mq">
+      <div class="mq__set">
+        <figure class="vq"><div class="vq__out" aria-label="Readiness Score 38% to 84%"><em>38%</em> → <strong>84%</strong></div><blockquote>“I went from not knowing where to start to having Goldman, Macquarie and Lazard in my pipeline in week three. The weekly plan is exactly what I needed.”</blockquote><figcaption><b>Amara</b>, Penultimate Year, Economics, LSE. Target firm: Goldman Sachs</figcaption></figure>
+        <figure class="vq"><div class="vq__out" aria-label="Readiness Score 45% to 90%"><em>45%</em> → <strong>90%</strong></div><blockquote>“The Readiness Score told me I was spending too long on my CV and not enough on case practice. That one insight changed my whole approach.”</blockquote><figcaption><b>James</b>, Final Year, Engineering, Imperial. Target firm: McKinsey &amp; Company</figcaption></figure>
+        <figure class="vq"><div class="vq__out" aria-label="Readiness Score 33% to 79%"><em>33%</em> → <strong>79%</strong></div><blockquote>“I'd been rejected at video interview stage three times without knowing why. The rejection-to-action system flagged my answer bank immediately.”</blockquote><figcaption><b>Priya</b>, First Year, PPE, Oxford. Target firm: J.P. Morgan</figcaption></figure>
+        <figure class="vq"><div class="vq__out" aria-label="Readiness Score 41% to 91%"><em>41%</em> → <strong>91%</strong></div><blockquote>“My Readiness Score went from 41% to 91% in three weeks. I only drilled the gaps the platform flagged, nothing else.”</blockquote><figcaption><b>Olivia</b>, Second Year, Economics, Warwick. Target firm: PwC</figcaption></figure>
+      </div>
+    </div>
+    <div class="voices__big" id="big-mq" aria-hidden="true"><span>Thesis Profile Execution Aptitude Interview Traction&nbsp;</span><span>Thesis Profile Execution Aptitude Interview Traction&nbsp;</span></div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="price wrap" id="pricing" aria-labelledby="price-h">
+    <div class="price__head">
+      <h2 class="h2" id="price-h" data-rise>One programme, three lengths</h2>
+      <p class="lede" data-rise>Every plan includes the dashboard, tracker, CV Checker and the Academy, priced by how long your access runs.</p>
+    </div>
+    <div class="plans">
+      <article class="plan" data-rise><p class="plan__p">£59</p><h3>1-Month Programme</h3><ul><li>Full dashboard with your live Readiness Score, Application Tracker and AI CV Checker</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>1 month of access</li></ul><a class="btn btn--ghost" href="#signup">Choose 1 month</a></article>
+      <article class="plan" data-rise><p class="plan__p">£139</p><h3>3-Month Programme</h3><ul><li>Full dashboard with your live Readiness Score, Application Tracker and AI CV Checker</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>3 months of access</li></ul><a class="btn btn--ghost" href="#signup">Choose 3 months</a></article>
+      <article class="plan plan--top" data-rise><p class="plan__p">£249</p><h3>12-Month Programme</h3><ul><li>Full dashboard with your live Readiness Score, Application Tracker and AI CV Checker</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>12 months of access, enough to run the programme through a full recruiting cycle</li></ul><a class="btn" href="#signup">Choose 12 months</a></article>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq wrap" id="faq" aria-labelledby="faq-h">
+    <h2 class="h2" id="faq-h" data-rise>Before you sign up</h2>
+    <div data-rise>
+      <details><summary>Which track is right for me?</summary><p>If you're in first or second year, start with Spring Week. Penultimate year students should choose Summer Internship. Placement Year and Graduate Programme tracks are built for sandwich-course and final-year students. The Offer Engine maps your timeline automatically so you stop guessing and start executing against real recruiting deadlines.</p></details>
+      <details><summary>Why does the platform focus so heavily on execution?</summary><p>Because recruiting is heavily driven by timing and consistency. Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. A great candidate with no system often loses to an average candidate with consistent execution. The Offer Engine exists to close that gap.</p></details>
+      <details><summary>Is this only for consulting and investment banking?</summary><p>The Offer Engine is designed around consulting, IB, and PE recruiting mechanics: rolling deadlines, psychometric testing, networking, interviews, and application volume. The system also works for Big 4, strategy, asset management, and other competitive graduate roles because the execution principles are the same.</p></details>
+      <details><summary>What makes The Offer Engine different from careers advice or YouTube prep?</summary><p>Most recruiting resources help you prepare. Very few help you execute consistently. The Offer Engine gives you a structured weekly system, a live readiness score, deadline tracking, accountability, and measurable progress. The students who convert offers are rarely the ones consuming the most content. They are usually the ones executing the most consistently.</p></details>
+      <details><summary>Can The Offer Engine guarantee me an offer?</summary><p>No platform can guarantee offers. What The Offer Engine does provide is the structure, accountability, and execution system that dramatically improves your probability of converting. Students who consistently complete weekly tasks, practise interviews, and maintain application volume outperform students relying on unstructured preparation.</p></details>
+    </div>
+  </section>
+
+  <!-- Full-screen CTA -->
+  <section class="end wrap" aria-labelledby="end-h">
+    <h2 class="end__h" id="end-h" aria-label="Which one first?"><span class="ln" data-split2>Which one</span><span class="ln ln--2">first?</span></h2>
+    <div class="end__cta">
+      <a class="btn" href="#pricing">Choose a plan</a>
+      <a class="btn btn--ghost" href="#cv">Check my CV</a>
+    </div>
+    <p class="end__note">Plans start at £59 for one month. Every plan includes the CV Checker and the Academy.</p>
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <span>© 2026 The Offer Engine. No platform can guarantee offers.</span>
+  <nav aria-label="Footer"><a href="#areas">Areas</a><a href="#score">Readiness Score</a><a href="#cv">CV check</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Product film: autoplays muted unless the visitor prefers reduced motion; the button always works.
+  const reel = $("#reel"), reelBtn = $("#reel-btn");
+  const syncReel = () => reelBtn.textContent = reel.paused ? "Play" : "Pause";
+  reel.addEventListener("play", syncReel); reel.addEventListener("pause", syncReel);
+  reelBtn.addEventListener("click", () => reel.paused ? reel.play() : reel.pause());
+  if (!reduce) reel.play().catch(() => {});
+
+  // Live score: v2 weights per track (website/CLAUDE.md), example area scores from content.ts.
+  const AREAS = ["Thesis", "Profile", "Execution", "Aptitude", "Interview", "Traction"];
+  const SCORES = [82, 68, 71, 55, 60, 45];
+  const T = {
+    spring: { name: "Spring Week", short: "Spring Week", who: "First & second year", w: [15, 20, 15, 20, 20, 10] },
+    summer: { name: "Summer Internship", short: "Summer Internship", who: "Penultimate year", w: [10, 15, 14, 20, 29, 12] },
+    placement: { name: "Placement Year", short: "Placement Year", who: "12-month structured placements", w: [10, 14, 12, 20, 32, 12] },
+    grad: { name: "Graduate Programme", short: "Graduate", who: "Final year & graduates", w: [8, 10, 11, 22, 36, 13] },
+  };
+  const cols = $("#cols");
+  cols.innerHTML = AREAS.map((a, i) => `<div class="col"><b>${SCORES[i]}</b><i class="col__bar" style="--h:${SCORES[i]}"></i><span>${a}</span><small>Weight 0%</small></div>`).join("");
+  const big = $("#big"); const num = { v: 61 };
+  const setTrack = (id, animate) => {
+    const t = T[id];
+    const score = Math.round(t.w.reduce((s, w, i) => s + w * SCORES[i], 0) / 100);
+    const max = t.w.indexOf(Math.max(...t.w));
+    $$(".tab").forEach((b) => b.setAttribute("aria-pressed", b.dataset.t === id));
+    $$(".col", cols).forEach((c, i) => { c.classList.toggle("is-top", i === max); $("small", c).textContent = `Weight ${t.w[i]}%`; });
+    $("#who").textContent = t.who;
+    $("#wname").textContent = `${t.short} weightings`;
+    $("#max").textContent = `${AREAS[max]}, ${t.w[max]}%`;
+    $("#live").textContent = `${t.name}: provisional readiness ${score}. ${AREAS[max]} counts most, ${t.w[max]}%.`;
+    if (animate && window.gsap && !reduce) gsap.to(num, { v: score, duration: .8, ease: "expo.out", onUpdate: () => big.textContent = Math.round(num.v) });
+    else { num.v = score; big.textContent = score; }
+  };
+  $$(".tab").forEach((b) => b.addEventListener("click", () => setTrack(b.dataset.t, true)));
+  setTrack("grad", false);
+
+  // Mental maths drill: a real question from the Medium set; the clock starts on first keystroke.
+  const drill = $("#drill"), ans = $("#ans"), fb = $("#fb");
+  let left = 71, timer = null, done = false;
+  const clock = () => { $("#clock").textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")} left`; $("#prog").style.setProperty("--p", (left / 77 * 100) + "%"); };
+  clock();
+  ans.addEventListener("input", () => {
+    if (timer) return;
+    timer = setInterval(() => { left = Math.max(0, left - 1); clock(); if (!left) clearInterval(timer); }, 1000);
+  });
+  drill.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = ans.value.replace(/[^0-9]/g, "");
+    if (!v) return;
+    const right = v === "374";
+    fb.classList.toggle("is-bad", !right);
+    fb.textContent = right ? "✓ Correct" : "✗ Last answer wrong: 22 × 17 = 374";
+    if (right && !done) { done = true; $("#correct").textContent = "8 correct"; clearInterval(timer); }
+  });
+
+  // Behavioural Top 20: toggling a question moves the count and the dots.
+  const dots = $("#dots");
+  dots.innerHTML = "<i></i>".repeat(20);
+  const prep = () => {
+    const n = 4 + $$(".beh__list .chip[aria-pressed=true]").length;
+    $("#prep").textContent = n;
+    $$("i", dots).forEach((d, i) => d.classList.toggle("on", i < n));
+    const open = $$(".beh__list .chip").findIndex((c) => c.getAttribute("aria-pressed") !== "true");
+    $("#next").textContent = `Next up: question ${open < 0 ? 8 : open + 1}`;
+  };
+  $$(".beh__list .chip").forEach((c) => c.addEventListener("click", () => {
+    const on = c.getAttribute("aria-pressed") !== "true";
+    c.setAttribute("aria-pressed", on); c.textContent = on ? "Prepared" : "Not yet"; prep();
+  }));
+  prep();
+
+  // Nav gains a ground once the hero is scrolled past.
+  const nav = $("#nav");
+  addEventListener("scroll", () => nav.classList.toggle("is-solid", scrollY > 40), { passive: true });
+
+  if (!window.gsap) return;
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+  const mm = gsap.matchMedia();
+
+  mm.add({ motion: "(prefers-reduced-motion: no-preference)", desk: "(min-width: 861px)" }, (ctx) => {
+    const { motion, desk } = ctx.conditions;
+    if (!motion) return;
+
+    document.fonts.ready.then(() => {
+      // Hero: characters rise in, then react to the pointer (weight + lift) and scatter as you scroll away.
+      const split = SplitText.create(".hero__h [data-split]", { type: "chars", charsClass: "char", aria: "hidden" });
+      const chars = split.chars;
+      gsap.from(chars, { yPercent: 120, rotate: 8, opacity: 0, duration: 1.1, ease: "expo.out", stagger: .035, delay: .1 });
+      gsap.from(".reel", { scale: .9, ease: "none", scrollTrigger: { trigger: ".reel", start: "top 95%", end: "top 25%", scrub: true } });
+
+      // Statement: words light up as they cross the middle of the screen.
+      const ws = SplitText.create("[data-words]", { type: "words", wordsClass: "word" });
+      gsap.fromTo(ws.words, { opacity: .16 }, { opacity: 1, stagger: .1, ease: "none", scrollTrigger: { trigger: "[data-words]", start: "top 85%", end: "bottom 55%", scrub: true } });
+
+      // Closing headline re-forms by character.
+      const es = SplitText.create("[data-split2]", { type: "chars", aria: "hidden" });
+      gsap.from(es.chars, { yPercent: () => gsap.utils.random(-160, 160), rotate: () => gsap.utils.random(-30, 30), opacity: 0, ease: "expo.out", stagger: { each: .03, from: "center" }, scrollTrigger: { trigger: ".end", start: "top 75%", end: "top 15%", scrub: .8 } });
+
+      // Horizontal chapter (desktop): pin and slide the six panels; each product fragment rises as its panel arrives.
+      if (desk) {
+        const track = $("#track");
+        document.documentElement.classList.add("is-h");
+        const move = gsap.to(track, {
+          x: () => -(track.scrollWidth - innerWidth), ease: "none",
+          scrollTrigger: { trigger: "#chap", pin: true, start: "top top", end: () => "+=" + (track.scrollWidth - innerWidth), scrub: .8, invalidateOnRefresh: true },
+        });
+        $$(".panel", track).forEach((p) => {
+          gsap.from($("[data-ui]", p), { y: 80, rotate: 3, ease: "none", scrollTrigger: { containerAnimation: move, trigger: p, start: "left right", end: "left 30%", scrub: true } });
+          countIn($$("[data-count]", p), { containerAnimation: move, trigger: p, start: "left 60%" });
+        });
+      } else {
+        $$(".panel").forEach((p) => countIn($$("[data-count]", p), { trigger: p, start: "top 70%" }));
+      }
+
+      // Score columns grow from zero when the section arrives.
+      gsap.from(".col__bar", { scaleY: 0, transformOrigin: "50% 100%", duration: 1.2, ease: "expo.out", stagger: .06, scrollTrigger: { trigger: "#cols", start: "top 80%", once: true } });
+
+      // Entrances for each section's parts.
+      gsap.from(".hero [data-rise]:not(.reel)", { y: 24, opacity: 0, duration: .9, ease: "expo.out", stagger: .1, delay: .5 });
+      $$("main > section:not(.hero) [data-rise]").forEach((el) => gsap.from(el, { y: 28, opacity: 0, duration: .9, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 92%", once: true } }));
+      $$(".cv [data-count]").forEach((el) => countIn([el], { trigger: el, start: "top 85%" }));
+      ScrollTrigger.create({ trigger: "#score", start: "top 60%", once: true, onEnter: () => { num.v = 0; setTrack($(".tab[aria-pressed=true]").dataset.t, true); } });
+
+      // Velocity marquee: base drift, scroll speed adds push and skew.
+      const mq = $("#mq");
+      const set = $(".mq__set", mq);
+      const clone = set.cloneNode(true); clone.setAttribute("aria-hidden", "true"); clone.querySelectorAll("[aria-label]").forEach((e) => e.removeAttribute("aria-label"));
+      mq.appendChild(clone);
+      const bm = $("#big-mq");
+      let x = 0, bx = 0, v = 0, dir = 1;
+      ScrollTrigger.create({ trigger: ".voices", start: "top bottom", end: "bottom top", onUpdate: (s) => { v = s.getVelocity() / 60; dir = s.direction; } });
+      const tick = () => {
+        const wd = set.offsetWidth, bw = bm.firstElementChild.offsetWidth;
+        v *= .92;
+        x -= (1.2 + Math.abs(v) * .5) * dir; bx += (1.6 + Math.abs(v) * .7) * dir;
+        x = gsap.utils.wrap(-wd, 0, x); bx = gsap.utils.wrap(-bw, 0, bx);
+        gsap.set(mq, { x }); gsap.set(bm, { x: bx });
+      };
+      gsap.ticker.add(tick);
+      ScrollTrigger.refresh();
+      return () => { document.documentElement.classList.remove("is-h"); gsap.ticker.remove(tick); clone.remove(); split.revert(); ws.revert(); es.revert(); };
+    });
+  });
+
+  function countIn(els, st) {
+    els.forEach((el) => {
+      const end = +el.dataset.count, o = { v: 0 };
+      ScrollTrigger.create({ ...st, once: true, onEnter: () => gsap.to(o, { v: end, duration: 1.4, ease: "expo.out", onUpdate: () => el.textContent = Math.round(o.v) }) });
+    });
+  }
+})();
+</script>
+</body>
+</html>
