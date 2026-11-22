@@ -28,7 +28,9 @@
 <meta name="twitter:image:alt" content="The Offer Engine: become offer ready. The dashboard shows a readiness score with its six areas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..900&display=swap" rel="stylesheet">
+<!-- Newsreader sets the headings (an optical-size news serif: the voice of the FT pages these students read),
+     Schibsted Grotesk the running text, and Geist stays inside the product replicas because it is the product's own font. -->
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..600&family=Schibsted+Grotesk:wght@400..700&family=Geist:wght@400..800&display=swap" rel="stylesheet">
 <script>
 document.documentElement.classList.add("js");
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("m");
@@ -36,7 +38,7 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentEl
 <style>
 :root {
   --bg: #080c14; --bg-alt: #0d1220;
-  --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
+  --field: #0c1426; --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
   --line: rgba(255, 255, 255, .08);
   --ink: #f8fafc; --muted: #94a3b8; --soft: #cbd5e1;
   --accent: #3b7ef6; --violet: #6c3ef6; --accent-soft: #8fb4ff;
@@ -44,7 +46,9 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentEl
   /* Button gradient: the blue end is darkened to #2563eb so white text is 5.17:1 at its weakest stop. */
   --grad: linear-gradient(120deg, #2563eb, var(--violet));
   --on-grad: #fff;
-  --f: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f: "Schibsted Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-d: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --f-ui: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --m: clamp(16px, 4vw, 56px);
   --ease: cubic-bezier(.16, 1, .3, 1);
   /* Type scale, in rem so the reader's text size setting carries through. */
@@ -93,7 +97,7 @@ input { caret-color: var(--accent-soft); }
 .nav::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 24px; pointer-events: none; background: linear-gradient(rgba(8, 12, 20, .5), transparent); opacity: 0; transition: opacity .3s; }
 .nav.is-scrolled::after { opacity: 1; }
 .nav__in { display: flex; align-items: center; gap: 16px; height: 68px; }
-.mark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 800; font-size: 1.125rem; letter-spacing: -.02em; text-decoration: none; flex: none; }
+.mark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--f-d); font-weight: 600; font-size: 1.25rem; letter-spacing: -.015em; text-decoration: none; flex: none; }
 .mark i { width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--violet); }
 .nav__links { display: flex; gap: 4px; margin-left: auto; font-size: .9375rem; }
 .nav__links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 999px; color: var(--soft); text-decoration: none; font-weight: 500; transition: color .2s, background-color .2s; }
@@ -106,7 +110,7 @@ input { caret-color: var(--accent-soft); }
 /* ---------- Hero (Bento's): one headline, two actions, the product window above the fold ---------- */
 .hero { position: relative; padding-block: clamp(48px, 7vw, 96px) 0; text-align: center; overflow: hidden; }
 .hero::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108, 62, 246, .3), rgba(59, 126, 246, .14) 55%, transparent); pointer-events: none; }
-.hero__h { position: relative; font-size: var(--t-7); font-weight: 850; line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+.hero__h { position: relative; font-family: var(--f-d); font-size: var(--t-7); font-weight: 500; line-height: .96; letter-spacing: -.035em; text-wrap: balance; }
 .hero__p { position: relative; max-width: 38ch; margin: 24px auto 0; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); color: var(--soft); text-wrap: pretty; }
 .hero__go { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
 .hero__go .btn { min-width: 200px; }
@@ -132,13 +136,14 @@ input { caret-color: var(--accent-soft); }
 /* Real screenshots inside a stop */
 .shot { margin: 0; }
 .shot img { display: block; width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line), 0 24px 64px -28px rgba(0, 0, 0, .8); background: #0a0f1c; }
+.shot picture { display: block; }
 .shot + .shot { margin-top: 16px; }
 .shot figcaption { margin-top: 10px; font-size: var(--t-1); color: var(--muted); }
 
 /* ---------- The route: one scroll-drawn line, a stop per feature, each stop's demo beside it ---------- */
-.route { position: relative; padding-block: clamp(96px, 11vw, 160px) clamp(48px, 6vw, 96px); }
+.route { position: relative; padding-block: clamp(96px, 11vw, 160px) clamp(16px, 2vw, 32px); }
 .route__intro { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px clamp(64px, 8vw, 128px); align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
-.route__h { font-size: var(--t-6); font-weight: 800; line-height: .95; letter-spacing: -.04em; text-wrap: balance; }
+.route__h { font-family: var(--f-d); font-size: var(--t-6); font-weight: 500; line-height: 1; letter-spacing: -.03em; text-wrap: balance; }
 .route__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; }
 
 .track { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
@@ -146,16 +151,40 @@ input { caret-color: var(--accent-soft); }
 .track .live { fill: none; stroke: url(#routeGrad); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
 .track .head { fill: var(--ink); stroke: var(--violet); stroke-width: 4; }
 
-.stop { --gap: clamp(64px, 8vw, 128px); --lane: 50%; position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; padding: clamp(48px, 6vw, 88px) var(--m); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gap); align-items: start; }
-.stop__dot { position: absolute; top: calc(clamp(48px, 6vw, 88px) + 26px); left: var(--lane); width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; background: var(--bg); border: 6px solid var(--s4); transition: border-color .4s, background-color .4s, scale .5s var(--ease); }
+/* Stops alternate sides. Each one has its own lane column on the outer edge, so the line winds: down one
+   edge beside a stop, across the gap in a wide S, and down the other edge beside the next. */
+.stop { --lw: clamp(48px, 5vw, 80px); --pad: clamp(48px, 6vw, 88px); position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; padding: var(--pad) var(--m); display: grid; column-gap: clamp(32px, 4.5vw, 80px); align-items: start; }
+.stop[data-side="l"] { --lane: calc(var(--m) + var(--lw) / 2); grid-template-columns: var(--lw) minmax(0, 5fr) minmax(0, 7fr); }
+.stop[data-side="r"] { --lane: calc(100% - var(--m) - var(--lw) / 2); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr) var(--lw); }
+.stop[data-side="l"] > .stop__text { grid-column: 2; }
+.stop[data-side="l"] > :last-child { grid-column: 3; }
+.stop[data-side="r"] > .stop__text { grid-column: 2; grid-row: 1; }
+.stop[data-side="r"] > :last-child { grid-column: 1; grid-row: 1; }
+.stop__dot { position: absolute; top: calc(var(--pad) + var(--t-5) * .5); left: var(--lane); width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; background: var(--bg); border: 6px solid var(--s4); transition: border-color .4s, background-color .4s, scale .5s var(--ease); }
 .stop.is-on .stop__dot { border-color: var(--violet); background: var(--ink); scale: 1.12; }
 .stop__text { max-width: 30rem; }
-.stop[data-side="l"] .stop__text { justify-self: end; }   /* text hugs the line from the left */
-.stop[data-side="r"] .stop__text { grid-column: 2; grid-row: 1; }
-.stop[data-side="r"] .ui { grid-column: 1; grid-row: 1; }
-.stop__name { font-size: var(--t-5); font-weight: 800; letter-spacing: -.04em; line-height: 1; text-wrap: balance; }
-.stop__lead { margin-top: 18px; font-size: var(--t-4); font-weight: 600; letter-spacing: -.02em; line-height: 1.3; text-wrap: balance; }
-.stop__text p:not(.stop__lead) { margin-top: 12px; color: var(--soft); text-wrap: pretty; }
+.stop__name { font-family: var(--f-d); font-size: var(--t-5); font-weight: 500; letter-spacing: -.03em; line-height: 1; text-wrap: balance; }
+.stop__lead { margin-top: 18px; font-size: var(--t-4); font-weight: 500; letter-spacing: -.015em; line-height: 1.3; text-wrap: balance; }
+.stop__text p:not(.stop__lead), .aca__head p:not(.stop__lead), .aca__ph p { margin-top: 12px; color: var(--soft); text-wrap: pretty; }
+
+/* The Academy: the one stop that takes the whole screen. The line leaves its lane, sweeps out to the page edge,
+   runs down the gutter beside the panel and swings back in below it. */
+.stop--wide { --gut: max(var(--m), 64px); --ap: clamp(20px, 4vw, 64px); display: block; max-width: none; padding-inline: var(--gut);
+  --lane: calc(max(0px, (100% - 2 * var(--gut) - 1760px) / 2) + var(--gut) / 2); }
+.stop--wide .stop__dot { top: calc(var(--pad) + var(--ap) + var(--t-6) * .5); }
+.aca { container-type: inline-size; max-width: 1760px; margin-inline: auto; padding: var(--ap); border-radius: 32px; background: var(--field); }
+.aca__head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(32px, 5vw, 96px); align-items: end; }
+.aca__head .stop__name { font-size: var(--t-6); }
+.aca__head .stop__lead { margin-top: 0; }
+.aca__head > div { max-width: 44rem; }
+.aca__course { margin-top: clamp(32px, 4vw, 56px); }
+.aca__course img { border-radius: 20px; }
+.aca__prac { margin-top: clamp(56px, 7vw, 112px); display: grid; gap: clamp(24px, 3vw, 40px); }
+.aca__ph { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 12px clamp(32px, 5vw, 96px); align-items: end; }
+.aca__ph h4 { margin: 0; font-family: var(--f-d); font-size: var(--t-5); font-weight: 500; letter-spacing: -.03em; line-height: 1; text-wrap: balance; }
+.aca__ph > div { max-width: 44rem; }
+.aca__ph p:first-child { margin-top: 0; }
+@container (max-width: 760px) { .aca__head, .aca__ph { grid-template-columns: minmax(0, 1fr); } }
 
 /* A product fragment: the only framed thing on the page, because the product has frames. Always visible. */
 .ui { position: relative; background: var(--s2); border-radius: 20px; padding: 22px; box-shadow: inset 0 0 0 1px var(--line), 0 24px 64px -28px rgba(0, 0, 0, .7); }
@@ -184,7 +213,7 @@ input { caret-color: var(--accent-soft); }
 
 /* Replicas of the real dashboard (website/app/dashboard), drawn with its v2 tokens */
 .v2 { --v2-bg: #0a0f1c; --v2-panel: #111a2e; --v2-border: rgba(150, 172, 222, .13); --v2-text: #f1f5ff; --v2-muted: #94a3c4; --v2-blue: #5b95ff; --v2-violet: #8f6bff; --v2-good: #34d399; --v2-bad: #fb7185; --v2-warn: #fbbf24; --v2-grad: linear-gradient(120deg, #6ea2ff, #9d7cff);
-  position: relative; background: var(--v2-panel); color: var(--v2-text); border-radius: 18px; padding: 24px; box-shadow: inset 0 0 0 1px var(--v2-border), 0 24px 64px -28px rgba(0, 0, 0, .8); }
+  position: relative; font-family: var(--f-ui); background: var(--v2-panel); color: var(--v2-text); border-radius: 18px; padding: 24px; box-shadow: inset 0 0 0 1px var(--v2-border), 0 24px 64px -28px rgba(0, 0, 0, .8); }
 .v2 .muted, .v2-small { color: var(--v2-muted); font-size: .9375rem; }
 .v2-chip { display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--v2-border); font-size: .8125rem; font-weight: 600; color: var(--v2-muted); }
 .v2-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: transparent; box-shadow: inset 0 0 0 1px var(--v2-border); color: var(--v2-text); font-weight: 600; font-size: .9375rem; cursor: pointer; transition: background-color .2s, transform .3s var(--ease); }
@@ -273,7 +302,7 @@ input { caret-color: var(--accent-soft); }
 .co__n { margin-left: auto; padding-left: 8px; font-size: .8125rem; color: var(--v2-muted); white-space: nowrap; }
 .co[aria-checked="true"], .co.is-right { border-color: #6b8cff; background: #1b2540; }
 .co.is-wrong .co__x { text-decoration: line-through; }
-.cs__go { justify-self: start; min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: var(--v2-grad); color: #0a0f1c; font: 650 .9375rem var(--f); cursor: pointer; transition: transform .3s var(--ease), opacity .2s; }
+.cs__go { justify-self: start; min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: var(--v2-grad); color: #0a0f1c; font: 650 .9375rem var(--f-ui); cursor: pointer; transition: transform .3s var(--ease), opacity .2s; }
 .cs__go:disabled { opacity: .45; cursor: not-allowed; }
 .cs__go:active:not(:disabled) { transform: scale(.97); transition-duration: .1s; }
 .cs__res { display: grid; gap: 4px; }
@@ -291,7 +320,7 @@ input { caret-color: var(--accent-soft); }
 .ms__body { display: grid; justify-items: center; gap: 14px; padding: 36px 20px 28px; text-align: center; }
 .ms__meta { display: flex; gap: 18px; }
 .ms__q { font-size: clamp(2rem, 4.2vw, 3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
-.ms input { width: min(100%, 22rem); min-height: 60px; padding: 0 18px; border-radius: 16px; border: 1px solid var(--v2-blue); background: var(--v2-bg); color: var(--v2-text); text-align: right; font: 600 1.375rem var(--f); }
+.ms input { width: min(100%, 22rem); min-height: 60px; padding: 0 18px; border-radius: 16px; border: 1px solid var(--v2-blue); background: var(--v2-bg); color: var(--v2-text); text-align: right; font: 600 1.375rem var(--f-ui); }
 .ms__st { min-height: 1.5em; font-size: .9375rem; }
 .ms__st.ok { color: var(--v2-good); }
 .ms__st.no { color: var(--v2-bad); }
@@ -305,8 +334,8 @@ input { caret-color: var(--accent-soft); }
 .tab:hover { color: var(--ink); background: rgba(255, 255, 255, .05); }
 .tab[aria-selected="true"] { background: var(--s4); color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); }
 .tab:active { transform: scale(.97); transition-duration: .1s; }
-/* Phones: one swipeable row instead of three rows of tabs; the arrows below step through it too. */
-@media (max-width: 600px) {
+/* Until the panel is wide enough for the side list: one swipeable row of tabs; the arrows below step through it too. */
+@container (max-width: 899px) {
   .tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab { flex: none; scroll-snap-align: start; }
@@ -322,22 +351,44 @@ input { caret-color: var(--accent-soft); }
 .arw:hover { background: var(--s4); }
 .arw:active { transform: scale(.94); transition-duration: .1s; }
 .arw svg { width: 18px; height: 18px; }
+/* Full-width Academy: the drills run down the left, the open drill takes the rest of the screen */
+@container (min-width: 900px) {
+  .tile { grid-template-columns: minmax(220px, 3fr) minmax(0, 9fr); grid-template-rows: auto 1fr; column-gap: clamp(24px, 3vw, 48px); row-gap: 16px; align-items: start; }
+  .tile > .tabs { grid-column: 1; grid-row: 1; flex-direction: column; flex-wrap: nowrap; }
+  .tile > .pane { grid-column: 2; grid-row: 1 / span 2; }
+  .tile > .step-nav { grid-column: 1; grid-row: 2; }
+  .tab { flex: none; min-height: 56px; padding: 0 18px; text-align: left; font-size: 1rem; }
+}
+.pane { container-type: inline-size; }
+@container (min-width: 760px) {
+  .pane__d { font-size: 1.0625rem; max-width: 60ch; }
+  .cs { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+  .cs__q { padding-top: 0; box-shadow: none; }
+  .ms__body { padding: 64px 32px 48px; }
+  .ms__q { font-size: 3.5rem; }
+}
 @media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { gap: 2px; } .bar__col i { width: 24px; } .bar__n { font-size: .75rem; } .rd__n { font-size: 3.5rem; } .ms__meta { gap: 12px; font-size: .8125rem; } .tab { padding: 0 12px; font-size: .875rem; } }
 
 /* Terminus */
-.stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(clamp(48px, 6vw, 88px) + 64px); }
-.stop--end .stop__name { font-size: var(--t-8); letter-spacing: -.05em; line-height: .85; }
+.stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(var(--pad) + var(--t-8) * .45); }
+.stop--end .stop__name { font-size: var(--t-8); letter-spacing: -.04em; line-height: .9; }
+.stop--end[data-side] { grid-template-columns: var(--lw) auto minmax(0, 1fr); }
 .stop--end .cta { align-self: end; }
-.cta__h { font-size: clamp(2rem, 3.4vw, 3.25rem); font-weight: 800; letter-spacing: -.035em; line-height: 1; margin-bottom: 24px; }
+.cta__h { font-family: var(--f-d); font-size: clamp(2rem, 3.4vw, 3.25rem); font-weight: 500; letter-spacing: -.025em; line-height: 1; margin-bottom: 24px; }
 .cta__row { display: flex; flex-wrap: wrap; gap: 12px; }
 .cta__note { margin-top: 18px; color: var(--soft); }
 
-@media (max-width: 900px) {
+/* Phones and small tablets: one lane down the left. The Academy keeps the full width: the line runs into
+   its panel at the dot and comes out of the bottom, like a line through a tunnel. */
+@media (max-width: 1023px) {
   .route__intro { grid-template-columns: 1fr; padding-left: calc(var(--m) + 36px); }
   .stop, .stop[data-side] { --lane: calc(var(--m) + 12px); grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding-left: calc(var(--m) + 36px); }
-  .stop[data-side] .stop__text, .stop[data-side] .ui { grid-column: 1; grid-row: auto; justify-self: stretch; max-width: none; }
-  .stop__dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; border-width: 5px; top: calc(clamp(48px, 6vw, 88px) + 20px); }
-  .stop--end .stop__dot { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-width: 8px; top: calc(clamp(48px, 6vw, 88px) + 36px); }
+  .stop[data-side] > .stop__text, .stop[data-side] > :last-child { grid-column: 1; grid-row: auto; justify-self: stretch; max-width: none; }
+  .stop__dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; border-width: 5px; }
+  .stop--end .stop__dot { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-width: 8px; top: calc(var(--pad) + var(--t-8) * .45); }
+  .stop.stop--wide { --lane: calc(var(--m) + 12px); padding-inline: var(--m); }
+  .stop--wide .stop__dot { top: calc(var(--pad) + 12px); }
+  .aca { margin-top: 48px; border-radius: 24px; }
   .ui { padding: 18px; }
   .stop--end .cta .btn { flex: 1 1 100%; }
 }
@@ -349,15 +400,15 @@ input { caret-color: var(--accent-soft); }
 
 /* ---------- Arrivals ---------- */
 .sec { padding-block: clamp(88px, 10vw, 160px); }
-.sec__h { font-size: var(--t-6); font-weight: 800; line-height: .95; letter-spacing: -.04em; max-width: 12ch; text-wrap: balance; }
+.sec__h { font-family: var(--f-d); font-size: var(--t-6); font-weight: 500; line-height: 1; letter-spacing: -.03em; max-width: 12ch; text-wrap: balance; }
 .sec__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; margin-top: 20px; }
 .arr ol { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 96px); }
 .arr li { padding-block: 32px; display: grid; gap: 16px; align-content: start; }
 .arr li + li { box-shadow: 0 -1px 0 var(--line); }
 @media (min-width: 901px) { .arr li:nth-child(2) { box-shadow: none; } }
-.arr__fig { font-size: clamp(2.5rem, 4.4vw, 4.25rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.arr__fig { font-family: var(--f-d); font-size: clamp(2.5rem, 4.4vw, 4.25rem); font-weight: 500; letter-spacing: -.03em; line-height: 1; }
 .arr__fig span { color: var(--muted); }
-.arr__fig small { display: block; font-size: 1rem; letter-spacing: 0; color: var(--muted); font-weight: 500; margin-top: 10px; }
+.arr__fig small { display: block; font-family: var(--f); font-variant-numeric: normal; font-size: 1rem; letter-spacing: 0; color: var(--muted); font-weight: 500; margin-top: 10px; }
 .arr blockquote { font-size: 1.1875rem; line-height: 1.5; max-width: 52ch; }
 .arr cite { font-style: normal; color: var(--muted); font-size: 1rem; }
 .arr cite b { color: var(--ink); font-weight: 600; }
@@ -374,8 +425,8 @@ input { caret-color: var(--accent-soft); }
 .board-t { width: 100%; border-collapse: collapse; }
 .board-t th, .board-t td { text-align: left; vertical-align: top; padding: 26px 16px 26px 0; border-top: 1px solid var(--line); }
 .board-t thead th { color: var(--muted); font-weight: 500; font-size: .9375rem; padding-block: 0 14px; border-top: 0; }
-.board-t tbody th { font-size: 1.375rem; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
-.board-t .fare { font-size: 2.75rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; white-space: nowrap; }
+.board-t tbody th { font-family: var(--f-d); font-size: 1.5rem; font-weight: 500; letter-spacing: -.015em; white-space: nowrap; }
+.board-t .fare { font-family: var(--f-d); font-size: 3rem; font-weight: 500; letter-spacing: -.03em; line-height: 1; white-space: nowrap; }
 .board-t ul { color: var(--soft); display: grid; gap: 6px; font-size: 1rem; }
 .board-t td:last-child { padding-right: 0; text-align: right; }
 .board-t .btn { white-space: nowrap; }
@@ -517,7 +568,7 @@ input { caret-color: var(--accent-soft); }
       <p class="stop__lead">Six areas, weighted for your track</p>
       <p>Every bar is fed by something you do: your profile, your CV check, your tracker and your Academy practice. Areas you haven't touched yet stay "Not yet assessed" instead of being guessed. Interview is a fifth of a Spring Week score and over a third of a Graduate one: change your track above and watch the weights move. Tap a bar to see what feeds it.</p>
     </div>
-    <div class="v2 rd">
+    <div class="v2 rd" data-ui>
       <div class="rd__top">
         <div><span class="v2-chip">Provisional readiness</span><p class="rd__n num" data-score aria-live="polite">16</p><p class="v2-small rd__w" data-rs-track>Graduate Programme weightings</p></div>
         <p class="v2-small" style="max-width:22ch">A preparation indicator, not a prediction of an offer.</p>
@@ -529,31 +580,33 @@ input { caret-color: var(--accent-soft); }
     </div>
   </article>
 
-  <article class="stop" data-side="r" id="academy" aria-labelledby="s3">
+  <article class="stop stop--wide" data-side="w" id="academy" aria-labelledby="s3">
     <span class="stop__dot" aria-hidden="true"></span>
-    <div class="stop__text">
-      <h3 class="stop__name" id="s3">Academy</h3>
-      <p class="stop__lead">A course for your track, stage by stage</p>
-      <p>Twelve stages in five phases, Build, Ship, Sharpen, Test and Convert, take you from choosing your direction to an offer decision. Nothing is locked. Alongside it sit the practice drills further down the line.</p>
-    </div>
-    <figure class="shot"><img src="assets/dash-academy.webp" width="2208" height="1124" loading="lazy" alt="Academy overview for the Graduate Programme: Stage 1 of 12, Choose your direction and explain your fit, with its four lessons and a Continue lesson 1.1 button, above a course road map of twelve numbered stages grouped into Build, Ship, Sharpen, Test and Convert. 0 stages complete, 12 to go. Nothing is locked."><figcaption>Screenshot of the Academy overview.</figcaption></figure>
-  </article>
+    <div class="aca">
+      <div class="aca__head">
+        <h3 class="stop__name" id="s3">Academy</h3>
+        <div>
+          <p class="stop__lead">A course for your track, stage by stage</p>
+          <p>Twelve stages in five phases, Build, Ship, Sharpen, Test and Convert, take you from choosing your direction to an offer decision. Nothing is locked.</p>
+        </div>
+      </div>
+      <figure class="shot aca__course"><picture><source media="(max-width: 600px)" srcset="assets/dash-academy-phone.webp" width="1000" height="2413"><img src="assets/dash-academy.webp" width="2208" height="1124" loading="lazy" alt="Academy overview for the Graduate Programme: Stage 1 of 12, Choose your direction and explain your fit, with its four lessons and a Continue lesson 1.1 button, above a course road map of twelve numbered stages grouped into Build, Ship, Sharpen, Test and Convert. 0 stages complete, 12 to go. Nothing is locked."></picture><figcaption>Screenshot of the Academy overview.</figcaption></figure>
 
-  <article class="stop" data-side="l" id="practice" aria-labelledby="s4">
-    <span class="stop__dot" aria-hidden="true"></span>
-    <div class="stop__text">
-      <h3 class="stop__name" id="s4">Practice</h3>
-      <p class="stop__lead">Five ways to train, all in the Academy</p>
-      <p>Case study interviews, behavioural interviews, psychometric tests, mental maths and reasoning tests sit alongside the course. Every session moves your Aptitude or Interview score, so the readiness bar above shows the work paying off. Step through each one here.</p>
-      <!-- PLACEHOLDER COPY: the founders' experience line below is draft wording, still being agreed with the client. -->
-      <p>Each one is informed by the founders' realistic, live experience of graduate recruiting.</p>
-    </div>
+      <div class="aca__prac" id="practice">
+        <div class="aca__ph">
+          <h4>Five ways to practise</h4>
+          <div>
+            <p>Case study interviews, behavioural interviews, psychometric tests, mental maths and reasoning tests sit alongside the course. Every session moves your Aptitude or Interview score, so the readiness bar above shows the work paying off. Step through each one here.</p>
+            <!-- PLACEHOLDER COPY: the founders' experience line below is draft wording, still being agreed with the client. -->
+            <p>Each one is informed by the founders' realistic, live experience of graduate recruiting.</p>
+          </div>
+        </div>
     <div class="tile" data-tabs>
       <div class="tabs" role="tablist" aria-label="Academy practice"><button type="button" class="tab" role="tab" id="tab-cases" aria-controls="pane-cases" aria-selected="true">Case studies</button><button type="button" class="tab" role="tab" id="tab-behavioural" aria-controls="pane-behavioural" aria-selected="false" tabindex="-1">Behavioural interviews</button><button type="button" class="tab" role="tab" id="tab-psychometric" aria-controls="pane-psychometric" aria-selected="false" tabindex="-1">Psychometric tests</button><button type="button" class="tab" role="tab" id="tab-maths" aria-controls="pane-maths" aria-selected="false" tabindex="-1">Mental maths</button><button type="button" class="tab" role="tab" id="tab-reasoning" aria-controls="pane-reasoning" aria-selected="false" tabindex="-1">Reasoning tests</button></div>
 
       <div class="pane" role="tabpanel" id="pane-cases" aria-labelledby="tab-cases">
         <p class="pane__d">24 real interview cases across 20 sectors, each with exhibits and six questions. Check an answer and the reasoning shows straight away. Try question 3 of this one.</p>
-        <div class="v2 cs" data-cs>
+        <div class="v2 cs" data-cs data-ui>
           <div class="cs__brief">
             <p class="cs__t">UK dental practice roll-up</p>
             <ul class="cs__tags" aria-label="Case details"><li>Healthcare Services</li><li>M&amp;A / Commercial Due Diligence</li><li>Challenging</li></ul>
@@ -589,17 +642,17 @@ input { caret-color: var(--accent-soft); }
 
       <div class="pane" role="tabpanel" id="pane-behavioural" aria-labelledby="tab-behavioural" hidden>
         <p class="pane__d">The 20 questions you are most likely to be asked, each with how to prepare, and 509 more behind them. Mark one prepared when you could answer it out loud tomorrow.</p>
-        <figure class="shot"><img src="assets/dash-behavioural.webp" width="1990" height="1360" loading="lazy" alt="Behavioural questions in the Academy: 6 of 20 prepared, feeding the Interview score. Top 20 tab, with 509 extra questions. Question 1, Tell me about yourself, is open on How to prepare: a 60 to 90 second answer covering where you are now, your most relevant experience, what shaped your interests and why this opportunity is the logical next step. Questions 2 to 4, Walk me through your CV, Why do you want to work in this industry and Why your interest in this firm, are marked Prepared."><figcaption>Screenshot of Behavioural questions with an example account.</figcaption></figure>
+        <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-behavioural-phone.webp" width="1000" height="2366"><img src="assets/dash-behavioural.webp" width="1990" height="1360" loading="lazy" alt="Behavioural questions in the Academy: 6 of 20 prepared, feeding the Interview score. Top 20 tab, with 509 extra questions. Question 1, Tell me about yourself, is open on How to prepare: a 60 to 90 second answer covering where you are now, your most relevant experience, what shaped your interests and why this opportunity is the logical next step. Questions 2 to 4, Walk me through your CV, Why do you want to work in this industry and Why your interest in this firm, are marked Prepared."></picture><figcaption>Screenshot of Behavioural questions with an example account.</figcaption></figure>
       </div>
 
       <div class="pane" role="tabpanel" id="pane-psychometric" aria-labelledby="tab-psychometric" hidden>
         <p class="pane__d">Seven sections of numerical reasoning in the styles of SHL, Kenexa, Talent Q, Aon cut-e and Cappfinity, timed or untimed. Your best score per section, and the next one always queued.</p>
-        <figure class="shot"><img src="assets/dash-psychometric.webp" width="1970" height="1240" loading="lazy" alt="Psychometric tests in the Academy, with a Timed and Untimed switch. 4 of 7 sections sat; best scores A 67%, B 45%, C 25% and D 55%, with E marked Next and F and G not sat. Your best sittings average 48%; strongest so far section A at 67%. Next up, section E: Free response (fill in the blank), 20 questions, 20 minutes, Type the figure, with a Start section E button."><figcaption>Screenshot of Psychometric tests with an example account.</figcaption></figure>
+        <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-psychometric-phone.webp" width="1000" height="2019"><img src="assets/dash-psychometric.webp" width="1970" height="1240" loading="lazy" alt="Psychometric tests in the Academy, with a Timed and Untimed switch. 4 of 7 sections sat; best scores A 67%, B 45%, C 25% and D 55%, with E marked Next and F and G not sat. Your best sittings average 48%; strongest so far section A at 67%. Next up, section E: Free response (fill in the blank), 20 questions, 20 minutes, Type the figure, with a Start section E button."></picture><figcaption>Screenshot of Psychometric tests with an example account.</figcaption></figure>
       </div>
 
       <div class="pane" role="tabpanel" id="pane-maths" aria-labelledby="tab-maths" hidden>
         <p class="pane__d">Two minutes, up to 60 sums, no calculator. Answer and press Enter: the next sum appears straight away, and a wrong answer shows you the right one. 500 pure sums, plus workplace drills for your track.</p>
-        <div class="v2 ms" data-ms>
+        <div class="v2 ms" data-ms data-ui>
           <div class="ms__bar"><strong>Mental maths, easy</strong><span class="ms__clock v2-small"><span class="num" data-ms-clock>2:00 left</span><button type="button" class="v2-btn" data-ms-end>End session</button></span></div>
           <div class="ms__prog" aria-hidden="true"><i data-ms-prog></i></div>
           <form class="ms__body" data-ms-form novalidate>
@@ -619,7 +672,7 @@ input { caret-color: var(--accent-soft); }
 
       <div class="pane" role="tabpanel" id="pane-reasoning" aria-labelledby="tab-reasoning" hidden>
         <p class="pane__d">Two mixed sets of 12 typed-answer items, numerical, verbal and logical, with suggested timings and a worked solution after you check each answer.</p>
-        <figure class="shot"><img src="assets/dash-reasoning.webp" width="2050" height="1520" loading="lazy" alt="Reasoning Set A in the Mixed Reasoning Test: twelve typed-answer items, numerical, verbal and logical, 20 minutes in total (numerical 8, verbal 6, logical 6). Item map N1 to N4, V1 to V4 and L1 to L4, 0 of 12 checked. The Numerical part shows a table of North, South and West team requests and costs, with question A-N1, Across all teams, what percentage of requests were resolved, and a Check answer button."><figcaption>Screenshot of a Mixed Reasoning Test set.</figcaption></figure>
+        <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-reasoning-phone.webp" width="1000" height="2621"><img src="assets/dash-reasoning.webp" width="2050" height="1520" loading="lazy" alt="Reasoning Set A in the Mixed Reasoning Test: twelve typed-answer items, numerical, verbal and logical, 20 minutes in total (numerical 8, verbal 6, logical 6). Item map N1 to N4, V1 to V4 and L1 to L4, 0 of 12 checked. The Numerical part shows a table of North, South and West team requests and costs, with question A-N1, Across all teams, what percentage of requests were resolved, and a Check answer button."></picture><figcaption>Screenshot of a Mixed Reasoning Test set.</figcaption></figure>
       </div>
 
       <div class="step-nav">
@@ -628,6 +681,8 @@ input { caret-color: var(--accent-soft); }
           <button type="button" class="arw" data-step="-1" aria-label="Previous category"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
           <button type="button" class="arw" data-step="1" aria-label="Next category"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
         </div>
+      </div>
+    </div>
       </div>
     </div>
   </article>
@@ -639,7 +694,7 @@ input { caret-color: var(--accent-soft); }
       <p class="stop__lead">Your whole pipeline on one board</p>
       <p>Every application with its status, priority, deadline and next step, as a table or a board. Deadlines count down and turn red when they pass. Drag Deloitte into Applying, or tap it, and choose whether it's in progress or submitted.</p>
     </div>
-    <div class="v2 trk">
+    <div class="v2 trk" data-ui>
       <div class="ui__row"><p style="font-weight:650">Application Tracker</p><span class="v2-small">4 applications</span></div>
       <div class="bd" data-board>
         <section class="col" data-col="planned" aria-label="Planned"><p class="col__h">Planned <span data-c>2</span></p>
@@ -1063,7 +1118,11 @@ input { caret-color: var(--accent-soft); }
     $$("[data-step]", tile).forEach((b) => b.addEventListener("click", () => select(cur + Number(b.dataset.step))));
   }
 
-  /* ---------- The route line: transit geometry (vertical runs, 45° switches), drawn 1:1 by scroll ---------- */
+  /* ---------- The route line: a winding road, drawn 1:1 by scroll ----------
+     It runs down a stop's outer lane, past the stop's content, then swings across the gap in a wide S (vertical
+     tangents at both ends) into the next stop's lane. At the Academy it sweeps out to the page edge and runs down
+     the gutter beside the full-width panel. On phones every lane is the same, so it is one straight line that
+     passes under the Academy panel. The curves are sampled into a polyline so scroll position maps to length. */
   {
     const route = $(".route"), svg = $(".track", route);
     const ghost = $(".ghost", svg), live = $(".live", svg), head = $(".head", svg);
@@ -1071,14 +1130,27 @@ input { caret-color: var(--accent-soft); }
     let segs = [], total = 0, stopY = [];
     function build() {
       const box = route.getBoundingClientRect();
-      const pts = stops.map((s) => { const r = $(".stop__dot", s).getBoundingClientRect(); return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top }; });
-      stopY = pts.map((p) => p.y);
-      const startY = $(".route__intro", route).getBoundingClientRect().bottom - box.top;
-      const path = [{ x: pts[0].x, y: Math.min(startY, pts[0].y - 40) }];
-      pts.forEach((p) => {
-        const prev = path[path.length - 1], dx = Math.abs(p.x - prev.x);
-        if (dx > 1) { const bendEnd = p.y - Math.min(120, (p.y - prev.y) * .3); const bendStart = Math.max(prev.y, bendEnd - dx); path.push({ x: prev.x, y: bendStart }, { x: p.x, y: bendEnd }); }
-        path.push(p);
+      const P = stops.map((s) => {
+        const r = $(".stop__dot", s).getBoundingClientRect();
+        const kids = [...s.children].filter((c) => !c.classList.contains("stop__dot"));
+        const bottom = Math.max(...kids.map((c) => c.getBoundingClientRect().bottom)) - box.top;
+        const top = Math.min(...kids.map((c) => c.getBoundingClientRect().top)) - box.top;
+        return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top, r: r.height / 2, top, bottom };
+      });
+      stopY = P.map((p) => p.y);
+      const startY = Math.min($(".route__intro", route).getBoundingClientRect().bottom - box.top, P[0].y - 40);
+      const path = [{ x: P[0].x, y: startY }];
+      P.forEach((p, i) => {
+        const prev = path[path.length - 1];
+        if (i && Math.abs(p.x - prev.x) > 1) {
+          const y0 = Math.max(prev.y, P[i - 1].bottom + 24), y1 = Math.max(y0 + 48, Math.min(p.y - p.r - 28, p.top - 20)), k = (y1 - y0) * .55;
+          path.push({ x: prev.x, y: y0 });
+          for (let j = 1, n = 64; j <= n; j++) {
+            const t = j / n, u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, e = t * t * t;
+            path.push({ x: (a + b) * prev.x + (c + e) * p.x, y: a * y0 + b * (y0 + k) + c * (y1 - k) + e * y1 });
+          }
+        }
+        path.push({ x: p.x, y: p.y });
       });
       segs = []; total = 0;
       for (let i = 1; i < path.length; i++) { const a = path[i - 1], b = path[i], len = Math.hypot(b.x - a.x, b.y - a.y); segs.push({ y0: a.y, y1: b.y, l0: total, l1: total + len }); total += len; }
