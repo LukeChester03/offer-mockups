@@ -67,11 +67,9 @@ input { caret-color: var(--accent-soft); }
 .btn--quiet { background: var(--s3); color: var(--ink); }
 .btn--quiet:hover { background: var(--s4); filter: none; }
 .btn--sm { min-height: 44px; padding: 0 18px; font-size: .9375rem; }
-.btn:active, .chip:active, .step:active, .opt:active, .link:active, .card:active, .faq summary:active { transform: scale(.97); transition-duration: .1s; }
+.btn:active, .opt:active, .link:active, .faq summary:active { transform: scale(.97); transition-duration: .1s; }
 .link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--accent-soft); font-size: .9375rem; font-weight: 500; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: transform .3s var(--ease); }
 .link:hover { color: var(--ink); }
-.chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--s4); cursor: pointer; font-size: .9375rem; font-weight: 600; transition: transform .3s var(--ease), background-color .2s; }
-.chip:hover { background: #26365a; }
 
 /* ---------- Sticky nav: a translucent layer, content scrolls under, soft edge instead of a rule ---------- */
 .nav { position: sticky; top: 0; z-index: 40; background: rgba(8, 12, 20, .8); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
@@ -98,39 +96,18 @@ input { caret-color: var(--accent-soft); }
 .m .hero__go { animation-delay: .16s; }
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
 
-/* Product window: always visible; only its values animate in. */
+/* Product window: a real screenshot of the dashboard, framed. Always visible. */
 .win { position: relative; margin: clamp(40px, 6vw, 72px) auto 0; max-width: 1120px; border-radius: 24px 24px 0 0; background: var(--bg-alt); box-shadow: inset 0 0 0 1px var(--line), 0 -30px 80px -40px rgba(108, 62, 246, .5); padding: 14px 14px 0; text-align: left; }
 .win__bar { display: flex; gap: 6px; padding: 4px 6px 14px; }
 .win__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--s4); }
-.win__grid { display: grid; grid-template-columns: 172px 1.3fr 1fr; gap: 12px; padding-bottom: 14px; }
-.side { display: grid; align-content: start; gap: 4px; padding: 8px; font-size: var(--t-1); color: var(--muted); }
-.side span { padding: 8px 10px; border-radius: 8px; }
-.side .on { background: var(--s4); color: var(--ink); }
-.pane { background: var(--s1); border-radius: 16px; padding: 18px; }
-.pane__t { font-size: var(--t-1); color: var(--muted); }
-.pane__h { font-weight: 600; margin-top: 4px; }
-.col { display: grid; gap: 12px; align-content: start; }
-.hscore { display: flex; gap: 20px; align-items: center; margin-top: 12px; }
-.mini { display: grid; gap: 9px; flex: 1; font-size: var(--t-1); }
-.mini li { display: grid; grid-template-columns: 72px 1fr 24px; gap: 10px; align-items: center; }
-.mini li span:last-child { text-align: right; }
-.mini .weak { color: var(--bad); }
-.mini .weak .meter i { background: var(--bad); }
-.hchase { color: var(--good); font-size: var(--t-1); margin-top: 4px; transition: opacity .4s; }
-@media (max-width: 960px) { .win__grid { grid-template-columns: 1fr 1fr; } .side { display: none; } }
-@media (max-width: 680px) { .win__grid { grid-template-columns: minmax(0, 1fr); } .win .col:last-child { display: none; } .win { padding: 10px 10px 0; } .pane { padding: 14px; } .hero__go .btn { flex: 1 1 100%; } }
+.win picture, .win img { display: block; width: 100%; height: auto; border-radius: 12px 12px 0 0; }
+@media (max-width: 680px) { .win { max-width: 420px; padding: 10px 10px 0; } .hero__go .btn { flex: 1 1 100%; } }
 
-/* Shared product bits */
-.meter { display: block; height: 8px; border-radius: 8px; background: var(--s4); overflow: hidden; }
-.meter i { display: block; height: 100%; width: var(--v, 0%); border-radius: inherit; background: var(--grad); }
-.ring { position: relative; flex: none; width: var(--rs, 132px); aspect-ratio: 1; }
-.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-.ring circle { fill: none; stroke-width: 14; }
-.ring .bg { stroke: var(--s4); }
-.ring .fg { stroke: url(#ringGrad); stroke-linecap: round; }
-.ring__c { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-.ring__n { font-size: calc(var(--rs, 132px) * .32); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
-.ring__c small { font-size: .8125rem; color: var(--muted); }
+/* Real screenshots inside a stop */
+.shot { margin: 0; }
+.shot img { display: block; width: 100%; height: auto; border-radius: 18px; box-shadow: 0 0 0 1px var(--line), 0 24px 64px -28px rgba(0, 0, 0, .8); background: #0a0f1c; }
+.shot + .shot { margin-top: 16px; }
+.shot figcaption { margin-top: 10px; font-size: var(--t-1); color: var(--muted); }
 
 /* ---------- The route: one scroll-drawn line, a stop per feature, each stop's demo beside it ---------- */
 .route { position: relative; padding-block: clamp(96px, 11vw, 160px) clamp(48px, 6vw, 96px); }
@@ -164,7 +141,7 @@ input { caret-color: var(--accent-soft); }
 .out.ok { color: var(--good); }
 .out.no { color: var(--bad); }
 
-/* Departs: the one track picker */
+/* Departs: the one track picker (a page control, read by the readiness replica) */
 .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 16px; border: 0; padding: 0; min-width: 0; }
 .opt { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; min-height: 72px; padding: 12px 14px; border-radius: 14px; background: var(--s3); cursor: pointer; transition: background-color .25s, box-shadow .25s, transform .3s var(--ease); }
 .opt:hover { background: var(--s4); }
@@ -179,59 +156,89 @@ input { caret-color: var(--accent-soft); }
 .opt:has(input:focus-visible) { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
 .pts { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--s3); font-size: .9375rem; color: var(--soft); }
 
-/* CV */
-.cvline { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; margin-top: 14px; padding: 16px; border-radius: 14px; background: var(--s3); min-height: 104px; transition: background-color .4s; }
-.cvline span { transition: opacity .18s, translate .3s var(--ease); }
-.cvline.is-swap span { opacity: 0; translate: 0 -6px; }
-.cvline b { font-size: 2.25rem; font-weight: 800; letter-spacing: -.03em; color: var(--bad); transition: color .3s; }
-.cvline.is-hi { background: color-mix(in srgb, var(--good) 12%, var(--s3)); }
-.cvline.is-hi b { color: var(--good); }
+/* Replicas of the real dashboard (website/app/dashboard), drawn with its v2 tokens */
+.v2 { --v2-bg: #0a0f1c; --v2-panel: #111a2e; --v2-border: rgba(150, 172, 222, .13); --v2-text: #f1f5ff; --v2-muted: #94a3c4; --v2-blue: #5b95ff; --v2-violet: #8f6bff; --v2-good: #34d399; --v2-bad: #fb7185; --v2-warn: #fbbf24; --v2-grad: linear-gradient(120deg, #6ea2ff, #9d7cff);
+  position: relative; background: var(--v2-panel); color: var(--v2-text); border-radius: 18px; padding: 24px; box-shadow: inset 0 0 0 1px var(--v2-border), 0 24px 64px -28px rgba(0, 0, 0, .8); }
+.v2 .muted, .v2-small { color: var(--v2-muted); font-size: .9375rem; }
+.v2-chip { display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--v2-border); font-size: .8125rem; font-weight: 600; color: var(--v2-muted); }
+.v2-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: transparent; box-shadow: inset 0 0 0 1px var(--v2-border); color: var(--v2-text); font-weight: 600; font-size: .9375rem; cursor: pointer; transition: background-color .2s, transform .3s var(--ease); }
+.v2-btn:hover { background: rgba(255, 255, 255, .05); }
+.v2-btn--solid { background: var(--v2-blue); box-shadow: none; color: #08101f; }
+.v2-btn--solid:hover { background: #79a9ff; }
+.v2-btn:active { transform: scale(.97); transition-duration: .1s; }
 
-/* Readiness (reads the Departs choice; no tabs of its own) */
-.score { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; margin-top: 16px; }
-.maxbox { margin-top: 10px; font-size: .9375rem; color: var(--soft); }
-.maxbox b { color: var(--ink); }
-.areas__key, .areas li { display: grid; grid-template-columns: 82px minmax(0, 1fr) 40px 30px; gap: 12px; align-items: center; }
-.areas__key { margin-top: 20px; color: var(--muted); font-size: .8125rem; }
-.areas__key span:nth-child(n+3), .areas li > :nth-child(n+3) { text-align: right; }
-.areas { display: grid; gap: 4px; margin-top: 8px; font-size: .9375rem; }
-.areas li { padding: 6px 8px; margin-inline: -8px; border-radius: 10px; transition: background-color .3s, opacity .3s, color .3s; }
-.areas li b { font-weight: 650; color: var(--accent-soft); }
-.areas li.is-max { font-weight: 650; }
-.areas li.is-max b { color: var(--ink); }
-.areas li .sc { color: var(--muted); }
-.areas.is-found li:not(.w) { opacity: .5; }
-.areas.is-found li.w { background: color-mix(in srgb, var(--bad) 16%, transparent); box-shadow: inset 0 0 0 2px var(--bad); }
-.areas.is-found li.w .sc { color: var(--bad); font-weight: 700; }
-.next { display: flex; gap: 12px; align-items: center; margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: var(--s3); }
-.next i { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--bad); }
+/* Readiness: "Your six areas" */
+.rd__top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+.rd__n { margin-top: 8px; font-size: 4.5rem; font-weight: 800; letter-spacing: -.05em; line-height: .9; background: var(--v2-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.rd__w { margin-top: 8px; }
+.rd__h { margin-top: 24px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; font-weight: 650; font-size: 1.125rem; }
+.bars { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 12px; align-items: end; }
+.bar { display: grid; justify-items: center; gap: 4px; padding: 8px 2px; border: 0; border-radius: 12px; background: none; cursor: pointer; text-align: center; transition: background-color .2s, transform .3s var(--ease); }
+.bar:hover, .bar[aria-expanded="true"] { background: rgba(255, 255, 255, .04); }
+.bar:active { transform: scale(.97); transition-duration: .1s; }
+.bar__v { font-weight: 700; font-size: .9375rem; }
+.bar__col { display: flex; align-items: flex-end; height: 120px; }
+.bar__col i { display: block; width: 34px; border-radius: 9px; background: linear-gradient(#eef2ff, #c3cdee); }
+.bar.na .bar__v { font-weight: 500; font-size: .6875rem; color: var(--v2-muted); }
+.bar.na .bar__col i { height: 72%; background: repeating-linear-gradient(135deg, #1a2440 0 6px, #24304f 6px 12px); }
+.bar__n { font-weight: 650; font-size: .875rem; }
+.bar__w { font-size: .75rem; color: var(--v2-muted); }
+.rd__panel { margin-top: 12px; padding-top: 16px; box-shadow: 0 -1px 0 var(--v2-border); }
+.rd__panel b { font-size: 1.125rem; }
+.rd__panel p { margin-top: 6px; color: var(--v2-muted); font-size: .9375rem; }
 
-/* Academy */
-.steps { display: grid; gap: 6px; margin-top: 14px; }
-.step { display: flex; gap: 12px; align-items: center; width: 100%; min-height: 52px; padding: 10px 14px; border: 0; border-radius: 12px; background: var(--s3); text-align: left; cursor: pointer; font-size: .9375rem; transition: background-color .2s, transform .3s var(--ease); }
-.step:hover { background: var(--s4); }
-.step i { flex: none; width: 22px; height: 22px; border-radius: 7px; box-shadow: inset 0 0 0 2px var(--muted); display: grid; place-items: center; transition: background-color .2s, box-shadow .2s; }
-.step[aria-checked="true"] i { box-shadow: none; background: var(--grad); }
-.step[aria-checked="true"] i::after { content: ""; width: 10px; height: 5px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
-.step[aria-checked="true"] span { color: var(--muted); text-decoration: line-through; }
-.step small { margin-left: auto; color: var(--muted); white-space: nowrap; font-size: .8125rem; }
+/* Tracker: the real board */
+.bd { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 20px) / 3); gap: 10px; margin-top: 16px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-color: var(--v2-border) transparent; }
+.col { scroll-snap-align: start; min-height: 260px; display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--v2-border); transition: background-color .2s, box-shadow .2s; }
+.col.is-over { background: rgba(91, 149, 255, .08); box-shadow: inset 0 0 0 2px var(--v2-blue); }
+.col__h { display: flex; align-items: center; gap: 8px; font-weight: 650; font-size: .9375rem; }
+.col__h span { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--v2-border); font-size: .75rem; font-weight: 500; color: var(--v2-muted); }
+.col__empty { flex: 1; display: grid; place-items: center; border-radius: 10px; border: 1px dashed var(--v2-border); color: var(--v2-muted); font-size: .8125rem; }
+.col:has(.ac) .col__empty { display: none; }
+.ac { position: relative; z-index: 2; display: grid; gap: 8px; width: 100%; padding: 12px; border: 0; border-radius: 12px; background: var(--v2-bg); box-shadow: inset 0 0 0 1px var(--pc); color: var(--v2-text); text-align: left; font: inherit; }
+.ac[data-p="realistic"] { --pc: #4dabf7; }
+.ac[data-p="dream"] { --pc: #da77f2; }
+.ac b { font-size: .875rem; line-height: 1.3; }
+.ac small { display: block; font-size: .75rem; color: var(--v2-muted); }
+.ac .ns { font-size: .75rem; color: var(--v2-muted); }
+.ac__m { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ac__p { font-size: .625rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--pc); }
+.dl { display: inline-flex; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--v2-border); font-size: .6875rem; color: var(--v2-muted); white-space: nowrap; }
+.dl--soon { border-color: rgba(251, 191, 36, .4); background: rgba(251, 191, 36, .1); color: #fcd34d; }
+.dl--over { border-color: rgba(244, 63, 94, .4); background: rgba(244, 63, 94, .1); color: #fda4af; }
+.ac--drag { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; transition: scale .35s var(--ease), box-shadow .35s var(--ease); }
+.ac--drag.is-lifted { z-index: 10; cursor: grabbing; scale: 1.05; box-shadow: inset 0 0 0 1px var(--pc), 0 18px 36px -10px rgba(0, 0, 0, .8), 0 4px 10px rgba(0, 0, 0, .4); }
+.ac--drag.is-flying { z-index: 10; }
+.pick { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding: 16px; border-radius: inherit; background: rgba(5, 8, 16, .62); }
+.pick[hidden] { display: none; }
+.pick__in { width: min(340px, 100%); padding: 20px; border-radius: 16px; background: #1a2338; box-shadow: inset 0 0 0 1px var(--v2-border), 0 24px 60px -12px rgba(0, 0, 0, .8); transform-origin: var(--ox, 50%) var(--oy, 50%); }
+.m .pick:not([hidden]) .pick__in { animation: pop .4s var(--ease); }
+@keyframes pop { from { opacity: 0; scale: .92; } }
+.pick__t { font-weight: 650; }
+.pick fieldset { border: 0; padding: 0; margin: 14px 0 0; display: grid; gap: 4px; }
+.pick legend { padding: 0; font-size: .875rem; font-weight: 600; margin-bottom: 6px; }
+.pick label { display: flex; align-items: center; gap: 10px; min-height: 40px; cursor: pointer; }
+.pick input { width: 18px; height: 18px; accent-color: var(--v2-blue); }
+.pick__go { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
-/* Tracker */
-.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; touch-action: pan-y; }
-.lane { min-height: 176px; padding: 10px; border-radius: 14px; background: var(--s3); display: flex; flex-direction: column; gap: 6px; transition: background-color .2s, box-shadow .2s; }
-.lane.is-over { background: var(--s4); box-shadow: inset 0 0 0 2px var(--accent-soft); }
-.lane__h { display: flex; justify-content: space-between; gap: 6px; font-size: .8125rem; color: var(--soft); padding: 2px 2px 4px; }
-.gh { height: 36px; border-radius: 9px; background: var(--s4); }
-.card { position: relative; z-index: 2; width: 100%; min-height: 48px; padding: 8px 10px; border: 0; border-radius: 10px; background: var(--grad); color: var(--on-grad); text-align: left; font-size: .875rem; font-weight: 650; line-height: 1.25; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: 0 1px 2px rgba(0, 0, 0, .3); transition: scale .35s var(--ease), box-shadow .35s var(--ease), transform .3s var(--ease); }
-.card small { display: block; font-weight: 500; font-size: .75rem; }
-.card.is-lifted { z-index: 10; cursor: grabbing; scale: 1.06; box-shadow: 0 18px 36px -10px rgba(0, 0, 0, .75), 0 4px 10px rgba(0, 0, 0, .35); }
-.card.is-flying { z-index: 10; }
-
-/* Practice */
-.mm { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
-.mm label { font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; margin-right: 4px; }
-.mm input { width: 6.5rem; min-height: 52px; padding: 0 14px; border-radius: 12px; border: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); background: var(--s3); font: 700 1.375rem var(--f); }
-.mm input:focus-visible { outline-offset: 2px; }
+/* Practice: the real mental maths session */
+.ms { padding: 0; overflow: hidden; }
+.ms__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 14px 20px; }
+.ms__bar strong { font-size: .9375rem; }
+.ms__clock { display: flex; align-items: center; gap: 14px; }
+.ms__prog { height: 3px; background: var(--v2-border); }
+.ms__prog i { display: block; height: 100%; width: 100%; background: var(--v2-grad); transform-origin: left; }
+.ms__body { display: grid; justify-items: center; gap: 14px; padding: 36px 20px 28px; text-align: center; }
+.ms__meta { display: flex; gap: 18px; }
+.ms__q { font-size: clamp(2rem, 4.2vw, 3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
+.ms input { width: min(100%, 22rem); min-height: 60px; padding: 0 18px; border-radius: 16px; border: 1px solid var(--v2-blue); background: var(--v2-bg); color: var(--v2-text); text-align: right; font: 600 1.375rem var(--f); }
+.ms__st { min-height: 1.5em; font-size: .9375rem; }
+.ms__st.ok { color: var(--v2-good); }
+.ms__st.no { color: var(--v2-bad); }
+.ms__res { display: grid; justify-items: start; gap: 12px; padding: 28px 24px; }
+.ms__res h4 { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; }
+.ms__card { width: 100%; padding: 16px; border-radius: 14px; background: var(--v2-bg); box-shadow: inset 0 0 0 1px var(--v2-border); }
+@media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { gap: 2px; } .bar__col i { width: 24px; } .bar__n { font-size: .75rem; } .rd__n { font-size: 3.5rem; } .ms__meta { gap: 12px; font-size: .8125rem; } }
 
 /* Terminus */
 .stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(clamp(48px, 6vw, 88px) + 64px); }
@@ -253,12 +260,7 @@ input { caret-color: var(--accent-soft); }
 @media (max-width: 520px) {
   .picks { grid-template-columns: minmax(0, 1fr); }
   .opt { min-height: 60px; }
-  .score { grid-template-columns: 1fr; justify-items: start; }
-  .areas__key, .areas li { grid-template-columns: 74px minmax(0, 1fr) 34px 26px; gap: 8px; }
-  .board { gap: 6px; }
-  .lane { padding: 8px 6px; }
-  .card { padding: 8px; font-size: .8125rem; }
-  .step small { display: none; }
+  .v2 { padding: 18px; }
 }
 
 /* ---------- Arrivals ---------- */
@@ -336,9 +338,9 @@ input { caret-color: var(--accent-soft); }
 /* ---------- Accessibility preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important; transition-duration: .2s !important; }
-  .btn:active, .chip:active, .step:active, .opt:active, .link:active, .card:active, .faq summary:active { transform: none; }
+  .btn:active, .opt:active, .link:active, .faq summary:active, .v2-btn:active, .bar:active { transform: none; }
   .did { translate: -50% 0; }
-  .card.is-lifted { scale: 1; }
+  .ac--drag.is-lifted { scale: 1; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -348,14 +350,14 @@ input { caret-color: var(--accent-soft); }
   :root { --muted: #cbd5e1; --soft: #e2e8f0; --line: rgba(255, 255, 255, .45); }
   .nav { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 1px 0 var(--line); }
   .did { background: var(--s2); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--line); }
-  .ui, .win, .pane, .opt, .lane, .step, .chip, .btn--quiet { box-shadow: inset 0 0 0 1px var(--line); }
+  .ui, .win, .opt, .btn--quiet, .shot img { box-shadow: inset 0 0 0 1px var(--line); }
+  .v2 { --v2-border: rgba(203, 213, 225, .5); --v2-muted: #cbd5e1; }
   .hero::before { display: none; }
 }
 </style>
 <link rel="stylesheet" href="assets/mnav.css">
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7ef6"/><stop offset="1" stop-color="#6c3ef6"/></linearGradient></defs></svg>
 
 <header class="nav" id="top" data-mnav=".nav__links a" data-mnav-after=".nav__go">
   <div class="wrap nav__in">
@@ -378,47 +380,12 @@ input { caret-color: var(--accent-soft); }
     </div>
   </div>
   <div class="wrap">
-    <div class="win" role="img" aria-label="The Offer Engine dashboard with example data: provisional readiness 61 of 100, Traction 45 is the weakest area, Deloitte marked submitted with a chase reminder set.">
+    <div class="win">
       <div class="win__bar" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="win__grid" aria-hidden="true">
-        <div class="side"><span class="on">Dashboard</span><span>Academy</span><span>Application Tracker</span><span>CV Checker</span></div>
-        <div class="col">
-          <div class="pane">
-            <p class="pane__t">Provisional readiness · 6 of 6 areas assessed</p>
-            <div class="hscore">
-              <div class="ring" style="--rs:120px">
-                <svg viewBox="0 0 140 140"><circle class="bg" cx="70" cy="70" r="58" pathLength="100"/><circle class="fg" cx="70" cy="70" r="58" pathLength="100" stroke-dasharray="61 100" data-hring/></svg>
-                <div class="ring__c"><span class="ring__n num" data-hnum>61</span><small>of 100</small></div>
-              </div>
-              <ul class="mini num" data-hmini>
-                <li><span>Thesis</span><span class="meter"><i style="--v:82%"></i></span><span>82</span></li>
-                <li><span>Profile</span><span class="meter"><i style="--v:68%"></i></span><span>68</span></li>
-                <li><span>Execution</span><span class="meter"><i style="--v:71%"></i></span><span>71</span></li>
-                <li><span>Aptitude</span><span class="meter"><i style="--v:55%"></i></span><span>55</span></li>
-                <li><span>Interview</span><span class="meter"><i style="--v:60%"></i></span><span>60</span></li>
-                <li class="weak"><span>Traction</span><span class="meter"><i style="--v:45%"></i></span><span>45</span></li>
-              </ul>
-            </div>
-          </div>
-          <div class="pane">
-            <p class="pane__t">Your next step</p>
-            <p class="pane__h">Traction, 45: your weakest area. Add 3 applications to your tracker this week.</p>
-          </div>
-        </div>
-        <div class="col">
-          <div class="pane">
-            <p class="pane__t">Graduate Applications · Stage 3 of 12</p>
-            <p class="pane__h">Make your experience easy to assess</p>
-            <span class="meter" style="margin-top:12px"><i style="--v:16.7%"></i></span>
-            <p class="pane__t" style="margin-top:8px">2 stages complete, 10 to go.</p>
-          </div>
-          <div class="pane">
-            <p class="pane__t">Application Tracker · 4 applications</p>
-            <p class="pane__h" style="margin-top:8px" data-hstage>Deloitte · Submitted</p>
-            <p class="hchase" data-hchase>Chase reminder set</p>
-          </div>
-        </div>
-      </div>
+      <picture>
+        <source media="(max-width: 680px)" srcset="assets/dash-home-phone.webp" width="780" height="1300">
+        <img src="assets/dash-home.webp" width="2000" height="1112" fetchpriority="high" alt="The Offer Engine dashboard home with example data: 4 applications, 3 in progress, 1 interview; provisional readiness 16, Not ready, from Thesis 14%, Profile 54%, Execution 23% and Traction 50%, with Aptitude and Interview not yet assessed; deadlines for Goldman Sachs (overdue), Deloitte (9 days left) and PwC.">
+      </picture>
     </div>
   </div>
 </section>
@@ -440,17 +407,16 @@ input { caret-color: var(--accent-soft); }
     <p class="route__p">Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. Every stop below is a working piece of the product, with example content. Nothing you do here is sent or saved.</p>
   </div>
 
-  <!-- Departs: the one track choice; every demo below reads it -->
+  <!-- Departs: the one track choice; the readiness replica below reads it -->
   <article class="stop" data-side="l" id="tracks" aria-labelledby="s0">
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s0">Pick your track</h3>
       <p class="stop__lead" data-who>Graduate Programme: final year &amp; graduates</p>
-      <p>Your track sets the deadlines you work to and how your score is weighted. The score further down the line follows whatever you pick here.</p>
+      <p>Your track sets the deadlines you work to and how your score is weighted. You choose it when you sign up and can change it in your account. The score further down the line follows whatever you pick here.</p>
     </div>
     <div class="ui">
-      <div class="ui__row"><p class="ui__t">Complete onboarding</p><span class="ui__l">Step 1 of 3</span></div>
-      <fieldset class="picks">
+      <fieldset class="picks" style="margin-top:0">
         <legend class="sr-only">Which recruiting season are you in?</legend>
         <label class="opt"><input type="radio" name="track" value="spring"><span class="opt__sw" aria-hidden="true"></span><b>Spring Week</b><small>First &amp; second year</small></label>
         <label class="opt"><input type="radio" name="track" value="summer"><span class="opt__sw" aria-hidden="true"></span><b>Summer Internship</b><small>Penultimate year</small></label>
@@ -465,19 +431,12 @@ input { caret-color: var(--accent-soft); }
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s1">CV check</h3>
-      <p class="stop__lead">Rewrite a weak line into evidence</p>
-      <p>Paste your CV and choose your track: the rubric changes for internship, graduate or other roles. You get a 100-point score, a breakdown for impact, clarity and relevance, and rewritten bullets ready to copy.</p>
+      <p class="stop__lead">A 100-point score, and your weakest bullets rewritten</p>
+      <p>Upload your CV and it is scored against the rubric for your track: a verdict, your top strength and biggest weakness, and a breakdown across Bullet Impact, Relevance, Ownership, Structure and Balance. Then your three weakest bullets come back rewritten as Action + Context + Result, ready to copy.</p>
     </div>
-    <div class="ui">
-      <div class="ui__row"><p class="ui__t">CV Checker</p><span class="ui__l">Bullet rewrite</span></div>
-      <div class="cvline" data-cv>
-        <span data-cv-text>Helped with events for the finance society.</span>
-        <b class="num" data-cv-score>3/10</b>
-      </div>
-      <div class="ui__foot">
-        <button class="chip" type="button" aria-pressed="false" data-cv-btn>Show the rewrite</button>
-        <span class="ui__l" data-cv-why aria-live="polite">Vague verb, no numbers, no result.</span>
-      </div>
+    <div>
+      <figure class="shot"><img src="assets/dash-cv-score.webp" width="1556" height="912" loading="lazy" alt="CV Checker result: 68, Competitive, Graduate Programme. A competitive CV held back by passive language. Top strength: quantified internship bullets with clear personal impact. Biggest weakness: passive ownership language across society roles."></figure>
+      <figure class="shot"><img src="assets/dash-cv-rewrites.webp" width="1554" height="1000" loading="lazy" alt="Three bullet rewrites. 'Helped with events for the finance society' becomes 'Ran 6 finance society events for 240 students, raising £3,200 in sponsorship', tagged added scope, numbers and a result. Two more rewrites follow."><figcaption>Screenshots of the CV Checker with an example CV.</figcaption></figure>
     </div>
   </article>
 
@@ -485,28 +444,17 @@ input { caret-color: var(--accent-soft); }
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s2">Readiness score</h3>
-      <p class="stop__lead">One score, weighted for you, and your weakest area first</p>
-      <p>Six areas scored across the full recruiting funnel, shown as one Provisional readiness score. Interview is a fifth of a Spring Week score and over a third of a Graduate one. Change your track above and watch the weights move.</p>
+      <p class="stop__lead">Six areas, weighted for your track</p>
+      <p>Every bar is fed by something you do: your profile, your CV check, your tracker and your Academy practice. Areas you haven't touched yet stay "Not yet assessed" instead of being guessed. Interview is a fifth of a Spring Week score and over a third of a Graduate one: change your track above and watch the weights move. Tap a bar to see what feeds it.</p>
     </div>
-    <div class="ui">
-      <div class="ui__row"><p class="ui__t">Provisional readiness</p><span class="ui__l" data-rs-track>Graduate Programme</span></div>
-      <div class="score">
-        <div class="ring">
-          <svg viewBox="0 0 140 140" aria-hidden="true"><circle class="bg" cx="70" cy="70" r="58" pathLength="100"/><circle class="fg" cx="70" cy="70" r="58" pathLength="100" stroke-dasharray="61 100" data-ring/></svg>
-          <div class="ring__c"><span class="ring__n num" data-score>61</span><small>of 100</small></div>
-        </div>
-        <div>
-          <p class="ui__l">6 of 6 areas assessed</p>
-          <p class="maxbox" data-max-wrap>Counts most on this track: <b data-max>Interview, 36%</b></p>
-        </div>
+    <div class="v2 rd">
+      <div class="rd__top">
+        <div><span class="v2-chip">Provisional readiness</span><p class="rd__n num" data-score aria-live="polite">16</p><p class="v2-small rd__w" data-rs-track>Graduate Programme weightings</p></div>
+        <p class="v2-small" style="max-width:22ch">A preparation indicator, not a prediction of an offer.</p>
       </div>
-      <p class="areas__key" aria-hidden="true"><span>Area</span><span>Weight on this track</span><span>%</span><span>Score</span></p>
-      <ul class="areas num" data-areas aria-label="Area weights and scores"></ul>
-      <div class="next" data-next hidden><i aria-hidden="true"></i><span>Traction, 45: your weakest area. Your next step: add 3 applications to your tracker this week.</span></div>
-      <div class="ui__foot">
-        <button class="btn btn--sm" type="button" data-find>Find my weakest area</button>
-        <button class="link" type="button" data-find-reset hidden>Start again</button>
-      </div>
+      <p class="rd__h">Your six areas <span class="v2-small" style="font-weight:400">Tap a bar to see what feeds that area</span></p>
+      <div class="bars num" data-bars></div>
+      <div class="rd__panel" data-panel aria-live="polite"></div>
       <p class="sr-only" aria-live="polite" data-live></p>
     </div>
   </article>
@@ -515,38 +463,42 @@ input { caret-color: var(--accent-soft); }
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s3">Academy</h3>
-      <p class="stop__lead">Advance level by level</p>
-      <p>Twelve stages take you from a career story to an offer decision. Nothing is locked. Tick a stage to see the progress move.</p>
+      <p class="stop__lead">A course for your track, stage by stage</p>
+      <p>Twelve stages in five phases, Build, Ship, Sharpen, Test and Convert, take you from choosing your direction to an offer decision. Nothing is locked. Drills for behavioural questions, cases, mental maths and psychometric tests sit alongside it, and every session moves your Interview or Aptitude score.</p>
     </div>
-    <div class="ui">
-      <div class="ui__row"><span class="ui__l">Graduate Applications</span><span class="ui__l num" data-ac-stage>Stage 3 of 12</span></div>
-      <p class="ui__t" style="margin:6px 0 12px">Make your experience easy to assess</p>
-      <span class="meter"><i data-ac-bar style="--v:16.7%"></i></span>
-      <p class="ui__l num" style="margin-top:8px" data-ac-n aria-live="polite">2 stages complete, 10 to go.</p>
-      <div class="steps" role="group" aria-label="Academy stages">
-        <button class="step" type="button" role="checkbox" aria-checked="true"><i aria-hidden="true"></i><span>Choose your direction and explain your fit</span></button>
-        <button class="step" type="button" role="checkbox" aria-checked="true"><i aria-hidden="true"></i><span>Build a target list you can act on</span></button>
-        <button class="step" type="button" role="checkbox" aria-checked="false"><i aria-hidden="true"></i><span>Make your experience easy to assess</span><small>90 to 120 min</small></button>
-        <button class="step" type="button" role="checkbox" aria-checked="false"><i aria-hidden="true"></i><span>Submit well and prepare for the next step</span><small>90 to 120 min</small></button>
-      </div>
-    </div>
+    <figure class="shot"><img src="assets/dash-academy.webp" width="2208" height="1124" loading="lazy" alt="Academy overview for the Graduate Programme: Stage 1 of 12, Choose your direction and explain your fit, with its four lessons and a Continue lesson 1.1 button, above a course road map of twelve numbered stages grouped into Build, Ship, Sharpen, Test and Convert. 0 stages complete, 12 to go. Nothing is locked."><figcaption>Screenshot of the Academy overview.</figcaption></figure>
   </article>
 
   <article class="stop" data-side="l" id="tracker" aria-labelledby="s4">
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s4">Application tracker</h3>
-      <p class="stop__lead">Know when to chase a reply</p>
-      <p>Drag Deloitte to Submitted, or tap it, and the tracker sets a reminder to chase. Deadline alerts come with it, free.</p>
+      <p class="stop__lead">Your whole pipeline on one board</p>
+      <p>Every application with its status, priority, deadline and next step, as a table or a board. Deadlines count down and turn red when they pass. Drag Deloitte into Applying, or tap it, and choose whether it's in progress or submitted.</p>
     </div>
-    <div class="ui">
-      <div class="ui__row"><p class="ui__t">Application Tracker</p><span class="ui__l">4 applications</span></div>
-      <div class="board" data-board>
-        <div class="lane" data-lane="Planned"><p class="lane__h"><span>Planned</span><span class="num" data-c>2</span></p><button class="card" type="button" data-card aria-label="Deloitte, Planned. Press to move to the next stage"><span>Deloitte</span><small>Planned</small></button><div class="gh"></div></div>
-        <div class="lane" data-lane="Submitted"><p class="lane__h"><span>Submitted</span><span class="num" data-c>1</span></p><div class="gh"></div></div>
-        <div class="lane" data-lane="Interview"><p class="lane__h"><span>Interview</span><span class="num" data-c>1</span></p><div class="gh"></div></div>
+    <div class="v2 trk">
+      <div class="ui__row"><p style="font-weight:650">Application Tracker</p><span class="v2-small">4 applications</span></div>
+      <div class="bd" data-board>
+        <section class="col" data-col="planned" aria-label="Planned"><p class="col__h">Planned <span data-c>2</span></p>
+          <div class="ac" data-p="realistic"><div><b>PwC</b><small>Graduate Associate, Deals</small></div><div class="ac__m"><span class="ac__p">Realistic</span><span class="dl">8 Dec</span></div></div>
+          <button type="button" class="ac ac--drag" data-p="realistic" data-card aria-label="Deloitte, Graduate Consultant, in Planned. Press to move to Applying."><div><b>Deloitte</b><small>Graduate Consultant</small></div><span class="ns">Finish the application form</span><div class="ac__m"><span class="ac__p">Realistic</span><span class="dl dl--soon">1 Dec · 9d left</span></div></button>
+          <p class="col__empty">Nothing here yet</p></section>
+        <section class="col" data-col="applying" aria-label="Applying"><p class="col__h">Applying <span data-c>1</span></p>
+          <div class="ac" data-p="dream"><div><b>Goldman Sachs</b><small>Analyst, Investment Banking</small></div><div class="ac__m"><span class="ac__p">Dream</span><span class="dl dl--over">19 Nov · overdue</span></div></div>
+          <p class="col__empty">Nothing here yet</p></section>
+        <section class="col" data-col="screening" aria-label="Screening"><p class="col__h">Screening <span data-c>0</span></p><p class="col__empty">Nothing here yet</p></section>
+        <section class="col" data-col="interviewing" aria-label="Interviewing"><p class="col__h">Interviewing <span data-c>1</span></p>
+          <div class="ac" data-p="dream"><div><b>McKinsey &amp; Company</b><small>Business Analyst</small></div><span class="ns">Case interview prep</span><div class="ac__m"><span class="ac__p">Dream</span></div></div>
+          <p class="col__empty">Nothing here yet</p></section>
       </div>
-      <div class="ui__foot"><p class="out" data-trk-out aria-live="polite">2 planned, 1 submitted, 1 at interview.</p><button class="link" type="button" data-trk-reset hidden>Start again</button></div>
+      <div class="ui__foot"><p class="v2-small" data-trk-out aria-live="polite">2 planned, 1 applying, 1 interviewing.</p><button class="link" type="button" data-trk-reset hidden>Start again</button></div>
+      <div class="pick" data-pick hidden>
+        <div class="pick__in" role="dialog" aria-modal="true" aria-labelledby="pick-t">
+          <p class="pick__t" id="pick-t" data-pick-t>Move Deloitte to Applying</p>
+          <fieldset><legend>Status</legend><div data-pick-opts></div></fieldset>
+          <div class="pick__go"><button type="button" class="v2-btn" data-pick-no>Cancel</button><button type="button" class="v2-btn v2-btn--solid" data-pick-yes disabled>Confirm</button></div>
+        </div>
+      </div>
     </div>
   </article>
 
@@ -554,21 +506,25 @@ input { caret-color: var(--accent-soft); }
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
       <h3 class="stop__name" id="s5">Practice</h3>
-      <p class="stop__lead">Drill mental maths without a calculator</p>
-      <p>Knowledge checks of 5 questions: your first answer counts toward your score, and every retry is practice.</p>
+      <p class="stop__lead">Mental maths against the clock</p>
+      <p>Two minutes, up to 60 sums, no calculator. Answer and press Enter: the next sum appears straight away, and if you got the last one wrong it shows you the right answer. Pure maths has 500 sums; the workplace drills for your track have 120 more, with workings after each one.</p>
     </div>
-    <form class="ui" data-mm novalidate>
-      <div class="ui__row"><p class="ui__t">Mental maths</p><span class="ui__l">Question 1 of 5</span></div>
-      <div class="mm">
-        <label for="mm-a">17 × 24 =</label>
-        <input id="mm-a" inputmode="numeric" autocomplete="off" aria-describedby="mm-out">
-        <button class="btn btn--sm" type="submit">Check</button>
+    <div class="v2 ms" data-ms>
+      <div class="ms__bar"><strong>Mental maths, easy</strong><span class="ms__clock v2-small"><span class="num" data-ms-clock>2:00 left</span><button type="button" class="v2-btn" data-ms-end>End session</button></span></div>
+      <div class="ms__prog" aria-hidden="true"><i data-ms-prog></i></div>
+      <form class="ms__body" data-ms-form novalidate>
+        <p class="ms__meta v2-small num"><span data-ms-qn>Question 1</span><span data-ms-ok>0 correct</span><span>No calculator</span></p>
+        <p class="ms__q num" data-ms-q>What is 17 × 24?</p>
+        <input inputmode="decimal" autocomplete="off" aria-label="Your answer" data-ms-in>
+        <button type="submit" class="v2-btn">Enter to submit</button>
+        <p class="ms__st" role="status" data-ms-st></p>
+      </form>
+      <div class="ms__res" data-ms-res hidden>
+        <h4>Results</h4>
+        <div class="ms__card num"><p><b data-ms-ans>0</b> answered</p><p><b data-ms-acc>0%</b> accuracy (<span data-ms-cor>0</span> correct)</p></div>
+        <button type="button" class="v2-btn" data-ms-again>Start another session</button>
       </div>
-      <div class="ui__foot">
-        <p class="out" id="mm-out" aria-live="polite"></p>
-        <span><button class="link" type="button" data-mm-how>Show me how</button> <button class="link" type="button" data-mm-reset hidden>Start again</button></span>
-      </div>
-    </form>
+    </div>
   </article>
 
   <article class="stop stop--end" data-side="l" aria-labelledby="s6" data-cta>
@@ -714,59 +670,57 @@ input { caret-color: var(--accent-soft); }
   const onScrollNav = () => nav.classList.toggle("is-scrolled", scrollY > 4);
   addEventListener("scroll", onScrollNav, { passive: true }); onScrollNav();
 
-  /* ---------- Hero: the window is visible from the first frame; its values fill in ---------- */
-  {
-    const ring = $("[data-hring]"), num = $("[data-hnum]"), bars = $$("[data-hmini] .meter i");
-    const widths = bars.map((b) => parseFloat(b.style.getPropertyValue("--v")));
-    const stage = $("[data-hstage]"), chase = $("[data-hchase]");
-    if (!reduce.matches) {
-      const s = new Spring(0, { damping: 1, response: 1.1 }, (x) => {
-        ring.setAttribute("stroke-dasharray", `${x * 61} 100`); num.textContent = Math.round(x * 61);
-        bars.forEach((b, i) => b.style.setProperty("--v", `${x * widths[i]}%`));
-      });
-      s.set(0); stage.textContent = "Deloitte · Planned"; chase.style.opacity = 0;
-      setTimeout(() => s.to(1), 350);
-      setTimeout(() => { stage.textContent = "Deloitte · Submitted"; chase.style.opacity = 1; }, 1700);
-    }
-  }
-
-  /* ---------- Tracks (real v2 weights) and the readiness demo that reads them ---------- */
+  /* ---------- Tracks and the readiness replica ----------
+     Weights: website/lib/readiness/config.defaults.ts (TRACK_WEIGHT_MATRIX). Area values: the example
+     account in the screenshots (Aptitude and Interview not yet assessed). Score = Σ value × weight / 100,
+     unassessed areas counting 0, which reproduces the 16 the real dashboard shows for this account. */
   const AREAS = ["Thesis", "Profile", "Execution", "Aptitude", "Interview", "Traction"];
-  const VALUES = [82, 68, 71, 55, 60, 45];
+  const VALUES = [14, 54, 23, null, null, 50];
+  const GUIDE = [
+    ["How clearly you've decided what you're going for, and how convincingly you explain it.", "Every application asks why this firm and why you. A vague answer is the most common early rejection."],
+    ["The quality of the things a recruiter actually reads - your CV, your LinkedIn, your stock answers.", "These are screened before a human ever speaks to you, and one weak CV blocks every application at once."],
+    ["Whether your deadlines are mapped, your applications are going out, and you're doing the work each week.", "Offer rates are brutal. Volume against the right target list is what converts preparation into interviews."],
+    ["Your performance at the automated stage - aptitude tests, situational judgement and live numerical work.", "Most candidates are cut here by a machine, before any of their preparation is seen."],
+    ["Your depth across fit stories, cases, mocks, commercial awareness and assessment centre exercises.", "This is where offers are decided, and it rewards drilled repetition more than any other stage."],
+    ["The real employer responses you've earned - interviews, assessment centres and offers.", "Responses show whether your preparation is converting into the process itself."],
+  ];
   const TRACKS = {
     spring:    { name: "Spring Week", who: "first & second year", pts: "Insight programmes, build the fundamentals, early discovery.", w: [15, 20, 15, 20, 20, 10] },
     summer:    { name: "Summer Internship", who: "penultimate year", pts: "Conversion-focused, the highest-stakes internship, direct route to a grad offer.", w: [10, 15, 14, 20, 29, 12] },
     placement: { name: "Placement Year", who: "12-month structured placements", pts: "Broad role families, competency-led, transferable framing.", w: [10, 14, 12, 20, 32, 12] },
     grad:      { name: "Graduate Programme", who: "final year & graduates", pts: "Highest bar, leadership depth required, technical & commercial rigour.", w: [8, 10, 11, 22, 36, 13] },
   };
-  const areasEl = $("[data-areas]");
-  areasEl.innerHTML = AREAS.map((a, i) => `<li${i === 5 ? ' class="w"' : ""}><span>${a}</span><span class="meter"><i></i></span><b>0%</b><span class="sc">${VALUES[i]}</span></li>`).join("");
-  const rows = $$("li", areasEl);
-  const wSprings = rows.map((li) => {
-    const bar = $("i", li), lab = $("b", li);
-    return new Spring(0, { eps: .05 }, (x) => { bar.style.width = `${x / 40 * 100}%`; lab.textContent = `${Math.round(x)}%`; });
-  });
-  const ringEl = $("[data-ring]"), scoreEl = $("[data-score]");
-  const scoreSpring = new Spring(61, { eps: .05 }, (x) => { ringEl.setAttribute("stroke-dasharray", `${x} 100`); scoreEl.textContent = Math.round(x); });
-  const list = (xs) => xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
-  let firstTrack = true;
+  const barsEl = $("[data-bars]"), panel = $("[data-panel]");
+  barsEl.innerHTML = AREAS.map((a, i) => {
+    const v = VALUES[i], na = v === null;
+    return `<button type="button" class="bar${na ? " na" : ""}" aria-expanded="false" aria-controls="rd-panel" aria-label="${a}: ${na ? "not yet assessed" : v}"><span class="bar__v">${na ? "Not yet assessed" : v}</span><span class="bar__col" aria-hidden="true"><i style="height:${na ? 72 : Math.max(8, v)}%"></i></span><span class="bar__n">${a}</span><span class="bar__w" data-w>0% weight</span></button>`;
+  }).join("");
+  panel.id = "rd-panel";
+  const bars = $$(".bar", barsEl);
+  let weights = TRACKS.grad.w;
+  function openArea(i, user) {
+    bars.forEach((b, j) => b.setAttribute("aria-expanded", j === i));
+    panel.innerHTML = `<b>${AREAS[i]}</b><p>${GUIDE[i][0]} Weight ${weights[i]}%.</p><p>${GUIDE[i][1]}</p>`;
+    if (user) log("area", `Opened ${AREAS[i]}`);
+  }
+  bars.forEach((b, i) => b.addEventListener("click", () => openArea(i, true)));
+  const wSprings = bars.map((b) => { const el = $("[data-w]", b); return new Spring(0, { eps: .05 }, (x) => { el.textContent = `${Math.round(x)}% weight`; }); });
+  const scoreEl = $("[data-score]");
+  const scoreSpring = new Spring(16, { eps: .05 }, (x) => { scoreEl.textContent = Math.round(x); });
+  let firstTrack = true, openIdx = 0;
   function setTrack(id) {
     const t = TRACKS[id];
-    const top = Math.max(...t.w);
-    const maxIdx = t.w.map((w, i) => (w === top ? i : -1)).filter((i) => i >= 0);
-    const score = Math.round(VALUES.reduce((s, v, i) => s + v * t.w[i], 0) / 100);
-    rows.forEach((li, i) => li.classList.toggle("is-max", maxIdx.includes(i)));
+    weights = t.w;
+    const score = Math.round(VALUES.reduce((s, v, i) => s + (v ?? 0) * t.w[i], 0) / 100);
     t.w.forEach((w, i) => firstTrack ? wSprings[i].set(w) : wSprings[i].to(w));
     firstTrack ? scoreSpring.set(score) : scoreSpring.to(score);
-    // A tie is shown as a tie, never as whichever area happens to come first.
-    const names = maxIdx.map((i) => AREAS[i]);
-    const maxText = names.length > 1 ? `${list(names)}, tied at ${top}%` : `${names[0]}, ${top}%`;
-    $("[data-max-wrap]").innerHTML = `${names.length > 1 ? "Count most on this track" : "Counts most on this track"}: <b>${maxText}</b>`;
     $("[data-who]").textContent = `${t.name}: ${t.who}`;
     $("[data-pts]").textContent = t.pts;
-    $("[data-rs-track]").textContent = t.name;
+    $("[data-rs-track]").textContent = `${t.name} weightings`;
+    const open = bars.findIndex((b) => b.getAttribute("aria-expanded") === "true");
+    openArea(open < 0 ? openIdx : open, false);
     if (!firstTrack) {
-      $("[data-live]").textContent = `${t.name}: provisional readiness ${score}. ${names.length > 1 ? `${list(names)} tie at ${top}%` : `${names[0]} counts most, ${top}%`}.`;
+      $("[data-live]").textContent = `${t.name} weightings: provisional readiness ${score}.`;
       log("track", `Picked ${t.name}: ${score}`);
     }
     firstTrack = false;
@@ -774,92 +728,73 @@ input { caret-color: var(--accent-soft); }
   $$('input[name="track"]').forEach((r) => r.addEventListener("change", () => setTrack(r.value)));
   setTrack($('input[name="track"]:checked').value);
 
-  const findBtn = $("[data-find]"), findReset = $("[data-find-reset]"), nextEl = $("[data-next]");
-  findBtn.addEventListener("click", () => {
-    areasEl.classList.add("is-found"); nextEl.hidden = false;
-    findBtn.hidden = true; findReset.hidden = false; findReset.focus();
-    log("weak", "Found your weakest area");
-  });
-  findReset.addEventListener("click", () => { areasEl.classList.remove("is-found"); nextEl.hidden = true; findBtn.hidden = false; findReset.hidden = true; findBtn.focus(); });
-
-  /* ---------- CV line: the score springs from the number on screen, so rapid presses never jump ---------- */
+  /* ---------- Tracker board replica: 1:1 drag with a lift, momentum-projected drop, spring home ----------
+     Columns and the status picker follow website/app/dashboard/tracker/lib/board.ts: a column that owns one
+     status moves the card at once; a column that owns two asks which one, and Cancel puts it back. */
   {
-    const cv = $("[data-cv]"), btn = $("[data-cv-btn]"), text = $("[data-cv-text]"), sc = $("[data-cv-score]"), why = $("[data-cv-why]");
-    const LINES = {
-      lo: ["Helped with events for the finance society.", 3, "Vague verb, no numbers, no result."],
-      hi: ["Ran 6 finance society events for 240 students, raising £3,200 in sponsorship.", 9, "The same line, rewritten into evidence: 9/10."],
-    };
-    const s = new Spring(3, { eps: .02 }, (x) => { sc.textContent = `${Math.round(x)}/10`; });
-    let swapT = 0;
-    btn.addEventListener("click", () => {
-      const hi = btn.getAttribute("aria-pressed") !== "true";
-      const [line, score, note] = LINES[hi ? "hi" : "lo"];
-      btn.setAttribute("aria-pressed", hi);
-      btn.textContent = hi ? "Show the original" : "Show the rewrite";
-      why.textContent = note;
-      cv.classList.toggle("is-hi", hi);
-      clearTimeout(swapT);
-      if (reduce.matches) text.textContent = line;
-      else { cv.classList.add("is-swap"); swapT = setTimeout(() => { text.textContent = line; cv.classList.remove("is-swap"); }, 180); }
-      s.to(score);
-      if (hi) log("cv", "Rewrote a CV line: 3/10 → 9/10");
-    });
-  }
-
-  /* ---------- Academy ---------- */
-  {
-    const steps = $$(".step"), n = $("[data-ac-n]"), bar = $("[data-ac-bar]"), stage = $("[data-ac-stage]");
-    const s = new Spring(2, { eps: .005 }, (x) => bar.style.setProperty("--v", `${x / 12 * 100}%`));
-    steps.forEach((st) => st.addEventListener("click", () => {
-      st.setAttribute("aria-checked", st.getAttribute("aria-checked") !== "true");
-      const c = steps.filter((x) => x.getAttribute("aria-checked") === "true").length;
-      n.textContent = `${c} stage${c === 1 ? "" : "s"} complete, ${12 - c} to go.`;
-      stage.textContent = `Stage ${Math.min(12, c + 1)} of 12`;
-      s.to(c);
-      log("academy", `Academy: ${c} of 12 stages`);
-    }));
-  }
-
-  /* ---------- Tracker: 1:1 drag with a lift, momentum-projected drop, spring home on a miss ---------- */
-  {
-    const board = $("[data-board]"), card = $("[data-card]"), lanes = $$("[data-lane]", board);
+    const board = $("[data-board]"), card = $("[data-card]"), cols = $$("[data-col]", board);
     const out = $("[data-trk-out]"), reset = $("[data-trk-reset]");
-    const BASE = [2, 1, 1];
-    let at = 0;
+    const pick = $("[data-pick]"), pickT = $("[data-pick-t]"), pickOpts = $("[data-pick-opts]"), yes = $("[data-pick-yes]"), no = $("[data-pick-no]");
+    const NAMES = ["Planned", "Applying", "Screening", "Interviewing"];
+    const STATUSES = [["Planned"], ["In Progress", "Submitted"], ["Online Testing", "Video Interview"], ["Interview", "Assessment Centre"]];
+    const OTHERS = [1, 1, 0, 1];
+    let at = 0, from = 0, status = "Planned";
     const pos = { x: 0, y: 0 };
     const paint = () => { card.style.translate = `${pos.x}px ${pos.y}px`; };
-    const sx = new Spring(0, { eps: .3 }, (v) => { pos.x = v; paint(); if (!sx.raf && !sy.raf) card.classList.remove("is-flying"); });
-    const sy = new Spring(0, { eps: .3 }, (v) => { pos.y = v; paint(); if (!sx.raf && !sy.raf) card.classList.remove("is-flying"); });
-
-    function place(i, vel = { x: 0, y: 0 }, damping = 1) {
-      // FLIP done in the right order: record where the card is on screen first, then move it, then
-      // spring the offset away from that recorded spot, carrying the release velocity.
+    const settled = () => { if (!sx.raf && !sy.raf) card.classList.remove("is-flying"); };
+    const sx = new Spring(0, { eps: .3 }, (v) => { pos.x = v; paint(); settled(); });
+    const sy = new Spring(0, { eps: .3 }, (v) => { pos.y = v; paint(); settled(); });
+    function fly(i, vel = { x: 0, y: 0 }, damping = 1) {
+      // FLIP in the right order: record where the card is on screen, move it, then spring the offset away.
       const before = card.getBoundingClientRect();
       at = i;
-      const lane = lanes[i];
-      lane.insertBefore(card, $(".lane__h", lane).nextSibling);
+      cols[i].insertBefore(card, $(".col__empty", cols[i]));
       sx.stop(); sy.stop(); pos.x = pos.y = 0; paint();
       const after = card.getBoundingClientRect();
       sx.set(before.left - after.left); sy.set(before.top - after.top);
       card.classList.add("is-flying");
       sx.to(0, { velocity: vel.x, damping, response: .4 }); sy.to(0, { velocity: vel.y, damping, response: .4 });
-      const stage = lane.dataset.lane;
-      $("small", card).textContent = stage;
-      card.setAttribute("aria-label", `Deloitte, ${stage}.${i < 2 ? " Press to move to the next stage" : ""}`);
-      const c = lanes.map((l, j) => BASE[j] + (j === i ? 1 : 0) - (j === 0 ? 1 : 0));
-      lanes.forEach((l, j) => { $("[data-c]", l).textContent = c[j]; });
-      out.classList.toggle("ok", i > 0);
-      out.textContent = i === 0 ? "2 planned, 1 submitted, 1 at interview." : `Deloitte marked ${stage.toLowerCase()}. ${i === 1 ? "Chase reminder set." : `${c[0]} planned, ${c[1]} submitted, ${c[2]} at interview.`}`;
-      reset.hidden = i === 0;
-      if (i > 0) log("trk", `Moved Deloitte to ${stage}`);
+      cols.forEach((c, j) => { $("[data-c]", c).textContent = OTHERS[j] + (j === i ? 1 : 0); });
     }
+    function summary() {
+      const c = cols.map((col, j) => OTHERS[j] + (j === at ? 1 : 0));
+      return NAMES.map((n, j) => c[j] ? `${c[j]} ${n.toLowerCase()}` : "").filter(Boolean).join(", ") + ".";
+    }
+    function settle(text) {
+      out.textContent = text;
+      reset.hidden = at === 0;
+      card.setAttribute("aria-label", `Deloitte, Graduate Consultant, in ${NAMES[at]}${at ? `, ${status}` : ""}.${at < 3 ? ` Press to move to ${NAMES[at + 1]}.` : ""}`);
+    }
+    function closePick() { pick.hidden = true; }
+    function moveTo(i, vel, damping) {
+      if (i === at || i < 0) return;
+      from = at;
+      fly(i, vel, damping);
+      if (STATUSES[i].length === 1) { status = STATUSES[i][0]; settle(`Deloitte moved to ${NAMES[i]} from ${NAMES[from]}. ${summary()}`); if (i) log("trk", `Moved Deloitte to ${NAMES[i]}`); return; }
+      pickT.textContent = `Move Deloitte to ${NAMES[i]}`;
+      pickOpts.innerHTML = STATUSES[i].map((s) => `<label><input type="radio" name="pk" value="${s}"> ${s}</label>`).join("");
+      yes.disabled = true;
+      $$("input", pickOpts).forEach((r) => r.addEventListener("change", () => { yes.disabled = false; }));
+      const cr = card.getBoundingClientRect(), pr = pick.getBoundingClientRect();
+      pick.style.setProperty("--ox", `${cr.left + cr.width / 2 - pr.left}px`); pick.style.setProperty("--oy", `${cr.top - pr.top}px`);
+      pick.hidden = false;
+      $("input", pickOpts).focus();
+    }
+    yes.addEventListener("click", () => {
+      status = $("input:checked", pickOpts).value; closePick();
+      settle(`Deloitte moved to ${NAMES[at]} from ${NAMES[from]}, ${status}. ${summary()}`);
+      log("trk", `Moved Deloitte to ${NAMES[at]}: ${status}`);
+      card.focus();
+    });
+    const cancel = () => { closePick(); const back = from; fly(back); at = back; settle(`Move cancelled. Deloitte stays in ${NAMES[back]}.`); card.focus(); };
+    no.addEventListener("click", cancel);
+    pick.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); cancel(); } });
 
     let drag = null, suppressClick = false;
-    const laneAt = (x) => { const r = lanes.map((l) => l.getBoundingClientRect()); const cx = Math.min(r[2].right - 1, Math.max(r[0].left + 1, x)); return r.findIndex((b) => cx >= b.left - 4 && cx <= b.right + 4); };
+    const colAt = (x) => { const r = cols.map((c) => c.getBoundingClientRect()); const b = board.getBoundingClientRect(); const cx = Math.min(b.right - 1, Math.max(b.left + 1, x)); return r.findIndex((q) => cx >= q.left - 5 && cx <= q.right + 5); };
     const rubber = (over, dim, c = .55) => (over * dim * c) / (dim + c * Math.abs(over));
-
     card.addEventListener("pointerdown", (e) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || !pick.hidden) return;
       card.setPointerCapture(e.pointerId);
       sx.stop(); sy.stop();   // grab it mid-flight: it stays where it is on screen
       drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, bx: pos.x, by: pos.y, live: false, hist: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] };
@@ -870,21 +805,20 @@ input { caret-color: var(--accent-soft); }
       if (!drag.live && Math.hypot(dx, dy) < 8) return;   // hysteresis before it counts as a drag
       if (!drag.live) { drag.live = true; card.classList.add("is-lifted"); }
       drag.hist.push({ x: e.clientX, y: e.clientY, t: e.timeStamp }); if (drag.hist.length > 6) drag.hist.shift();
-      // 1:1 inside the board, soft resistance past its edges
       const b = board.getBoundingClientRect(), home = card.getBoundingClientRect();
-      const ox = home.left - pos.x, oy = home.top - pos.y;   // card's untranslated origin
+      const ox = home.left - pos.x, oy = home.top - pos.y;
       let tx = drag.bx + dx, ty = drag.by + dy;
       const minX = b.left - ox, maxX = b.right - ox - home.width, minY = b.top - oy, maxY = b.bottom - oy - home.height;
       if (tx < minX) tx = minX - rubber(minX - tx, b.width); else if (tx > maxX) tx = maxX + rubber(tx - maxX, b.width);
       if (ty < minY) ty = minY - rubber(minY - ty, b.height); else if (ty > maxY) ty = maxY + rubber(ty - maxY, b.height);
       pos.x = tx; pos.y = ty; paint();
-      const over = laneAt(e.clientX);
-      lanes.forEach((l, j) => l.classList.toggle("is-over", j === over && j !== at));
+      const over = colAt(e.clientX);
+      cols.forEach((c, j) => c.classList.toggle("is-over", j === over && j !== at));
     });
     const end = (e) => {
       if (!drag || e.pointerId !== drag.id) return;
       const d = drag; drag = null;
-      lanes.forEach((l) => l.classList.remove("is-over"));
+      cols.forEach((c) => c.classList.remove("is-over"));
       if (!d.live) return;   // a tap: the click handler moves it on
       suppressClick = true; setTimeout(() => { suppressClick = false; }, 0);
       card.classList.remove("is-lifted");
@@ -892,41 +826,56 @@ input { caret-color: var(--accent-soft); }
       const h = d.hist.filter((p) => e.timeStamp - p.t < 120), z = d.hist[d.hist.length - 1], a = h[0] || z;
       const dt = Math.max(16, z.t - a.t) / 1000, cap = (v) => Math.max(-4000, Math.min(4000, v));
       const vel = e.type === "pointercancel" ? { x: 0, y: 0 } : { x: cap((z.x - a.x) / dt), y: cap((z.y - a.y) / dt) };
-      const speed = Math.hypot(vel.x, vel.y);
-      // Project where the throw is going (Apple's decay projection), and drop into the lane there.
-      const project = (v) => (v / 1000) * .99 / (1 - .99);
-      const target = laneAt(z.x + project(vel.x));
-      const damping = speed > 300 ? .8 : 1;   // bounce only because a flick preceded it
-      if (target >= 0 && target !== at) place(target, vel, damping);
+      const damping = Math.hypot(vel.x, vel.y) > 300 ? .8 : 1;   // bounce only because a flick preceded it
+      const target = colAt(z.x + (vel.x / 1000) * .99 / (1 - .99));   // where the throw is going
+      if (target >= 0 && target !== at) moveTo(target, vel, damping);
       else { card.classList.add("is-flying"); sx.to(0, { velocity: vel.x, damping, response: .4 }); sy.to(0, { velocity: vel.y, damping, response: .4 }); }
     };
     card.addEventListener("pointerup", end);
     card.addEventListener("pointercancel", end);
-    card.addEventListener("click", () => { if (suppressClick) return; if (at < 2) place(at + 1); });
-    reset.addEventListener("click", () => { place(0); card.focus(); });
+    card.addEventListener("click", () => { if (suppressClick) return; if (at < 3) moveTo(at + 1); });
+    reset.addEventListener("click", () => { from = at; status = "Planned"; fly(0); settle(`Deloitte moved to Planned. ${summary()}`); card.focus(); });
   }
 
-  /* ---------- Mental maths: the answer stays back until it is right or asked for ---------- */
+  /* ---------- Mental maths session replica (website/.../mental-maths/MentalMathsSession.tsx) ----------
+     Two minutes on the clock; each answer moves straight on; a wrong one shows the right answer. */
   {
-    const form = $("[data-mm]"), input = $("#mm-a"), outEl = $("#mm-out"), how = $("[data-mm-how]"), again = $("[data-mm-reset]");
-    const shake = new Spring(0, { damping: .35, response: .3, eps: .2 }, (x) => { input.style.translate = `${x}px 0`; });
-    const finish = () => { how.hidden = true; again.hidden = false; };
+    const SUMS = [["17 × 24", 408], ["84 × 4", 336], ["94 × 3", 282], ["15,580 - 3,565", 12015]];
+    const SECONDS = 120;
+    const form = $("[data-ms-form]"), input = $("[data-ms-in]"), st = $("[data-ms-st]"), q = $("[data-ms-q]"), qn = $("[data-ms-qn]"), okEl = $("[data-ms-ok]");
+    const clockWrap = $(".ms__clock"), clock = $("[data-ms-clock]"), prog = $("[data-ms-prog]"), res = $("[data-ms-res]"), endBtn = $("[data-ms-end]");
+    let i, correct, left, timer, ended;
+    const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")} left`;
+    function paintClock() { clock.textContent = fmt(left); prog.style.transform = `scaleX(${left / SECONDS})`; }
+    function start() { if (timer || ended) return; timer = setInterval(() => { left--; paintClock(); if (left <= 0) finish(); }, 1000); }
+    function show() { const [s] = SUMS[i % SUMS.length]; q.textContent = `What is ${s}?`; qn.textContent = `Question ${i + 1}`; okEl.textContent = `${correct} correct`; }
+    function reset() { clearInterval(timer); timer = 0; i = 0; correct = 0; left = SECONDS; ended = false; form.hidden = false; res.hidden = true; clockWrap.hidden = false; st.textContent = ""; st.className = "ms__st"; input.value = ""; paintClock(); show(); }
+    function finish() {
+      clearInterval(timer); timer = 0; ended = true;
+      const acc = i ? Math.round(100 * correct / i) : 0;
+      $("[data-ms-ans]").textContent = i; $("[data-ms-acc]").textContent = `${acc}%`; $("[data-ms-cor]").textContent = correct;
+      form.hidden = true; res.hidden = false; clockWrap.hidden = true;
+      log("maths", `Mental maths: ${i} answered, ${acc}% accuracy`);
+    }
+    input.addEventListener("input", start);
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const v = input.value.trim();
-      if (!v) { outEl.className = "out"; outEl.textContent = "Type your answer first."; input.focus(); return; }
-      if (v === "408") {
-        outEl.className = "out ok"; outEl.textContent = "Right, 408. Quick way: 17 × 25 = 425, then take away 17.";
-        finish(); log("maths", "Solved 17 × 24");
-      } else {
-        outEl.className = "out no"; outEl.textContent = `${v} isn't it. Try again, or ask to see how.`;
-        if (!reduce.matches) shake.to(0, { velocity: -900 });
-        input.select();
-        log("maths", "Tried 17 × 24");
-      }
+      if (!v) return;
+      const n = Number(v);
+      if (!Number.isFinite(n)) { st.className = "ms__st no"; st.setAttribute("role", "alert"); st.textContent = "Enter the number only, with no %, £ or commas."; return; }
+      start();
+      st.setAttribute("role", "status");
+      const [s, ans] = SUMS[i % SUMS.length], ok = n === ans;
+      if (ok) correct++;
+      st.className = `ms__st ${ok ? "ok" : "no"}`;
+      st.textContent = ok ? "✓ Correct" : `✗ Last answer wrong: ${s} = ${ans}`;
+      i++; input.value = ""; show(); input.focus();
+      log("maths", `Mental maths: ${correct} of ${i} correct`);
     });
-    how.addEventListener("click", () => { outEl.className = "out"; outEl.textContent = "17 × 25 = 425, then take away 17: 17 × 24 = 408."; finish(); log("maths", "Worked through 17 × 24"); });
-    again.addEventListener("click", () => { input.value = ""; outEl.className = "out"; outEl.textContent = ""; how.hidden = false; again.hidden = true; input.focus(); });
+    endBtn.addEventListener("click", finish);
+    $("[data-ms-again]").addEventListener("click", () => { reset(); input.focus(); });
+    reset();
   }
 
   /* ---------- The route line: transit geometry (vertical runs, 45° switches), drawn 1:1 by scroll ---------- */
