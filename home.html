@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Offer Engine: become offer ready</title>
+<meta name="description" content="The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..900&display=swap" rel="stylesheet">
+<script>
+document.documentElement.classList.add("js");
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("m");
+</script>
+<style>
+/* Home: Route is the spine (one scroll-drawn line, stop order, open canvas, fares table, terminus).
+   Bento supplies the hero product window, the working demos inside the stops, the "What you just did"
+   bar and a sticky nav. Tokens: website/app/globals.css + dashboard v2 surfaces. */
+:root {
+  --bg: #080c14; --bg-alt: #0d1220;
+  --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
+  --line: rgba(255, 255, 255, .08);
+  --ink: #f8fafc; --muted: #94a3b8; --soft: #cbd5e1;
+  --accent: #3b7ef6; --violet: #6c3ef6; --accent-soft: #8fb4ff;
+  --good: #34d399; --bad: #fb7185;
+  /* Button gradient: the blue end is darkened to #2563eb so white text is 5.17:1 at its weakest stop. */
+  --grad: linear-gradient(120deg, #2563eb, var(--violet));
+  --on-grad: #fff;
+  --f: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --m: clamp(16px, 4vw, 56px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  /* Type scale, in rem so the reader's text size setting carries through. */
+  --t-1: .875rem;                          /* 14  notes, keys */
+  --t-2: 1.0625rem;                        /* 17  body */
+  --t-3: 1.25rem;                          /* 20  lead, frame titles */
+  --t-4: clamp(1.375rem, 1.9vw, 1.75rem);  /* 22–28  stop lead */
+  --t-5: clamp(2.5rem, 4.6vw, 4rem);       /* 40–64  stop names */
+  --t-6: clamp(2.75rem, 6vw, 5rem);        /* 44–80  section titles */
+  --t-7: clamp(3.25rem, 10vw, 7.5rem);     /* 52–120 hero */
+  --t-8: clamp(4.5rem, 14vw, 12.5rem);     /* 72–200 terminus */
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); scrollbar-color: var(--s4) var(--bg); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--t-2)/1.55 var(--f); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+h1, h2, h3, p, ol, ul, figure, blockquote { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+a { color: inherit; text-underline-offset: 4px; }
+button, input { font: inherit; color: inherit; }
+input { caret-color: var(--accent-soft); }
+:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 3px; border-radius: 6px; }
+::selection { background: var(--accent-soft); color: var(--bg); }
+[id] { scroll-margin-top: 88px; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1280px; margin-inline: auto; padding-inline: var(--m); }
+.muted { color: var(--muted); }
+
+/* ---------- Controls: every one presses (scale .97 on :active, instant) ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 26px; border: 0; border-radius: 999px; cursor: pointer; background: var(--grad); color: var(--on-grad); text-decoration: none; font: 600 var(--t-2)/1 var(--f); transition: transform .3s var(--ease), background-color .2s, filter .2s; }
+.btn:hover { filter: brightness(1.08); }
+.btn--ink { background: var(--ink); color: var(--bg); }
+.btn--ink:hover { background: #fff; filter: none; }
+.btn--quiet { background: var(--s3); color: var(--ink); }
+.btn--quiet:hover { background: var(--s4); filter: none; }
+.btn--sm { min-height: 44px; padding: 0 18px; font-size: .9375rem; }
+.btn:active, .chip:active, .step:active, .opt:active, .link:active, .card:active, .faq summary:active { transform: scale(.97); transition-duration: .1s; }
+.link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--accent-soft); font-size: .9375rem; font-weight: 500; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: transform .3s var(--ease); }
+.link:hover { color: var(--ink); }
+.chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--s4); cursor: pointer; font-size: .9375rem; font-weight: 600; transition: transform .3s var(--ease), background-color .2s; }
+.chip:hover { background: #26365a; }
+
+/* ---------- Sticky nav: a translucent layer, content scrolls under, soft edge instead of a rule ---------- */
+.nav { position: sticky; top: 0; z-index: 40; background: rgba(8, 12, 20, .8); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+.nav::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 24px; pointer-events: none; background: linear-gradient(rgba(8, 12, 20, .5), transparent); opacity: 0; transition: opacity .3s; }
+.nav.is-scrolled::after { opacity: 1; }
+.nav__in { display: flex; align-items: center; gap: 16px; height: 68px; }
+.mark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 800; font-size: 1.125rem; letter-spacing: -.02em; text-decoration: none; flex: none; }
+.mark i { width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--violet); }
+.nav__links { display: flex; gap: 4px; margin-left: auto; font-size: .9375rem; }
+.nav__links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 999px; color: var(--soft); text-decoration: none; font-weight: 500; transition: color .2s, background-color .2s; }
+.nav__links a:hover { color: var(--ink); background: rgba(255, 255, 255, .06); }
+.nav__go { margin-left: 8px; }
+@media (max-width: 960px) { .nav__links { display: none; } .nav__go { margin-left: auto; } .mnav-btn { display: inline-flex; } }
+
+/* ---------- Hero (Bento's): one headline, two actions, the product window above the fold ---------- */
+.hero { position: relative; padding-block: clamp(48px, 7vw, 96px) 0; text-align: center; overflow: hidden; }
+.hero::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108, 62, 246, .3), rgba(59, 126, 246, .14) 55%, transparent); pointer-events: none; }
+.hero__h { position: relative; font-size: var(--t-7); font-weight: 850; line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+.hero__p { position: relative; max-width: 38ch; margin: 24px auto 0; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); color: var(--soft); text-wrap: pretty; }
+.hero__go { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+.hero__go .btn { min-width: 200px; }
+.m .hero__h, .m .hero__p, .m .hero__go { animation: rise .9s var(--ease) backwards; }
+.m .hero__p { animation-delay: .08s; }
+.m .hero__go { animation-delay: .16s; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+
+/* Product window: always visible; only its values animate in. */
+.win { position: relative; margin: clamp(40px, 6vw, 72px) auto 0; max-width: 1120px; border-radius: 24px 24px 0 0; background: var(--bg-alt); box-shadow: inset 0 0 0 1px var(--line), 0 -30px 80px -40px rgba(108, 62, 246, .5); padding: 14px 14px 0; text-align: left; }
+.win__bar { display: flex; gap: 6px; padding: 4px 6px 14px; }
+.win__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--s4); }
+.win__grid { display: grid; grid-template-columns: 172px 1.3fr 1fr; gap: 12px; padding-bottom: 14px; }
+.side { display: grid; align-content: start; gap: 4px; padding: 8px; font-size: var(--t-1); color: var(--muted); }
+.side span { padding: 8px 10px; border-radius: 8px; }
+.side .on { background: var(--s4); color: var(--ink); }
+.pane { background: var(--s1); border-radius: 16px; padding: 18px; }
+.pane__t { font-size: var(--t-1); color: var(--muted); }
+.pane__h { font-weight: 600; margin-top: 4px; }
+.col { display: grid; gap: 12px; align-content: start; }
+.hscore { display: flex; gap: 20px; align-items: center; margin-top: 12px; }
+.mini { display: grid; gap: 9px; flex: 1; font-size: var(--t-1); }
+.mini li { display: grid; grid-template-columns: 72px 1fr 24px; gap: 10px; align-items: center; }
+.mini li span:last-child { text-align: right; }
+.mini .weak { color: var(--bad); }
+.mini .weak .meter i { background: var(--bad); }
+.hchase { color: var(--good); font-size: var(--t-1); margin-top: 4px; transition: opacity .4s; }
+@media (max-width: 960px) { .win__grid { grid-template-columns: 1fr 1fr; } .side { display: none; } }
+@media (max-width: 680px) { .win__grid { grid-template-columns: minmax(0, 1fr); } .win .col:last-child { display: none; } .win { padding: 10px 10px 0; } .pane { padding: 14px; } .hero__go .btn { flex: 1 1 100%; } }
+
+/* Shared product bits */
+.meter { display: block; height: 8px; border-radius: 8px; background: var(--s4); overflow: hidden; }
+.meter i { display: block; height: 100%; width: var(--v, 0%); border-radius: inherit; background: var(--grad); }
+.ring { position: relative; flex: none; width: var(--rs, 132px); aspect-ratio: 1; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 14; }
+.ring .bg { stroke: var(--s4); }
+.ring .fg { stroke: url(#ringGrad); stroke-linecap: round; }
+.ring__c { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring__n { font-size: calc(var(--rs, 132px) * .32); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.ring__c small { font-size: .8125rem; color: var(--muted); }
+
+/* ---------- The route: one scroll-drawn line, a stop per feature, each stop's demo beside it ---------- */
+.route { position: relative; padding-block: clamp(96px, 11vw, 160px) clamp(48px, 6vw, 96px); }
+.route__intro { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px clamp(64px, 8vw, 128px); align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.route__h { font-size: var(--t-6); font-weight: 800; line-height: .95; letter-spacing: -.04em; text-wrap: balance; }
+.route__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; }
+
+.track { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.track .ghost { fill: none; stroke: var(--s3); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+.track .live { fill: none; stroke: url(#routeGrad); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+.track .head { fill: var(--ink); stroke: var(--violet); stroke-width: 4; }
+
+.stop { --gap: clamp(64px, 8vw, 128px); --lane: 50%; position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; padding: clamp(48px, 6vw, 88px) var(--m); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gap); align-items: start; }
+.stop__dot { position: absolute; top: calc(clamp(48px, 6vw, 88px) + 26px); left: var(--lane); width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; background: var(--bg); border: 6px solid var(--s4); transition: border-color .4s, background-color .4s, scale .5s var(--ease); }
+.stop.is-on .stop__dot { border-color: var(--violet); background: var(--ink); scale: 1.12; }
+.stop__text { max-width: 30rem; }
+.stop[data-side="l"] .stop__text { justify-self: end; }   /* text hugs the line from the left */
+.stop[data-side="r"] .stop__text { grid-column: 2; grid-row: 1; }
+.stop[data-side="r"] .ui { grid-column: 1; grid-row: 1; }
+.stop__name { font-size: var(--t-5); font-weight: 800; letter-spacing: -.04em; line-height: 1; text-wrap: balance; }
+.stop__lead { margin-top: 18px; font-size: var(--t-4); font-weight: 600; letter-spacing: -.02em; line-height: 1.2; text-wrap: balance; }
+.stop__text p:not(.stop__lead) { margin-top: 12px; color: var(--soft); text-wrap: pretty; }
+
+/* A product fragment: the only framed thing on the page, because the product has frames. Always visible. */
+.ui { position: relative; background: var(--s2); border-radius: 20px; padding: 22px; box-shadow: inset 0 0 0 1px var(--line), 0 24px 64px -28px rgba(0, 0, 0, .7); }
+.ui__row { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 12px; flex-wrap: wrap; }
+.ui__t { font-size: var(--t-3); font-weight: 650; letter-spacing: -.01em; }
+.ui__l { color: var(--muted); font-size: .9375rem; }
+.ui__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 16px; }
+.out { min-height: 1.55em; font-size: .9375rem; color: var(--soft); }
+.out.ok { color: var(--good); }
+.out.no { color: var(--bad); }
+
+/* Departs: the one track picker */
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 16px; border: 0; padding: 0; min-width: 0; }
+.opt { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; min-height: 72px; padding: 12px 14px; border-radius: 14px; background: var(--s3); cursor: pointer; transition: background-color .25s, box-shadow .25s, transform .3s var(--ease); }
+.opt:hover { background: var(--s4); }
+.opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.opt__sw { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--muted); display: grid; place-items: center; transition: border-color .25s; }
+.opt__sw::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); scale: 0; transition: scale .35s var(--ease); }
+.opt b { font-weight: 650; line-height: 1.2; }
+.opt small { color: var(--muted); font-size: var(--t-1); line-height: 1.3; }
+.opt:has(input:checked) { background: color-mix(in srgb, var(--violet) 26%, var(--s3)); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--violet) 70%, transparent); }
+.opt:has(input:checked) .opt__sw { border-color: var(--ink); }
+.opt:has(input:checked) .opt__sw::after { scale: 1; }
+.opt:has(input:focus-visible) { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+.pts { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--s3); font-size: .9375rem; color: var(--soft); }
+
+/* CV */
+.cvline { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; margin-top: 14px; padding: 16px; border-radius: 14px; background: var(--s3); min-height: 104px; transition: background-color .4s; }
+.cvline span { transition: opacity .18s, translate .3s var(--ease); }
+.cvline.is-swap span { opacity: 0; translate: 0 -6px; }
+.cvline b { font-size: 2.25rem; font-weight: 800; letter-spacing: -.03em; color: var(--bad); transition: color .3s; }
+.cvline.is-hi { background: color-mix(in srgb, var(--good) 12%, var(--s3)); }
+.cvline.is-hi b { color: var(--good); }
+
+/* Readiness (reads the Departs choice; no tabs of its own) */
+.score { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; margin-top: 16px; }
+.maxbox { margin-top: 10px; font-size: .9375rem; color: var(--soft); }
+.maxbox b { color: var(--ink); }
+.areas__key, .areas li { display: grid; grid-template-columns: 82px minmax(0, 1fr) 40px 30px; gap: 12px; align-items: center; }
+.areas__key { margin-top: 20px; color: var(--muted); font-size: .8125rem; }
+.areas__key span:nth-child(n+3), .areas li > :nth-child(n+3) { text-align: right; }
+.areas { display: grid; gap: 4px; margin-top: 8px; font-size: .9375rem; }
+.areas li { padding: 6px 8px; margin-inline: -8px; border-radius: 10px; transition: background-color .3s, opacity .3s, color .3s; }
+.areas li b { font-weight: 650; color: var(--accent-soft); }
+.areas li.is-max { font-weight: 650; }
+.areas li.is-max b { color: var(--ink); }
+.areas li .sc { color: var(--muted); }
+.areas.is-found li:not(.w) { opacity: .5; }
+.areas.is-found li.w { background: color-mix(in srgb, var(--bad) 16%, transparent); box-shadow: inset 0 0 0 2px var(--bad); }
+.areas.is-found li.w .sc { color: var(--bad); font-weight: 700; }
+.next { display: flex; gap: 12px; align-items: center; margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: var(--s3); }
+.next i { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--bad); }
+
+/* Academy */
+.steps { display: grid; gap: 6px; margin-top: 14px; }
+.step { display: flex; gap: 12px; align-items: center; width: 100%; min-height: 52px; padding: 10px 14px; border: 0; border-radius: 12px; background: var(--s3); text-align: left; cursor: pointer; font-size: .9375rem; transition: background-color .2s, transform .3s var(--ease); }
+.step:hover { background: var(--s4); }
+.step i { flex: none; width: 22px; height: 22px; border-radius: 7px; box-shadow: inset 0 0 0 2px var(--muted); display: grid; place-items: center; transition: background-color .2s, box-shadow .2s; }
+.step[aria-checked="true"] i { box-shadow: none; background: var(--grad); }
+.step[aria-checked="true"] i::after { content: ""; width: 10px; height: 5px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.step[aria-checked="true"] span { color: var(--muted); text-decoration: line-through; }
+.step small { margin-left: auto; color: var(--muted); white-space: nowrap; font-size: .8125rem; }
+
+/* Tracker */
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; touch-action: pan-y; }
+.lane { min-height: 176px; padding: 10px; border-radius: 14px; background: var(--s3); display: flex; flex-direction: column; gap: 6px; transition: background-color .2s, box-shadow .2s; }
+.lane.is-over { background: var(--s4); box-shadow: inset 0 0 0 2px var(--accent-soft); }
+.lane__h { display: flex; justify-content: space-between; gap: 6px; font-size: .8125rem; color: var(--soft); padding: 2px 2px 4px; }
+.gh { height: 36px; border-radius: 9px; background: var(--s4); }
+.card { position: relative; z-index: 2; width: 100%; min-height: 48px; padding: 8px 10px; border: 0; border-radius: 10px; background: var(--grad); color: var(--on-grad); text-align: left; font-size: .875rem; font-weight: 650; line-height: 1.25; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: 0 1px 2px rgba(0, 0, 0, .3); transition: scale .35s var(--ease), box-shadow .35s var(--ease), transform .3s var(--ease); }
+.card small { display: block; font-weight: 500; font-size: .75rem; }
+.card.is-lifted { z-index: 10; cursor: grabbing; scale: 1.06; box-shadow: 0 18px 36px -10px rgba(0, 0, 0, .75), 0 4px 10px rgba(0, 0, 0, .35); }
+.card.is-flying { z-index: 10; }
+
+/* Practice */
+.mm { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.mm label { font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; margin-right: 4px; }
+.mm input { width: 6.5rem; min-height: 52px; padding: 0 14px; border-radius: 12px; border: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); background: var(--s3); font: 700 1.375rem var(--f); }
+.mm input:focus-visible { outline-offset: 2px; }
+
+/* Terminus */
+.stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(clamp(48px, 6vw, 88px) + 64px); }
+.stop--end .stop__name { font-size: var(--t-8); letter-spacing: -.05em; line-height: .85; }
+.stop--end .cta { align-self: end; }
+.cta__h { font-size: clamp(2rem, 3.4vw, 3.25rem); font-weight: 800; letter-spacing: -.035em; line-height: 1; margin-bottom: 24px; }
+.cta__row { display: flex; flex-wrap: wrap; gap: 12px; }
+.cta__note { margin-top: 18px; color: var(--soft); }
+
+@media (max-width: 900px) {
+  .route__intro { grid-template-columns: 1fr; padding-left: calc(var(--m) + 36px); }
+  .stop, .stop[data-side] { --lane: calc(var(--m) + 12px); grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding-left: calc(var(--m) + 36px); }
+  .stop[data-side] .stop__text, .stop[data-side] .ui { grid-column: 1; grid-row: auto; justify-self: stretch; max-width: none; }
+  .stop__dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; border-width: 5px; top: calc(clamp(48px, 6vw, 88px) + 20px); }
+  .stop--end .stop__dot { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-width: 8px; top: calc(clamp(48px, 6vw, 88px) + 36px); }
+  .ui { padding: 18px; }
+  .stop--end .cta .btn { flex: 1 1 100%; }
+}
+@media (max-width: 520px) {
+  .picks { grid-template-columns: minmax(0, 1fr); }
+  .opt { min-height: 60px; }
+  .score { grid-template-columns: 1fr; justify-items: start; }
+  .areas__key, .areas li { grid-template-columns: 74px minmax(0, 1fr) 34px 26px; gap: 8px; }
+  .board { gap: 6px; }
+  .lane { padding: 8px 6px; }
+  .card { padding: 8px; font-size: .8125rem; }
+  .step small { display: none; }
+}
+
+/* ---------- Arrivals ---------- */
+.sec { padding-block: clamp(88px, 10vw, 160px); }
+.sec__h { font-size: var(--t-6); font-weight: 800; line-height: .95; letter-spacing: -.04em; max-width: 12ch; text-wrap: balance; }
+.sec__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; margin-top: 20px; }
+.arr ol { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 96px); }
+.arr li { padding-block: 32px; display: grid; gap: 16px; align-content: start; }
+.arr li + li { box-shadow: 0 -1px 0 var(--line); }
+@media (min-width: 901px) { .arr li:nth-child(2) { box-shadow: none; } }
+.arr__fig { font-size: clamp(2.5rem, 4.4vw, 4.25rem); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.arr__fig span { color: var(--muted); }
+.arr__fig small { display: block; font-size: 1rem; letter-spacing: 0; color: var(--muted); font-weight: 500; margin-top: 10px; }
+.arr blockquote { font-size: 1.1875rem; line-height: 1.5; max-width: 52ch; }
+.arr cite { font-style: normal; color: var(--muted); font-size: 1rem; }
+.arr cite b { color: var(--ink); font-weight: 600; }
+@media (max-width: 900px) { .arr ol { grid-template-columns: 1fr; } }
+
+/* ---------- Fares ---------- */
+.fares { background: var(--bg-alt); }
+.fares__in { display: grid; gap: clamp(40px, 5vw, 64px); }
+.fares__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px clamp(64px, 8vw, 128px); align-items: end; }
+.fares__head .sec__p { margin-top: 0; }
+@media (max-width: 900px) { .fares__head { grid-template-columns: 1fr; } }
+.faq__in { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(32px, 5vw, 96px); }
+.board-t { width: 100%; border-collapse: collapse; }
+.board-t th, .board-t td { text-align: left; vertical-align: top; padding: 26px 16px 26px 0; border-top: 1px solid var(--line); }
+.board-t thead th { color: var(--muted); font-weight: 500; font-size: .9375rem; padding-block: 0 14px; border-top: 0; }
+.board-t tbody th { font-size: 1.375rem; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+.board-t .fare { font-size: 2.75rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; white-space: nowrap; }
+.board-t ul { color: var(--soft); display: grid; gap: 6px; font-size: 1rem; }
+.board-t td:last-child { padding-right: 0; text-align: right; }
+.board-t .btn { white-space: nowrap; }
+@media (max-width: 1100px) { .faq__in { grid-template-columns: 1fr; } }
+@media (max-width: 720px) {
+  .board-t thead { display: none; }
+  .board-t, .board-t tbody, .board-t tr, .board-t th, .board-t td { display: block; }
+  .board-t tbody th { white-space: normal; }
+  .board-t tr { border-top: 1px solid var(--line); padding-block: 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; align-items: baseline; }
+  .board-t th, .board-t td { border: 0; padding: 0; }
+  .board-t td:nth-child(3), .board-t td:last-child { grid-column: 1 / -1; text-align: left; }
+  .board-t td:last-child .btn { width: 100%; }
+}
+
+/* ---------- FAQ ---------- */
+.faq details { box-shadow: 0 -1px 0 var(--line); }
+.faq details:last-child { box-shadow: 0 -1px 0 var(--line), 0 1px 0 var(--line); }
+.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 20px; align-items: center; min-height: 72px; padding-block: 16px; font-size: clamp(1.1875rem, 1.6vw, 1.4375rem); font-weight: 600; letter-spacing: -.01em; transition: transform .3s var(--ease); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary i { position: relative; flex: none; width: 24px; height: 24px; }
+.faq summary i::before, .faq summary i::after { content: ""; position: absolute; left: 4px; right: 4px; top: 11px; height: 2px; border-radius: 2px; background: var(--accent-soft); transition: rotate .35s var(--ease); }
+.faq summary i::after { rotate: 90deg; }
+.faq details[open] summary i::after { rotate: 0deg; }
+.faq details p { color: var(--soft); max-width: 64ch; padding-bottom: 28px; }
+
+/* ---------- Footer ---------- */
+.foot { padding-block: 48px 128px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; color: var(--muted); font-size: .9375rem; box-shadow: 0 -1px 0 var(--line); }
+.foot nav { display: flex; flex-wrap: wrap; gap: 0 20px; }
+.foot nav a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--soft); }
+.foot nav a:hover { color: var(--ink); text-decoration: underline; }
+.foot p { width: 100%; }
+
+/* ---------- What you just did ---------- */
+.did { position: fixed; z-index: 30; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: min(720px, calc(100% - 24px)); display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 20px; border-radius: 999px; background: rgba(19, 32, 58, .78); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 20px 60px -20px rgba(0, 0, 0, .85); translate: -50% calc(100% + 40px); opacity: 0; visibility: hidden; transition: translate .55s var(--ease), opacity .35s, visibility 0s .55s; }
+.did.is-on { translate: -50% 0; opacity: 1; visibility: visible; transition: translate .55s var(--ease), opacity .35s, visibility 0s; }
+.did__t { flex: 1; min-width: 0; font-size: var(--t-1); }
+.did__t b { display: block; font-size: .9375rem; }
+.did__list { display: block; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 680px) {
+  .did { border-radius: 20px; }
+  /* Sign up shows in one place at a time on a phone: the bar takes it over from the nav. */
+  .did-on .nav__go { display: none; }
+}
+
+/* ---------- Accessibility preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important; transition-duration: .2s !important; }
+  .btn:active, .chip:active, .step:active, .opt:active, .link:active, .card:active, .faq summary:active { transform: none; }
+  .did { translate: -50% 0; }
+  .card.is-lifted { scale: 1; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .did { background: var(--s2); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  :root { --muted: #cbd5e1; --soft: #e2e8f0; --line: rgba(255, 255, 255, .45); }
+  .nav { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 1px 0 var(--line); }
+  .did { background: var(--s2); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--line); }
+  .ui, .win, .pane, .opt, .lane, .step, .chip, .btn--quiet { box-shadow: inset 0 0 0 1px var(--line); }
+  .hero::before { display: none; }
+}
+</style>
+<link rel="stylesheet" href="assets/mnav.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7ef6"/><stop offset="1" stop-color="#6c3ef6"/></linearGradient></defs></svg>
+
+<header class="nav" id="top" data-mnav=".nav__links a" data-mnav-after=".nav__go">
+  <div class="wrap nav__in">
+    <a class="mark" href="#top"><i aria-hidden="true"></i>The Offer Engine</a>
+    <nav class="nav__links" aria-label="Site">
+      <a href="#how-it-works">How it works</a><a href="#cv-check">CV Checker</a><a href="#readiness-score">Readiness Score</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--sm nav__go" href="#">Sign up free</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap">
+    <h1 class="hero__h" id="hero-h">Become offer ready</h1>
+    <p class="hero__p">The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.</p>
+    <div class="hero__go">
+      <a class="btn" href="#">Sign up free</a>
+      <a class="btn btn--ink" href="#cv-check">Check my CV free</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="win" role="img" aria-label="The Offer Engine dashboard with example data: provisional readiness 61 of 100, Traction 45 is the weakest area, Deloitte marked submitted with a chase reminder set.">
+      <div class="win__bar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="win__grid" aria-hidden="true">
+        <div class="side"><span class="on">Dashboard</span><span>Academy</span><span>Application Tracker</span><span>CV Checker</span></div>
+        <div class="col">
+          <div class="pane">
+            <p class="pane__t">Provisional readiness · 6 of 6 areas assessed</p>
+            <div class="hscore">
+              <div class="ring" style="--rs:120px">
+                <svg viewBox="0 0 140 140"><circle class="bg" cx="70" cy="70" r="58" pathLength="100"/><circle class="fg" cx="70" cy="70" r="58" pathLength="100" stroke-dasharray="61 100" data-hring/></svg>
+                <div class="ring__c"><span class="ring__n num" data-hnum>61</span><small>of 100</small></div>
+              </div>
+              <ul class="mini num" data-hmini>
+                <li><span>Thesis</span><span class="meter"><i style="--v:82%"></i></span><span>82</span></li>
+                <li><span>Profile</span><span class="meter"><i style="--v:68%"></i></span><span>68</span></li>
+                <li><span>Execution</span><span class="meter"><i style="--v:71%"></i></span><span>71</span></li>
+                <li><span>Aptitude</span><span class="meter"><i style="--v:55%"></i></span><span>55</span></li>
+                <li><span>Interview</span><span class="meter"><i style="--v:60%"></i></span><span>60</span></li>
+                <li class="weak"><span>Traction</span><span class="meter"><i style="--v:45%"></i></span><span>45</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pane">
+            <p class="pane__t">Your next step</p>
+            <p class="pane__h">Traction, 45: your weakest area. Add 3 applications to your tracker this week.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="pane">
+            <p class="pane__t">Graduate Applications · Stage 3 of 12</p>
+            <p class="pane__h">Make your experience easy to assess</p>
+            <span class="meter" style="margin-top:12px"><i style="--v:16.7%"></i></span>
+            <p class="pane__t" style="margin-top:8px">2 stages complete, 10 to go.</p>
+          </div>
+          <div class="pane">
+            <p class="pane__t">Application Tracker · 4 applications</p>
+            <p class="pane__h" style="margin-top:8px" data-hstage>Deloitte · Submitted</p>
+            <p class="hchase" data-hchase>Chase reminder set</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="route" id="how-it-works" aria-labelledby="route-h">
+  <svg class="track" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="routeGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000" data-grad>
+        <stop offset="0" stop-color="#3b7ef6"/><stop offset="1" stop-color="#6c3ef6"/>
+      </linearGradient>
+    </defs>
+    <path class="ghost" d=""/>
+    <path class="live" d=""/>
+    <circle class="head" r="8" cx="-40" cy="-40"/>
+  </svg>
+
+  <div class="wrap route__intro">
+    <h2 class="route__h" id="route-h">From track to offer</h2>
+    <p class="route__p">Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. Every stop below is a working piece of the product, with example content. Nothing you do here is sent or saved.</p>
+  </div>
+
+  <!-- Departs: the one track choice; every demo below reads it -->
+  <article class="stop" data-side="l" id="tracks" aria-labelledby="s0">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s0">Pick your track</h3>
+      <p class="stop__lead" data-who>Graduate Programme: final year &amp; graduates</p>
+      <p>Your track sets the deadlines you work to and how your score is weighted. The score further down the line follows whatever you pick here.</p>
+    </div>
+    <div class="ui">
+      <div class="ui__row"><p class="ui__t">Complete onboarding</p><span class="ui__l">Step 1 of 3</span></div>
+      <fieldset class="picks">
+        <legend class="sr-only">Which recruiting season are you in?</legend>
+        <label class="opt"><input type="radio" name="track" value="spring"><span class="opt__sw" aria-hidden="true"></span><b>Spring Week</b><small>First &amp; second year</small></label>
+        <label class="opt"><input type="radio" name="track" value="summer"><span class="opt__sw" aria-hidden="true"></span><b>Summer Internship</b><small>Penultimate year</small></label>
+        <label class="opt"><input type="radio" name="track" value="placement"><span class="opt__sw" aria-hidden="true"></span><b>Placement Year</b><small>12-month placements</small></label>
+        <label class="opt"><input type="radio" name="track" value="grad" checked><span class="opt__sw" aria-hidden="true"></span><b>Graduate Programme</b><small>Final year &amp; graduates</small></label>
+      </fieldset>
+      <p class="pts" data-pts>Highest bar, leadership depth required, technical &amp; commercial rigour.</p>
+    </div>
+  </article>
+
+  <article class="stop" data-side="r" id="cv-check" aria-labelledby="s1">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s1">CV check</h3>
+      <p class="stop__lead">Rewrite a weak line into evidence</p>
+      <p>Paste your CV and choose your track: the rubric changes for internship, graduate or other roles. You get a 100-point score, a breakdown for impact, clarity and relevance, and rewritten bullets ready to copy.</p>
+    </div>
+    <div class="ui">
+      <div class="ui__row"><p class="ui__t">CV Checker</p><span class="ui__l">Bullet rewrite</span></div>
+      <div class="cvline" data-cv>
+        <span data-cv-text>Helped with events for the finance society.</span>
+        <b class="num" data-cv-score>3/10</b>
+      </div>
+      <div class="ui__foot">
+        <button class="chip" type="button" aria-pressed="false" data-cv-btn>Show the rewrite</button>
+        <span class="ui__l" data-cv-why aria-live="polite">Vague verb, no numbers, no result.</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="stop" data-side="l" id="readiness-score" aria-labelledby="s2">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s2">Readiness score</h3>
+      <p class="stop__lead">One score, weighted for you, and your weakest area first</p>
+      <p>Six areas scored across the full recruiting funnel, shown as one Provisional readiness score. Interview is a fifth of a Spring Week score and over a third of a Graduate one. Change your track above and watch the weights move.</p>
+    </div>
+    <div class="ui">
+      <div class="ui__row"><p class="ui__t">Provisional readiness</p><span class="ui__l" data-rs-track>Graduate Programme</span></div>
+      <div class="score">
+        <div class="ring">
+          <svg viewBox="0 0 140 140" aria-hidden="true"><circle class="bg" cx="70" cy="70" r="58" pathLength="100"/><circle class="fg" cx="70" cy="70" r="58" pathLength="100" stroke-dasharray="61 100" data-ring/></svg>
+          <div class="ring__c"><span class="ring__n num" data-score>61</span><small>of 100</small></div>
+        </div>
+        <div>
+          <p class="ui__l">6 of 6 areas assessed</p>
+          <p class="maxbox" data-max-wrap>Counts most on this track: <b data-max>Interview, 36%</b></p>
+        </div>
+      </div>
+      <p class="areas__key" aria-hidden="true"><span>Area</span><span>Weight on this track</span><span>%</span><span>Score</span></p>
+      <ul class="areas num" data-areas aria-label="Area weights and scores"></ul>
+      <div class="next" data-next hidden><i aria-hidden="true"></i><span>Traction, 45: your weakest area. Your next step: add 3 applications to your tracker this week.</span></div>
+      <div class="ui__foot">
+        <button class="btn btn--sm" type="button" data-find>Find my weakest area</button>
+        <button class="link" type="button" data-find-reset hidden>Start again</button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-live></p>
+    </div>
+  </article>
+
+  <article class="stop" data-side="r" id="academy" aria-labelledby="s3">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s3">Academy</h3>
+      <p class="stop__lead">Advance level by level</p>
+      <p>Twelve stages take you from a career story to an offer decision. Nothing is locked. Tick a stage to see the progress move.</p>
+    </div>
+    <div class="ui">
+      <div class="ui__row"><span class="ui__l">Graduate Applications</span><span class="ui__l num" data-ac-stage>Stage 3 of 12</span></div>
+      <p class="ui__t" style="margin:6px 0 12px">Make your experience easy to assess</p>
+      <span class="meter"><i data-ac-bar style="--v:16.7%"></i></span>
+      <p class="ui__l num" style="margin-top:8px" data-ac-n aria-live="polite">2 stages complete, 10 to go.</p>
+      <div class="steps" role="group" aria-label="Academy stages">
+        <button class="step" type="button" role="checkbox" aria-checked="true"><i aria-hidden="true"></i><span>Choose your direction and explain your fit</span></button>
+        <button class="step" type="button" role="checkbox" aria-checked="true"><i aria-hidden="true"></i><span>Build a target list you can act on</span></button>
+        <button class="step" type="button" role="checkbox" aria-checked="false"><i aria-hidden="true"></i><span>Make your experience easy to assess</span><small>90 to 120 min</small></button>
+        <button class="step" type="button" role="checkbox" aria-checked="false"><i aria-hidden="true"></i><span>Submit well and prepare for the next step</span><small>90 to 120 min</small></button>
+      </div>
+    </div>
+  </article>
+
+  <article class="stop" data-side="l" id="tracker" aria-labelledby="s4">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s4">Application tracker</h3>
+      <p class="stop__lead">Know when to chase a reply</p>
+      <p>Drag Deloitte to Submitted, or tap it, and the tracker sets a reminder to chase. Deadline alerts come with it, free.</p>
+    </div>
+    <div class="ui">
+      <div class="ui__row"><p class="ui__t">Application Tracker</p><span class="ui__l">4 applications</span></div>
+      <div class="board" data-board>
+        <div class="lane" data-lane="Planned"><p class="lane__h"><span>Planned</span><span class="num" data-c>2</span></p><button class="card" type="button" data-card aria-label="Deloitte, Planned. Press to move to the next stage"><span>Deloitte</span><small>Planned</small></button><div class="gh"></div></div>
+        <div class="lane" data-lane="Submitted"><p class="lane__h"><span>Submitted</span><span class="num" data-c>1</span></p><div class="gh"></div></div>
+        <div class="lane" data-lane="Interview"><p class="lane__h"><span>Interview</span><span class="num" data-c>1</span></p><div class="gh"></div></div>
+      </div>
+      <div class="ui__foot"><p class="out" data-trk-out aria-live="polite">2 planned, 1 submitted, 1 at interview.</p><button class="link" type="button" data-trk-reset hidden>Start again</button></div>
+    </div>
+  </article>
+
+  <article class="stop" data-side="r" id="practice" aria-labelledby="s5">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s5">Practice</h3>
+      <p class="stop__lead">Drill mental maths without a calculator</p>
+      <p>Knowledge checks of 5 questions: your first answer counts toward your score, and every retry is practice.</p>
+    </div>
+    <form class="ui" data-mm novalidate>
+      <div class="ui__row"><p class="ui__t">Mental maths</p><span class="ui__l">Question 1 of 5</span></div>
+      <div class="mm">
+        <label for="mm-a">17 × 24 =</label>
+        <input id="mm-a" inputmode="numeric" autocomplete="off" aria-describedby="mm-out">
+        <button class="btn btn--sm" type="submit">Check</button>
+      </div>
+      <div class="ui__foot">
+        <p class="out" id="mm-out" aria-live="polite"></p>
+        <span><button class="link" type="button" data-mm-how>Show me how</button> <button class="link" type="button" data-mm-reset hidden>Start again</button></span>
+      </div>
+    </form>
+  </article>
+
+  <article class="stop stop--end" data-side="l" aria-labelledby="s6" data-cta>
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s6">Offer</h3>
+    </div>
+    <div class="cta">
+      <p class="cta__h">Which one first?</p>
+      <div class="cta__row">
+        <a class="btn" href="#">Sign up free</a>
+        <a class="btn btn--ink" href="#cv-check">Check my CV free</a>
+      </div>
+      <p class="cta__note">Both are free. Only the Academy is paid.</p>
+    </div>
+  </article>
+</section>
+
+<section class="wrap sec arr" aria-labelledby="arr-h">
+  <h2 class="sec__h" id="arr-h">Students who executed</h2>
+  <ol>
+    <li>
+      <p class="arr__fig num"><span>38%</span> to 84%<small>Readiness Score. Target firm: Goldman Sachs</small></p>
+      <blockquote>“I went from not knowing where to start to having Goldman, Macquarie and Lazard in my pipeline in week three. The weekly plan is exactly what I needed.”</blockquote>
+      <cite><b>Amara</b>, Penultimate Year, Economics, LSE</cite>
+    </li>
+    <li>
+      <p class="arr__fig num"><span>45%</span> to 90%<small>Readiness Score. Target firm: McKinsey &amp; Company</small></p>
+      <blockquote>“The Readiness Score told me I was spending too long on my CV and not enough on case practice. That one insight changed my whole approach.”</blockquote>
+      <cite><b>James</b>, Final Year, Engineering, Imperial</cite>
+    </li>
+    <li>
+      <p class="arr__fig num"><span>33%</span> to 79%<small>Readiness Score. Target firm: J.P. Morgan</small></p>
+      <blockquote>“I'd been rejected at video interview stage three times without knowing why. The rejection-to-action system flagged my answer bank immediately.”</blockquote>
+      <cite><b>Priya</b>, First Year, PPE, Oxford</cite>
+    </li>
+    <li>
+      <p class="arr__fig num"><span>41%</span> to 91%<small>Readiness Score. Target firm: PwC</small></p>
+      <blockquote>“My Readiness Score went from 41% to 91% in three weeks. I only drilled the gaps the platform flagged, nothing else.”</blockquote>
+      <cite><b>Olivia</b>, Second Year, Economics, Warwick</cite>
+    </li>
+  </ol>
+</section>
+
+<section class="sec fares" id="pricing" aria-labelledby="price-h">
+  <div class="wrap fares__in">
+    <div class="fares__head">
+      <h2 class="sec__h" id="price-h">Free to start</h2>
+      <p class="sec__p">The dashboard, tracker and CV Checker are free. The paid plans are one programme, priced by how long your access runs.</p>
+    </div>
+    <table class="board-t">
+      <caption class="sr-only">Plans and prices</caption>
+      <thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Includes</th><th scope="col"><span class="sr-only">Choose</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Free</th><td class="fare num">£0</td><td><ul><li>Full dashboard with your live Readiness Score</li><li>Application Tracker with deadline alerts</li><li>AI CV Checker</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Sign up free</a></td></tr>
+        <tr><th scope="row">1-Month Programme</th><td class="fare num">£49</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>1 month of access</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 1 month</a></td></tr>
+        <tr><th scope="row">6-Month Programme</th><td class="fare num">£149</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>6 months of access</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 6 months</a></td></tr>
+        <tr><th scope="row">12-Month Programme</th><td class="fare num">£249</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>12 months of access, enough to run the programme through a full recruiting cycle</li></ul></td><td><a class="btn btn--sm" href="#">Choose 12 months</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="wrap sec faq" id="faq" aria-labelledby="faq-h">
+  <div class="faq__in">
+    <h2 class="sec__h" id="faq-h">Before you sign up</h2>
+    <div>
+      <details open><summary>Which track is right for me? <i aria-hidden="true"></i></summary><p>If you're in first or second year, start with Spring Week. Penultimate year students should choose Summer Internship. Placement Year and Graduate Programme tracks are built for sandwich-course and final-year students. The Offer Engine maps your timeline automatically so you stop guessing and start executing against real recruiting deadlines.</p></details>
+      <details><summary>Why does the platform focus so heavily on execution? <i aria-hidden="true"></i></summary><p>Because recruiting is heavily driven by timing and consistency. Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. A great candidate with no system often loses to an average candidate with consistent execution. The Offer Engine exists to close that gap.</p></details>
+      <details><summary>Is this only for consulting and investment banking? <i aria-hidden="true"></i></summary><p>The Offer Engine is designed around consulting, IB, and PE recruiting mechanics: rolling deadlines, psychometric testing, networking, interviews, and application volume. The system also works for Big 4, strategy, asset management, and other competitive graduate roles because the execution principles are the same.</p></details>
+      <details><summary>What makes The Offer Engine different from careers advice or YouTube prep? <i aria-hidden="true"></i></summary><p>Most recruiting resources help you prepare. Very few help you execute consistently. The Offer Engine gives you a structured weekly system, a live readiness score, deadline tracking, accountability, and measurable progress. The students who convert offers are rarely the ones consuming the most content. They are usually the ones executing the most consistently.</p></details>
+      <details><summary>Can The Offer Engine guarantee me an offer? <i aria-hidden="true"></i></summary><p>No platform can guarantee offers. What The Offer Engine does provide is the structure, accountability, and execution system that dramatically improves your probability of converting. Students who consistently complete weekly tasks, practise interviews, and maintain application volume outperform students relying on unstructured preparation.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap foot">
+  <a class="mark" href="#top"><i aria-hidden="true"></i>The Offer Engine</a>
+  <nav aria-label="Footer">
+    <a href="#how-it-works">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#">Log in</a>
+    <a href="#">Terms &amp; cancellation</a>
+    <a href="#">Privacy &amp; cookies</a>
+  </nav>
+  <p>© 2026 The Offer Engine. No platform can guarantee offers.</p>
+</footer>
+
+<aside class="did" data-did aria-label="What you just did">
+  <p class="did__t"><b>What you just did</b><span class="did__list" data-did-list aria-live="polite"></span></p>
+  <a class="btn btn--sm" href="#">Sign up free</a>
+</aside>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- Springs ----------
+     Apple's two-parameter spring (damping ratio + response), unit mass. Each Spring keeps its live value
+     and velocity, so a new target starts from what is on screen and carries the current velocity:
+     interrupting never jumps. Reduced motion: values land at once. */
+  class Spring {
+    constructor(value, opts, onUpdate) {
+      this.x = this.target = value; this.v = 0; this.raf = 0;
+      this.d = opts.damping ?? 1; this.r = opts.response ?? .4; this.eps = opts.eps ?? .01; this.cb = onUpdate;
+      this.tick = this.tick.bind(this);
+    }
+    to(target, o = {}) {
+      this.target = target;
+      if (o.velocity !== undefined) this.v = o.velocity;
+      if (o.damping) this.d = o.damping;
+      if (o.response) this.r = o.response;
+      if (reduce.matches) return this.set(target);
+      if (!this.raf) { this.last = performance.now(); this.raf = requestAnimationFrame(this.tick); }
+      return this;
+    }
+    set(x) { cancelAnimationFrame(this.raf); this.raf = 0; this.x = this.target = x; this.v = 0; this.cb(x); return this; }
+    stop() { cancelAnimationFrame(this.raf); this.raf = 0; this.v = 0; this.target = this.x; }
+    tick(t) {
+      const dt = Math.min(.064, (t - this.last) / 1000); this.last = t;
+      const k = (2 * Math.PI / this.r) ** 2, c = 4 * Math.PI * this.d / this.r;
+      const n = Math.max(1, Math.ceil(dt / .004)), h = dt / n;
+      for (let i = 0; i < n; i++) { const a = -k * (this.x - this.target) - c * this.v; this.v += a * h; this.x += this.v * h; }
+      if (Math.abs(this.x - this.target) < this.eps && Math.abs(this.v) < this.eps * 10) { this.set(this.target); return; }
+      this.cb(this.x); this.raf = requestAnimationFrame(this.tick);
+    }
+  }
+
+  /* ---------- What you just did ---------- */
+  const done = new Map(), did = $("[data-did]"), didList = $("[data-did-list]");
+  let ctaVisible = false;
+  const showDid = () => { const on = done.size > 0 && !ctaVisible; did.classList.toggle("is-on", on); root.classList.toggle("did-on", on); };
+  function log(key, text) { done.set(key, text); didList.textContent = [...done.values()].join(" · "); showDid(); }
+  new IntersectionObserver(([e]) => { ctaVisible = e.isIntersecting; showDid(); }).observe($("[data-cta]"));
+
+  /* ---------- Nav: soft edge appears once content scrolls under it ---------- */
+  const nav = $(".nav");
+  const onScrollNav = () => nav.classList.toggle("is-scrolled", scrollY > 4);
+  addEventListener("scroll", onScrollNav, { passive: true }); onScrollNav();
+
+  /* ---------- Hero: the window is visible from the first frame; its values fill in ---------- */
+  {
+    const ring = $("[data-hring]"), num = $("[data-hnum]"), bars = $$("[data-hmini] .meter i");
+    const widths = bars.map((b) => parseFloat(b.style.getPropertyValue("--v")));
+    const stage = $("[data-hstage]"), chase = $("[data-hchase]");
+    if (!reduce.matches) {
+      const s = new Spring(0, { damping: 1, response: 1.1 }, (x) => {
+        ring.setAttribute("stroke-dasharray", `${x * 61} 100`); num.textContent = Math.round(x * 61);
+        bars.forEach((b, i) => b.style.setProperty("--v", `${x * widths[i]}%`));
+      });
+      s.set(0); stage.textContent = "Deloitte · Planned"; chase.style.opacity = 0;
+      setTimeout(() => s.to(1), 350);
+      setTimeout(() => { stage.textContent = "Deloitte · Submitted"; chase.style.opacity = 1; }, 1700);
+    }
+  }
+
+  /* ---------- Tracks (real v2 weights) and the readiness demo that reads them ---------- */
+  const AREAS = ["Thesis", "Profile", "Execution", "Aptitude", "Interview", "Traction"];
+  const VALUES = [82, 68, 71, 55, 60, 45];
+  const TRACKS = {
+    spring:    { name: "Spring Week", who: "first & second year", pts: "Insight programmes, build the fundamentals, early discovery.", w: [15, 20, 15, 20, 20, 10] },
+    summer:    { name: "Summer Internship", who: "penultimate year", pts: "Conversion-focused, the highest-stakes internship, direct route to a grad offer.", w: [10, 15, 14, 20, 29, 12] },
+    placement: { name: "Placement Year", who: "12-month structured placements", pts: "Broad role families, competency-led, transferable framing.", w: [10, 14, 12, 20, 32, 12] },
+    grad:      { name: "Graduate Programme", who: "final year & graduates", pts: "Highest bar, leadership depth required, technical & commercial rigour.", w: [8, 10, 11, 22, 36, 13] },
+  };
+  const areasEl = $("[data-areas]");
+  areasEl.innerHTML = AREAS.map((a, i) => `<li${i === 5 ? ' class="w"' : ""}><span>${a}</span><span class="meter"><i></i></span><b>0%</b><span class="sc">${VALUES[i]}</span></li>`).join("");
+  const rows = $$("li", areasEl);
+  const wSprings = rows.map((li) => {
+    const bar = $("i", li), lab = $("b", li);
+    return new Spring(0, { eps: .05 }, (x) => { bar.style.width = `${x / 40 * 100}%`; lab.textContent = `${Math.round(x)}%`; });
+  });
+  const ringEl = $("[data-ring]"), scoreEl = $("[data-score]");
+  const scoreSpring = new Spring(61, { eps: .05 }, (x) => { ringEl.setAttribute("stroke-dasharray", `${x} 100`); scoreEl.textContent = Math.round(x); });
+  const list = (xs) => xs.length < 2 ? xs[0] : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+  let firstTrack = true;
+  function setTrack(id) {
+    const t = TRACKS[id];
+    const top = Math.max(...t.w);
+    const maxIdx = t.w.map((w, i) => (w === top ? i : -1)).filter((i) => i >= 0);
+    const score = Math.round(VALUES.reduce((s, v, i) => s + v * t.w[i], 0) / 100);
+    rows.forEach((li, i) => li.classList.toggle("is-max", maxIdx.includes(i)));
+    t.w.forEach((w, i) => firstTrack ? wSprings[i].set(w) : wSprings[i].to(w));
+    firstTrack ? scoreSpring.set(score) : scoreSpring.to(score);
+    // A tie is shown as a tie, never as whichever area happens to come first.
+    const names = maxIdx.map((i) => AREAS[i]);
+    const maxText = names.length > 1 ? `${list(names)}, tied at ${top}%` : `${names[0]}, ${top}%`;
+    $("[data-max-wrap]").innerHTML = `${names.length > 1 ? "Count most on this track" : "Counts most on this track"}: <b>${maxText}</b>`;
+    $("[data-who]").textContent = `${t.name}: ${t.who}`;
+    $("[data-pts]").textContent = t.pts;
+    $("[data-rs-track]").textContent = t.name;
+    if (!firstTrack) {
+      $("[data-live]").textContent = `${t.name}: provisional readiness ${score}. ${names.length > 1 ? `${list(names)} tie at ${top}%` : `${names[0]} counts most, ${top}%`}.`;
+      log("track", `Picked ${t.name}: ${score}`);
+    }
+    firstTrack = false;
+  }
+  $$('input[name="track"]').forEach((r) => r.addEventListener("change", () => setTrack(r.value)));
+  setTrack($('input[name="track"]:checked').value);
+
+  const findBtn = $("[data-find]"), findReset = $("[data-find-reset]"), nextEl = $("[data-next]");
+  findBtn.addEventListener("click", () => {
+    areasEl.classList.add("is-found"); nextEl.hidden = false;
+    findBtn.hidden = true; findReset.hidden = false; findReset.focus();
+    log("weak", "Found your weakest area");
+  });
+  findReset.addEventListener("click", () => { areasEl.classList.remove("is-found"); nextEl.hidden = true; findBtn.hidden = false; findReset.hidden = true; findBtn.focus(); });
+
+  /* ---------- CV line: the score springs from the number on screen, so rapid presses never jump ---------- */
+  {
+    const cv = $("[data-cv]"), btn = $("[data-cv-btn]"), text = $("[data-cv-text]"), sc = $("[data-cv-score]"), why = $("[data-cv-why]");
+    const LINES = {
+      lo: ["Helped with events for the finance society.", 3, "Vague verb, no numbers, no result."],
+      hi: ["Ran 6 finance society events for 240 students, raising £3,200 in sponsorship.", 9, "The same line, rewritten into evidence: 9/10."],
+    };
+    const s = new Spring(3, { eps: .02 }, (x) => { sc.textContent = `${Math.round(x)}/10`; });
+    let swapT = 0;
+    btn.addEventListener("click", () => {
+      const hi = btn.getAttribute("aria-pressed") !== "true";
+      const [line, score, note] = LINES[hi ? "hi" : "lo"];
+      btn.setAttribute("aria-pressed", hi);
+      btn.textContent = hi ? "Show the original" : "Show the rewrite";
+      why.textContent = note;
+      cv.classList.toggle("is-hi", hi);
+      clearTimeout(swapT);
+      if (reduce.matches) text.textContent = line;
+      else { cv.classList.add("is-swap"); swapT = setTimeout(() => { text.textContent = line; cv.classList.remove("is-swap"); }, 180); }
+      s.to(score);
+      if (hi) log("cv", "Rewrote a CV line: 3/10 → 9/10");
+    });
+  }
+
+  /* ---------- Academy ---------- */
+  {
+    const steps = $$(".step"), n = $("[data-ac-n]"), bar = $("[data-ac-bar]"), stage = $("[data-ac-stage]");
+    const s = new Spring(2, { eps: .005 }, (x) => bar.style.setProperty("--v", `${x / 12 * 100}%`));
+    steps.forEach((st) => st.addEventListener("click", () => {
+      st.setAttribute("aria-checked", st.getAttribute("aria-checked") !== "true");
+      const c = steps.filter((x) => x.getAttribute("aria-checked") === "true").length;
+      n.textContent = `${c} stage${c === 1 ? "" : "s"} complete, ${12 - c} to go.`;
+      stage.textContent = `Stage ${Math.min(12, c + 1)} of 12`;
+      s.to(c);
+      log("academy", `Academy: ${c} of 12 stages`);
+    }));
+  }
+
+  /* ---------- Tracker: 1:1 drag with a lift, momentum-projected drop, spring home on a miss ---------- */
+  {
+    const board = $("[data-board]"), card = $("[data-card]"), lanes = $$("[data-lane]", board);
+    const out = $("[data-trk-out]"), reset = $("[data-trk-reset]");
+    const BASE = [2, 1, 1];
+    let at = 0;
+    const pos = { x: 0, y: 0 };
+    const paint = () => { card.style.translate = `${pos.x}px ${pos.y}px`; };
+    const sx = new Spring(0, { eps: .3 }, (v) => { pos.x = v; paint(); if (!sx.raf && !sy.raf) card.classList.remove("is-flying"); });
+    const sy = new Spring(0, { eps: .3 }, (v) => { pos.y = v; paint(); if (!sx.raf && !sy.raf) card.classList.remove("is-flying"); });
+
+    function place(i, vel = { x: 0, y: 0 }, damping = 1) {
+      // FLIP done in the right order: record where the card is on screen first, then move it, then
+      // spring the offset away from that recorded spot, carrying the release velocity.
+      const before = card.getBoundingClientRect();
+      at = i;
+      const lane = lanes[i];
+      lane.insertBefore(card, $(".lane__h", lane).nextSibling);
+      sx.stop(); sy.stop(); pos.x = pos.y = 0; paint();
+      const after = card.getBoundingClientRect();
+      sx.set(before.left - after.left); sy.set(before.top - after.top);
+      card.classList.add("is-flying");
+      sx.to(0, { velocity: vel.x, damping, response: .4 }); sy.to(0, { velocity: vel.y, damping, response: .4 });
+      const stage = lane.dataset.lane;
+      $("small", card).textContent = stage;
+      card.setAttribute("aria-label", `Deloitte, ${stage}.${i < 2 ? " Press to move to the next stage" : ""}`);
+      const c = lanes.map((l, j) => BASE[j] + (j === i ? 1 : 0) - (j === 0 ? 1 : 0));
+      lanes.forEach((l, j) => { $("[data-c]", l).textContent = c[j]; });
+      out.classList.toggle("ok", i > 0);
+      out.textContent = i === 0 ? "2 planned, 1 submitted, 1 at interview." : `Deloitte marked ${stage.toLowerCase()}. ${i === 1 ? "Chase reminder set." : `${c[0]} planned, ${c[1]} submitted, ${c[2]} at interview.`}`;
+      reset.hidden = i === 0;
+      if (i > 0) log("trk", `Moved Deloitte to ${stage}`);
+    }
+
+    let drag = null, suppressClick = false;
+    const laneAt = (x) => { const r = lanes.map((l) => l.getBoundingClientRect()); const cx = Math.min(r[2].right - 1, Math.max(r[0].left + 1, x)); return r.findIndex((b) => cx >= b.left - 4 && cx <= b.right + 4); };
+    const rubber = (over, dim, c = .55) => (over * dim * c) / (dim + c * Math.abs(over));
+
+    card.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      card.setPointerCapture(e.pointerId);
+      sx.stop(); sy.stop();   // grab it mid-flight: it stays where it is on screen
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, bx: pos.x, by: pos.y, live: false, hist: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] };
+    });
+    card.addEventListener("pointermove", (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      if (!drag.live && Math.hypot(dx, dy) < 8) return;   // hysteresis before it counts as a drag
+      if (!drag.live) { drag.live = true; card.classList.add("is-lifted"); }
+      drag.hist.push({ x: e.clientX, y: e.clientY, t: e.timeStamp }); if (drag.hist.length > 6) drag.hist.shift();
+      // 1:1 inside the board, soft resistance past its edges
+      const b = board.getBoundingClientRect(), home = card.getBoundingClientRect();
+      const ox = home.left - pos.x, oy = home.top - pos.y;   // card's untranslated origin
+      let tx = drag.bx + dx, ty = drag.by + dy;
+      const minX = b.left - ox, maxX = b.right - ox - home.width, minY = b.top - oy, maxY = b.bottom - oy - home.height;
+      if (tx < minX) tx = minX - rubber(minX - tx, b.width); else if (tx > maxX) tx = maxX + rubber(tx - maxX, b.width);
+      if (ty < minY) ty = minY - rubber(minY - ty, b.height); else if (ty > maxY) ty = maxY + rubber(ty - maxY, b.height);
+      pos.x = tx; pos.y = ty; paint();
+      const over = laneAt(e.clientX);
+      lanes.forEach((l, j) => l.classList.toggle("is-over", j === over && j !== at));
+    });
+    const end = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag; drag = null;
+      lanes.forEach((l) => l.classList.remove("is-over"));
+      if (!d.live) return;   // a tap: the click handler moves it on
+      suppressClick = true; setTimeout(() => { suppressClick = false; }, 0);
+      card.classList.remove("is-lifted");
+      sx.x = pos.x; sy.x = pos.y;   // the springs start from where the card is on screen
+      const h = d.hist.filter((p) => e.timeStamp - p.t < 120), z = d.hist[d.hist.length - 1], a = h[0] || z;
+      const dt = Math.max(16, z.t - a.t) / 1000, cap = (v) => Math.max(-4000, Math.min(4000, v));
+      const vel = e.type === "pointercancel" ? { x: 0, y: 0 } : { x: cap((z.x - a.x) / dt), y: cap((z.y - a.y) / dt) };
+      const speed = Math.hypot(vel.x, vel.y);
+      // Project where the throw is going (Apple's decay projection), and drop into the lane there.
+      const project = (v) => (v / 1000) * .99 / (1 - .99);
+      const target = laneAt(z.x + project(vel.x));
+      const damping = speed > 300 ? .8 : 1;   // bounce only because a flick preceded it
+      if (target >= 0 && target !== at) place(target, vel, damping);
+      else { card.classList.add("is-flying"); sx.to(0, { velocity: vel.x, damping, response: .4 }); sy.to(0, { velocity: vel.y, damping, response: .4 }); }
+    };
+    card.addEventListener("pointerup", end);
+    card.addEventListener("pointercancel", end);
+    card.addEventListener("click", () => { if (suppressClick) return; if (at < 2) place(at + 1); });
+    reset.addEventListener("click", () => { place(0); card.focus(); });
+  }
+
+  /* ---------- Mental maths: the answer stays back until it is right or asked for ---------- */
+  {
+    const form = $("[data-mm]"), input = $("#mm-a"), outEl = $("#mm-out"), how = $("[data-mm-how]"), again = $("[data-mm-reset]");
+    const shake = new Spring(0, { damping: .35, response: .3, eps: .2 }, (x) => { input.style.translate = `${x}px 0`; });
+    const finish = () => { how.hidden = true; again.hidden = false; };
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = input.value.trim();
+      if (!v) { outEl.className = "out"; outEl.textContent = "Type your answer first."; input.focus(); return; }
+      if (v === "408") {
+        outEl.className = "out ok"; outEl.textContent = "Right, 408. Quick way: 17 × 25 = 425, then take away 17.";
+        finish(); log("maths", "Solved 17 × 24");
+      } else {
+        outEl.className = "out no"; outEl.textContent = `${v} isn't it. Try again, or ask to see how.`;
+        if (!reduce.matches) shake.to(0, { velocity: -900 });
+        input.select();
+        log("maths", "Tried 17 × 24");
+      }
+    });
+    how.addEventListener("click", () => { outEl.className = "out"; outEl.textContent = "17 × 25 = 425, then take away 17: 17 × 24 = 408."; finish(); log("maths", "Worked through 17 × 24"); });
+    again.addEventListener("click", () => { input.value = ""; outEl.className = "out"; outEl.textContent = ""; how.hidden = false; again.hidden = true; input.focus(); });
+  }
+
+  /* ---------- The route line: transit geometry (vertical runs, 45° switches), drawn 1:1 by scroll ---------- */
+  {
+    const route = $(".route"), svg = $(".track", route);
+    const ghost = $(".ghost", svg), live = $(".live", svg), head = $(".head", svg);
+    const stops = $$(".stop", route);
+    let segs = [], total = 0, stopY = [];
+    function build() {
+      const box = route.getBoundingClientRect();
+      const pts = stops.map((s) => { const r = $(".stop__dot", s).getBoundingClientRect(); return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top }; });
+      stopY = pts.map((p) => p.y);
+      const startY = $(".route__intro", route).getBoundingClientRect().bottom - box.top;
+      const path = [{ x: pts[0].x, y: Math.min(startY, pts[0].y - 40) }];
+      pts.forEach((p) => {
+        const prev = path[path.length - 1], dx = Math.abs(p.x - prev.x);
+        if (dx > 1) { const bendEnd = p.y - Math.min(120, (p.y - prev.y) * .3); const bendStart = Math.max(prev.y, bendEnd - dx); path.push({ x: prev.x, y: bendStart }, { x: p.x, y: bendEnd }); }
+        path.push(p);
+      });
+      segs = []; total = 0;
+      for (let i = 1; i < path.length; i++) { const a = path[i - 1], b = path[i], len = Math.hypot(b.x - a.x, b.y - a.y); segs.push({ y0: a.y, y1: b.y, l0: total, l1: total + len }); total += len; }
+      const d = path.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+      ghost.setAttribute("d", d); live.setAttribute("d", d);
+      $("[data-grad]").setAttribute("y2", box.height);
+    }
+    const lenAtY = (y) => { if (!segs.length || y <= segs[0].y0) return 0; for (const s of segs) if (y <= s.y1) return s.y1 === s.y0 ? s.l1 : s.l0 + (s.l1 - s.l0) * (y - s.y0) / (s.y1 - s.y0); return total; };
+    function draw(len) {
+      const L = Math.max(0, Math.min(total, len));
+      live.style.strokeDasharray = `${L} ${total + 20}`;
+      const pt = live.getPointAtLength(L);
+      head.setAttribute("cx", pt.x); head.setAttribute("cy", pt.y); head.style.opacity = L > 0 ? 1 : 0;
+    }
+    function update() {
+      if (reduce.matches) { draw(total); stops.forEach((s) => s.classList.add("is-on")); return; }
+      const y = innerHeight * .62 - route.getBoundingClientRect().top;
+      draw(lenAtY(y));
+      stops.forEach((s, i) => s.classList.toggle("is-on", y >= stopY[i] - 2));
+    }
+    let queued = false;
+    const frame = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; update(); }); };
+    const rebuild = () => { build(); update(); };
+    rebuild();
+    addEventListener("scroll", frame, { passive: true });
+    new ResizeObserver(() => requestAnimationFrame(rebuild)).observe(route);
+    reduce.addEventListener("change", rebuild);
+    document.fonts && document.fonts.ready.then(rebuild);
+  }
+})();
+</script>
+<script src="assets/mnav.js"></script>
+</body>
+</html>
