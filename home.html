@@ -4,8 +4,28 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Offer Engine: become offer ready</title>
-<meta name="description" content="The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.">
+<title>The Offer Engine | Become offer ready</title>
+<meta name="description" content="Score your CV, track every application and practise psychometric tests and case interviews. The Offer Engine shows you exactly what to do next to land a graduate or internship offer.">
+<meta name="theme-color" content="#080c14">
+<link rel="canonical" href="https://lukechester03.github.io/offer-mockups/home.html">
+<link rel="icon" href="https://lukechester03.github.io/offer-mockups/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="https://lukechester03.github.io/offer-mockups/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="https://lukechester03.github.io/offer-mockups/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Offer Engine">
+<meta property="og:url" content="https://lukechester03.github.io/offer-mockups/home.html">
+<meta property="og:title" content="The Offer Engine | Become offer ready">
+<meta property="og:description" content="Score your CV, track every application and practise psychometric tests and case interviews, with a clear next step every week.">
+<meta property="og:image" content="https://lukechester03.github.io/offer-mockups/assets/og-home.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Offer Engine: become offer ready. The dashboard shows a readiness score with its six areas.">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Offer Engine | Become offer ready">
+<meta name="twitter:description" content="Score your CV, track every application and practise psychometric tests and case interviews, with a clear next step every week.">
+<meta name="twitter:image" content="https://lukechester03.github.io/offer-mockups/assets/og-home.png">
+<meta name="twitter:image:alt" content="The Offer Engine: become offer ready. The dashboard shows a readiness score with its six areas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..900&display=swap" rel="stylesheet">
@@ -14,9 +34,6 @@ document.documentElement.classList.add("js");
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("m");
 </script>
 <style>
-/* Home: Route is the spine (one scroll-drawn line, stop order, open canvas, fares table, terminus).
-   Bento supplies the hero product window, the working demos inside the stops, the "What you just did"
-   bar and a sticky nav. Tokens: website/app/globals.css + dashboard v2 surfaces. */
 :root {
   --bg: #080c14; --bg-alt: #0d1220;
   --s1: #111a2e; --s2: #13203a; --s3: #17223b; --s4: #1e2b49;
@@ -83,6 +100,8 @@ input { caret-color: var(--accent-soft); }
 .nav__links a:hover { color: var(--ink); background: rgba(255, 255, 255, .06); }
 .nav__go { margin-left: 8px; }
 @media (max-width: 960px) { .nav__links { display: none; } .nav__go { margin-left: auto; } .mnav-btn { display: inline-flex; } }
+/* On a phone the hero's two buttons sit right under the nav, so the bar keeps just the name and the menu. */
+@media (max-width: 600px) { .nav__go { display: none; } .nav[data-mnav] .mnav-btn { margin-left: auto; } }
 
 /* ---------- Hero (Bento's): one headline, two actions, the product window above the fold ---------- */
 .hero { position: relative; padding-block: clamp(48px, 7vw, 96px) 0; text-align: center; overflow: hidden; }
@@ -101,7 +120,14 @@ input { caret-color: var(--accent-soft); }
 .win__bar { display: flex; gap: 6px; padding: 4px 6px 14px; }
 .win__bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--s4); }
 .win picture, .win img { display: block; width: 100%; height: auto; border-radius: 12px 12px 0 0; }
-@media (max-width: 680px) { .win { max-width: 420px; padding: 10px 10px 0; } .hero__go .btn { flex: 1 1 100%; } }
+/* Phones get the dashboard as it looks on a phone (sidebar closed), at its own aspect ratio, so the score and
+   stats read at full size instead of a shrunken desktop. The ratio is set here too, not only on <source>,
+   so no browser falls back to the desktop shape and squeezes it. */
+@media (max-width: 680px) {
+  .win { max-width: 440px; padding: 10px 10px 0; }
+  .win img { aspect-ratio: 1000 / 1735; object-fit: cover; object-position: top; }
+  .hero__go .btn { flex: 1 1 100%; }
+}
 
 /* Real screenshots inside a stop */
 .shot { margin: 0; }
@@ -221,24 +247,41 @@ input { caret-color: var(--accent-soft); }
 .pick input { width: 18px; height: 18px; accent-color: var(--v2-blue); }
 .pick__go { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
-/* Practice: the real mental maths session */
-.ms { padding: 0; overflow: hidden; }
-.ms__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 14px 20px; }
-.ms__bar strong { font-size: .9375rem; }
-.ms__clock { display: flex; align-items: center; gap: 14px; }
-.ms__prog { height: 3px; background: var(--v2-border); }
-.ms__prog i { display: block; height: 100%; width: 100%; background: var(--v2-grad); transform-origin: left; }
-.ms__body { display: grid; justify-items: center; gap: 14px; padding: 36px 20px 28px; text-align: center; }
-.ms__meta { display: flex; gap: 18px; }
-.ms__q { font-size: clamp(2rem, 4.2vw, 3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
-.ms input { width: min(100%, 22rem); min-height: 60px; padding: 0 18px; border-radius: 16px; border: 1px solid var(--v2-blue); background: var(--v2-bg); color: var(--v2-text); text-align: right; font: 600 1.375rem var(--f); }
-.ms__st { min-height: 1.5em; font-size: .9375rem; }
-.ms__st.ok { color: var(--v2-good); }
-.ms__st.no { color: var(--v2-bad); }
-.ms__res { display: grid; justify-items: start; gap: 12px; padding: 28px 24px; }
-.ms__res h4 { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; }
-.ms__card { width: 100%; padding: 16px; border-radius: 14px; background: var(--v2-bg); box-shadow: inset 0 0 0 1px var(--v2-border); }
-@media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { gap: 2px; } .bar__col i { width: 24px; } .bar__n { font-size: .75rem; } .rd__n { font-size: 3.5rem; } .ms__meta { gap: 12px; font-size: .8125rem; } }
+/* Case studies: the real case interview (website/.../interviews/cases/[case]/CaseInterview.tsx) */
+.cs { display: grid; gap: 22px; }
+.cs__brief { display: grid; gap: 12px; }
+.cs__t { font-size: 1.375rem; font-weight: 650; letter-spacing: -.015em; line-height: 1.2; }
+.cs__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.cs__tags li { padding: 3px 10px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--v2-border); font-size: .75rem; color: var(--v2-text); }
+.cs__p { font-size: .9375rem; color: var(--v2-text); }
+.cs__ex h4 { margin: 4px 0 2px; font-size: .875rem; font-weight: 650; }
+.cs table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.cs th { padding: 6px 0; font-weight: 400; text-align: left; color: var(--v2-muted); }
+.cs td { padding: 7px 0; border-top: 1px solid var(--v2-border); }
+.cs th + th, .cs td + td { text-align: right; padding-left: 12px; }
+.cs__q { display: grid; gap: 14px; padding-top: 22px; box-shadow: 0 -1px 0 var(--v2-border); }
+.seg { display: flex; gap: 4px; }
+.seg i { flex: 1; height: 8px; border-radius: 999px; background: var(--v2-border); transition: background-color .4s; }
+.seg i.on { background: var(--v2-grad); }
+.cs__stem { font-size: 1.125rem; font-weight: 650; line-height: 1.35; }
+.cs__opts { display: grid; gap: 8px; }
+.co { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 52px; padding: 10px 14px; border: 1px solid var(--v2-border); border-radius: 14px; background: transparent; color: var(--v2-text); text-align: left; font: inherit; font-size: .9375rem; cursor: pointer; transition: background-color .2s, border-color .2s, transform .3s var(--ease); }
+.co:hover:not(:disabled) { background: rgba(255, 255, 255, .04); }
+.co:active:not(:disabled) { transform: scale(.98); transition-duration: .1s; }
+.co:disabled { cursor: default; }
+.co__k { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid currentColor; border-radius: 7px; font-size: .75rem; }
+.co__n { margin-left: auto; padding-left: 8px; font-size: .8125rem; color: var(--v2-muted); white-space: nowrap; }
+.co[aria-checked="true"], .co.is-right { border-color: #6b8cff; background: #1b2540; }
+.co.is-wrong .co__x { text-decoration: line-through; }
+.cs__go { justify-self: start; min-height: 46px; padding: 0 20px; border: 0; border-radius: 12px; background: var(--v2-grad); color: #0a0f1c; font: 650 .9375rem var(--f); cursor: pointer; transition: transform .3s var(--ease), opacity .2s; }
+.cs__go:disabled { opacity: .45; cursor: not-allowed; }
+.cs__go:active:not(:disabled) { transform: scale(.97); transition-duration: .1s; }
+.cs__res { display: grid; gap: 4px; }
+.cs__res strong.ok { color: var(--v2-good); }
+.cs__res strong.no { color: var(--v2-bad); }
+.cs__res p { font-size: .9375rem; color: var(--v2-muted); }
+.m .cs__res:not([hidden]) { animation: rise .5s var(--ease); }
+@media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { gap: 2px; } .bar__col i { width: 24px; } .bar__n { font-size: .75rem; } .rd__n { font-size: 3.5rem; } }
 
 /* Terminus */
 .stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(clamp(48px, 6vw, 88px) + 64px); }
@@ -323,33 +366,18 @@ input { caret-color: var(--accent-soft); }
 .foot nav a:hover { color: var(--ink); text-decoration: underline; }
 .foot p { width: 100%; }
 
-/* ---------- What you just did ---------- */
-.did { position: fixed; z-index: 30; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: min(720px, calc(100% - 24px)); display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 20px; border-radius: 999px; background: rgba(19, 32, 58, .78); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 20px 60px -20px rgba(0, 0, 0, .85); translate: -50% calc(100% + 40px); opacity: 0; visibility: hidden; transition: translate .55s var(--ease), opacity .35s, visibility 0s .55s; }
-.did.is-on { translate: -50% 0; opacity: 1; visibility: visible; transition: translate .55s var(--ease), opacity .35s, visibility 0s; }
-.did__t { flex: 1; min-width: 0; font-size: var(--t-1); }
-.did__t b { display: block; font-size: .9375rem; }
-.did__list { display: block; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-width: 680px) {
-  .did { border-radius: 20px; }
-  /* Sign up shows in one place at a time on a phone: the bar takes it over from the nav. */
-  .did-on .nav__go { display: none; }
-}
-
 /* ---------- Accessibility preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important; transition-duration: .2s !important; }
-  .btn:active, .opt:active, .link:active, .faq summary:active, .v2-btn:active, .bar:active { transform: none; }
-  .did { translate: -50% 0; }
+  .btn:active, .opt:active, .link:active, .faq summary:active, .v2-btn:active, .bar:active, .co:active, .cs__go:active { transform: none; }
   .ac--drag.is-lifted { scale: 1; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .did { background: var(--s2); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 @media (prefers-contrast: more) {
   :root { --muted: #cbd5e1; --soft: #e2e8f0; --line: rgba(255, 255, 255, .45); }
   .nav { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 1px 0 var(--line); }
-  .did { background: var(--s2); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--line); }
   .ui, .win, .opt, .btn--quiet, .shot img { box-shadow: inset 0 0 0 1px var(--line); }
   .v2 { --v2-border: rgba(203, 213, 225, .5); --v2-muted: #cbd5e1; }
   .hero::before { display: none; }
@@ -363,9 +391,9 @@ input { caret-color: var(--accent-soft); }
   <div class="wrap nav__in">
     <a class="mark" href="#top"><i aria-hidden="true"></i>The Offer Engine</a>
     <nav class="nav__links" aria-label="Site">
-      <a href="#how-it-works">How it works</a><a href="#cv-check">CV Checker</a><a href="#readiness-score">Readiness Score</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="#how-it-works">How it works</a><a href="#cv-check">CV Checker</a><a href="#psychometric-tests">Psychometric tests</a><a href="#case-studies">Case studies</a><a href="#pricing">Pricing</a><a href="#faq">Q&amp;A</a>
     </nav>
-    <a class="btn btn--sm nav__go" href="#">Sign up free</a>
+    <a class="btn btn--sm nav__go" href="#cv-check">Check My CV for Free</a>
   </div>
 </header>
 
@@ -375,16 +403,16 @@ input { caret-color: var(--accent-soft); }
     <h1 class="hero__h" id="hero-h">Become offer ready</h1>
     <p class="hero__p">The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.</p>
     <div class="hero__go">
-      <a class="btn" href="#">Sign up free</a>
-      <a class="btn btn--ink" href="#cv-check">Check my CV free</a>
+      <a class="btn" href="#cv-check">Check My CV for Free</a>
+      <a class="btn btn--ink" href="#pricing">Explore Plans</a>
     </div>
   </div>
   <div class="wrap">
     <div class="win">
       <div class="win__bar" aria-hidden="true"><i></i><i></i><i></i></div>
       <picture>
-        <source media="(max-width: 680px)" srcset="assets/dash-home-phone.webp" width="780" height="1300">
-        <img src="assets/dash-home.webp" width="2000" height="1112" fetchpriority="high" alt="The Offer Engine dashboard home with example data: 4 applications, 3 in progress, 1 interview; provisional readiness 16, Not ready, from Thesis 14%, Profile 54%, Execution 23% and Traction 50%, with Aptitude and Interview not yet assessed; deadlines for Goldman Sachs (overdue), Deloitte (9 days left) and PwC.">
+        <source media="(max-width: 680px)" srcset="assets/dash-home-phone.webp" width="1000" height="1735">
+        <img src="assets/dash-home.webp" width="2000" height="1112" fetchpriority="high" alt="The Offer Engine dashboard with example data: 4 applications, 3 in progress, 1 interview; provisional readiness 16, Not ready, from Thesis 14%, Profile 54%, Execution 23% and Traction 50%, with Aptitude and Interview not yet assessed; deadlines for Goldman Sachs (overdue), Deloitte (9 days left) and PwC.">
       </picture>
     </div>
   </div>
@@ -404,7 +432,7 @@ input { caret-color: var(--accent-soft); }
 
   <div class="wrap route__intro">
     <h2 class="route__h" id="route-h">From track to offer</h2>
-    <p class="route__p">Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. Every stop below is a working piece of the product, with example content. Nothing you do here is sent or saved.</p>
+    <p class="route__p">Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. Every stop below is the real product, with example content. Try the parts you can touch: nothing you do here is sent or saved.</p>
   </div>
 
   <!-- Departs: the one track choice; the readiness replica below reads it -->
@@ -464,15 +492,66 @@ input { caret-color: var(--accent-soft); }
     <div class="stop__text">
       <h3 class="stop__name" id="s3">Academy</h3>
       <p class="stop__lead">A course for your track, stage by stage</p>
-      <p>Twelve stages in five phases, Build, Ship, Sharpen, Test and Convert, take you from choosing your direction to an offer decision. Nothing is locked. Drills for behavioural questions, cases, mental maths and psychometric tests sit alongside it, and every session moves your Interview or Aptitude score.</p>
+      <p>Twelve stages in five phases, Build, Ship, Sharpen, Test and Convert, take you from choosing your direction to an offer decision. Nothing is locked. Alongside it sit the drills: psychometric tests, case studies, behavioural interviews and mental maths, and every session moves your Aptitude or Interview score.</p>
     </div>
     <figure class="shot"><img src="assets/dash-academy.webp" width="2208" height="1124" loading="lazy" alt="Academy overview for the Graduate Programme: Stage 1 of 12, Choose your direction and explain your fit, with its four lessons and a Continue lesson 1.1 button, above a course road map of twelve numbered stages grouped into Build, Ship, Sharpen, Test and Convert. 0 stages complete, 12 to go. Nothing is locked."><figcaption>Screenshot of the Academy overview.</figcaption></figure>
   </article>
 
-  <article class="stop" data-side="l" id="tracker" aria-labelledby="s4">
+  <article class="stop" data-side="l" id="psychometric-tests" aria-labelledby="s4">
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
-      <h3 class="stop__name" id="s4">Application tracker</h3>
+      <h3 class="stop__name" id="s4">Psychometric tests</h3>
+      <p class="stop__lead">Seven sections, in the formats firms really use</p>
+      <p>Most applications are cut at the online test, before a person reads your CV. Practise numerical reasoning in the styles of SHL, Kenexa, Talent Q, Aon cut-e and Cappfinity: multiple choice, true, false or cannot say, typed answers, ranking and interactive charts. Sit each section timed or untimed, see your best score per section, and the next one is always queued. Every sitting feeds your Aptitude score.</p>
+    </div>
+    <figure class="shot"><img src="assets/dash-psychometric.webp" width="1970" height="1240" loading="lazy" alt="Psychometric tests in the Academy, with a Timed and Untimed switch. 4 of 7 sections sat; best scores A 67%, B 45%, C 25% and D 55%, with E marked Next and F and G not sat. Your best sittings average 48%; strongest so far section A at 67%. Next up, section E: Free response (fill in the blank), 20 questions, 20 minutes, Type the figure, with a Start section E button."><figcaption>Screenshot of Psychometric tests with an example account.</figcaption></figure>
+  </article>
+
+  <article class="stop" data-side="r" id="case-studies" aria-labelledby="s5">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s5">Case studies</h3>
+      <p class="stop__lead">24 cases, worked one question at a time</p>
+      <p>Real interview cases across 20 sectors, from a dental practice roll-up to EV charging, at beginner, intermediate and challenging levels. Each comes with its exhibits and six questions that take you from structuring the problem to the maths and the recommendation. Check each answer and see the reasoning straight away. Try question 3 of this one.</p>
+    </div>
+    <div class="v2 cs" data-cs>
+      <div class="cs__brief">
+        <p class="cs__t">UK dental practice roll-up</p>
+        <ul class="cs__tags" aria-label="Case details"><li>Healthcare Services</li><li>M&amp;A / Commercial Due Diligence</li><li>Challenging</li></ul>
+        <p class="cs__p">A mid-market PE fund is considering a buy-and-build of UK dental practices: acquiring a c.40-practice platform and bolting on roughly 10 practices a year. Should they proceed, and what would most threaten the thesis?</p>
+        <section class="cs__ex" aria-label="Exhibit: Illustrative single-practice economics">
+          <h4>Illustrative single-practice economics</h4>
+          <table class="num">
+            <thead><tr><th>Line</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Revenue (4 surgeries)</td><td>£900k (£225k per chair)</td></tr>
+              <tr><td>Clinician pay</td><td>45% of revenue (£405k)</td></tr>
+              <tr><td>Materials and lab</td><td>12% (£108k)</td></tr>
+              <tr><td>Practice staff and premises</td><td>25% (£225k)</td></tr>
+              <tr><td>Practice EBITDA</td><td>18% (£162k)</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+      <div class="cs__q">
+        <div class="seg" role="progressbar" aria-label="Case questions answered" aria-valuemin="0" aria-valuemax="6" aria-valuenow="2" data-cs-seg><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <p class="cs__stem" id="cs-stem">Using Exhibit 1, what is annual EBITDA per chair across the four-chair practice?</p>
+        <div class="cs__opts" role="radiogroup" aria-labelledby="cs-stem" data-cs-opts>
+          <button type="button" class="co" role="radio" aria-checked="false" data-o="A"><span class="co__k">A</span><span class="co__x num">£162.0k</span><span class="co__n"></span></button>
+          <button type="button" class="co" role="radio" aria-checked="false" data-o="B"><span class="co__k">B</span><span class="co__x num">£40.5k</span><span class="co__n"></span></button>
+          <button type="button" class="co" role="radio" aria-checked="false" data-o="C"><span class="co__k">C</span><span class="co__x num">£225.0k</span><span class="co__n"></span></button>
+          <button type="button" class="co" role="radio" aria-checked="false" data-o="D"><span class="co__k">D</span><span class="co__x num">£101.25k</span><span class="co__n"></span></button>
+        </div>
+        <button type="button" class="cs__go" data-cs-check disabled>Check answer</button>
+        <div class="cs__res" role="status" data-cs-res hidden><strong data-cs-verdict></strong><p>£900k revenue × 18% EBITDA margin ÷ 4 chairs = £40.5k per chair.</p><button class="link" type="button" data-cs-again>Try it again</button></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="stop" data-side="l" id="tracker" aria-labelledby="s6">
+    <span class="stop__dot" aria-hidden="true"></span>
+    <div class="stop__text">
+      <h3 class="stop__name" id="s6">Application tracker</h3>
       <p class="stop__lead">Your whole pipeline on one board</p>
       <p>Every application with its status, priority, deadline and next step, as a table or a board. Deadlines count down and turn red when they pass. Drag Deloitte into Applying, or tap it, and choose whether it's in progress or submitted.</p>
     </div>
@@ -502,43 +581,18 @@ input { caret-color: var(--accent-soft); }
     </div>
   </article>
 
-  <article class="stop" data-side="r" id="practice" aria-labelledby="s5">
+  <article class="stop stop--end" data-side="l" aria-labelledby="s7" data-cta>
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="stop__text">
-      <h3 class="stop__name" id="s5">Practice</h3>
-      <p class="stop__lead">Mental maths against the clock</p>
-      <p>Two minutes, up to 60 sums, no calculator. Answer and press Enter: the next sum appears straight away, and if you got the last one wrong it shows you the right answer. Pure maths has 500 sums; the workplace drills for your track have 120 more, with workings after each one.</p>
-    </div>
-    <div class="v2 ms" data-ms>
-      <div class="ms__bar"><strong>Mental maths, easy</strong><span class="ms__clock v2-small"><span class="num" data-ms-clock>2:00 left</span><button type="button" class="v2-btn" data-ms-end>End session</button></span></div>
-      <div class="ms__prog" aria-hidden="true"><i data-ms-prog></i></div>
-      <form class="ms__body" data-ms-form novalidate>
-        <p class="ms__meta v2-small num"><span data-ms-qn>Question 1</span><span data-ms-ok>0 correct</span><span>No calculator</span></p>
-        <p class="ms__q num" data-ms-q>What is 17 × 24?</p>
-        <input inputmode="decimal" autocomplete="off" aria-label="Your answer" data-ms-in>
-        <button type="submit" class="v2-btn">Enter to submit</button>
-        <p class="ms__st" role="status" data-ms-st></p>
-      </form>
-      <div class="ms__res" data-ms-res hidden>
-        <h4>Results</h4>
-        <div class="ms__card num"><p><b data-ms-ans>0</b> answered</p><p><b data-ms-acc>0%</b> accuracy (<span data-ms-cor>0</span> correct)</p></div>
-        <button type="button" class="v2-btn" data-ms-again>Start another session</button>
-      </div>
-    </div>
-  </article>
-
-  <article class="stop stop--end" data-side="l" aria-labelledby="s6" data-cta>
-    <span class="stop__dot" aria-hidden="true"></span>
-    <div class="stop__text">
-      <h3 class="stop__name" id="s6">Offer</h3>
+      <h3 class="stop__name" id="s7">Offer</h3>
     </div>
     <div class="cta">
       <p class="cta__h">Which one first?</p>
       <div class="cta__row">
-        <a class="btn" href="#">Sign up free</a>
-        <a class="btn btn--ink" href="#cv-check">Check my CV free</a>
+        <a class="btn" href="#cv-check">Check My CV for Free</a>
+        <a class="btn btn--ink" href="#pricing">Explore Plans</a>
       </div>
-      <p class="cta__note">Both are free. Only the Academy is paid.</p>
+      <p class="cta__note">Your CV check is free. Plans start at £59.</p>
     </div>
   </article>
 </section>
@@ -572,17 +626,16 @@ input { caret-color: var(--accent-soft); }
 <section class="sec fares" id="pricing" aria-labelledby="price-h">
   <div class="wrap fares__in">
     <div class="fares__head">
-      <h2 class="sec__h" id="price-h">Free to start</h2>
-      <p class="sec__p">The dashboard, tracker and CV Checker are free. The paid plans are one programme, priced by how long your access runs.</p>
+      <h2 class="sec__h" id="price-h">One programme</h2>
+      <p class="sec__p">Every plan is the same programme, with everything in it. Plans are priced by how long your access runs.</p>
     </div>
     <table class="board-t">
       <caption class="sr-only">Plans and prices</caption>
       <thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Includes</th><th scope="col"><span class="sr-only">Choose</span></th></tr></thead>
       <tbody>
-        <tr><th scope="row">Free</th><td class="fare num">£0</td><td><ul><li>Full dashboard with your live Readiness Score</li><li>Application Tracker with deadline alerts</li><li>AI CV Checker</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Sign up free</a></td></tr>
-        <tr><th scope="row">1-Month Programme</th><td class="fare num">£49</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>1 month of access</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 1 month</a></td></tr>
-        <tr><th scope="row">6-Month Programme</th><td class="fare num">£149</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>6 months of access</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 6 months</a></td></tr>
-        <tr><th scope="row">12-Month Programme</th><td class="fare num">£249</td><td><ul><li>Everything in Free</li><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>12 months of access, enough to run the programme through a full recruiting cycle</li></ul></td><td><a class="btn btn--sm" href="#">Choose 12 months</a></td></tr>
+        <tr><th scope="row">1-Month Programme</th><td class="fare num">£59</td><td><ul><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>Psychometric tests, case studies and interview drills</li><li>Live Readiness Score, Application Tracker and AI CV Checker</li><li>1 month of access</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 1 month</a></td></tr>
+        <tr><th scope="row">3-Month Programme</th><td class="fare num">£139</td><td><ul><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>Psychometric tests, case studies and interview drills</li><li>Live Readiness Score, Application Tracker and AI CV Checker</li><li>3 months of access</li></ul></td><td><a class="btn btn--sm" href="#">Choose 3 months</a></td></tr>
+        <tr><th scope="row">12-Month Programme</th><td class="fare num">£249</td><td><ul><li>The Offer Engine Academy: a 12-week structured programme with lessons, worked examples and knowledge checks</li><li>Psychometric tests, case studies and interview drills</li><li>Live Readiness Score, Application Tracker and AI CV Checker</li><li>12 months of access, enough for a full recruiting cycle</li></ul></td><td><a class="btn btn--sm btn--quiet" href="#">Choose 12 months</a></td></tr>
       </tbody>
     </table>
   </div>
@@ -590,7 +643,7 @@ input { caret-color: var(--accent-soft); }
 
 <section class="wrap sec faq" id="faq" aria-labelledby="faq-h">
   <div class="faq__in">
-    <h2 class="sec__h" id="faq-h">Before you sign up</h2>
+    <h2 class="sec__h" id="faq-h">Q&amp;A</h2>
     <div>
       <details open><summary>Which track is right for me? <i aria-hidden="true"></i></summary><p>If you're in first or second year, start with Spring Week. Penultimate year students should choose Summer Internship. Placement Year and Graduate Programme tracks are built for sandwich-course and final-year students. The Offer Engine maps your timeline automatically so you stop guessing and start executing against real recruiting deadlines.</p></details>
       <details><summary>Why does the platform focus so heavily on execution? <i aria-hidden="true"></i></summary><p>Because recruiting is heavily driven by timing and consistency. Applications close earlier than most students expect, and rolling recruitment rewards candidates who move first. A great candidate with no system often loses to an average candidate with consistent execution. The Offer Engine exists to close that gap.</p></details>
@@ -607,7 +660,7 @@ input { caret-color: var(--accent-soft); }
   <nav aria-label="Footer">
     <a href="#how-it-works">How it works</a>
     <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
+    <a href="#faq">Q&amp;A</a>
     <a href="#">Log in</a>
     <a href="#">Terms &amp; cancellation</a>
     <a href="#">Privacy &amp; cookies</a>
@@ -615,10 +668,6 @@ input { caret-color: var(--accent-soft); }
   <p>© 2026 The Offer Engine. No platform can guarantee offers.</p>
 </footer>
 
-<aside class="did" data-did aria-label="What you just did">
-  <p class="did__t"><b>What you just did</b><span class="did__list" data-did-list aria-live="polite"></span></p>
-  <a class="btn btn--sm" href="#">Sign up free</a>
-</aside>
 
 <script>
 (() => {
@@ -658,13 +707,6 @@ input { caret-color: var(--accent-soft); }
     }
   }
 
-  /* ---------- What you just did ---------- */
-  const done = new Map(), did = $("[data-did]"), didList = $("[data-did-list]");
-  let ctaVisible = false;
-  const showDid = () => { const on = done.size > 0 && !ctaVisible; did.classList.toggle("is-on", on); root.classList.toggle("did-on", on); };
-  function log(key, text) { done.set(key, text); didList.textContent = [...done.values()].join(" · "); showDid(); }
-  new IntersectionObserver(([e]) => { ctaVisible = e.isIntersecting; showDid(); }).observe($("[data-cta]"));
-
   /* ---------- Nav: soft edge appears once content scrolls under it ---------- */
   const nav = $(".nav");
   const onScrollNav = () => nav.classList.toggle("is-scrolled", scrollY > 4);
@@ -701,7 +743,6 @@ input { caret-color: var(--accent-soft); }
   function openArea(i, user) {
     bars.forEach((b, j) => b.setAttribute("aria-expanded", j === i));
     panel.innerHTML = `<b>${AREAS[i]}</b><p>${GUIDE[i][0]} Weight ${weights[i]}%.</p><p>${GUIDE[i][1]}</p>`;
-    if (user) log("area", `Opened ${AREAS[i]}`);
   }
   bars.forEach((b, i) => b.addEventListener("click", () => openArea(i, true)));
   const wSprings = bars.map((b) => { const el = $("[data-w]", b); return new Spring(0, { eps: .05 }, (x) => { el.textContent = `${Math.round(x)}% weight`; }); });
@@ -721,7 +762,6 @@ input { caret-color: var(--accent-soft); }
     openArea(open < 0 ? openIdx : open, false);
     if (!firstTrack) {
       $("[data-live]").textContent = `${t.name} weightings: provisional readiness ${score}.`;
-      log("track", `Picked ${t.name}: ${score}`);
     }
     firstTrack = false;
   }
@@ -770,7 +810,7 @@ input { caret-color: var(--accent-soft); }
       if (i === at || i < 0) return;
       from = at;
       fly(i, vel, damping);
-      if (STATUSES[i].length === 1) { status = STATUSES[i][0]; settle(`Deloitte moved to ${NAMES[i]} from ${NAMES[from]}. ${summary()}`); if (i) log("trk", `Moved Deloitte to ${NAMES[i]}`); return; }
+      if (STATUSES[i].length === 1) { status = STATUSES[i][0]; settle(`Deloitte moved to ${NAMES[i]} from ${NAMES[from]}. ${summary()}`); return; }
       pickT.textContent = `Move Deloitte to ${NAMES[i]}`;
       pickOpts.innerHTML = STATUSES[i].map((s) => `<label><input type="radio" name="pk" value="${s}"> ${s}</label>`).join("");
       yes.disabled = true;
@@ -783,7 +823,6 @@ input { caret-color: var(--accent-soft); }
     yes.addEventListener("click", () => {
       status = $("input:checked", pickOpts).value; closePick();
       settle(`Deloitte moved to ${NAMES[at]} from ${NAMES[from]}, ${status}. ${summary()}`);
-      log("trk", `Moved Deloitte to ${NAMES[at]}: ${status}`);
       card.focus();
     });
     const cancel = () => { closePick(); const back = from; fly(back); at = back; settle(`Move cancelled. Deloitte stays in ${NAMES[back]}.`); card.focus(); };
@@ -837,45 +876,44 @@ input { caret-color: var(--accent-soft); }
     reset.addEventListener("click", () => { from = at; status = "Planned"; fly(0); settle(`Deloitte moved to Planned. ${summary()}`); card.focus(); });
   }
 
-  /* ---------- Mental maths session replica (website/.../mental-maths/MentalMathsSession.tsx) ----------
-     Two minutes on the clock; each answer moves straight on; a wrong one shows the right answer. */
+  /* ---------- Case interview replica (website/.../interviews/cases/[case]/CaseInterview.tsx) ----------
+     Pick an option, Check answer, then the right option is marked, a wrong pick is struck through, and the
+     reasoning shows. Case 01, question 3, as in the case bank. */
   {
-    const SUMS = [["17 × 24", 408], ["84 × 4", 336], ["94 × 3", 282], ["15,580 - 3,565", 12015]];
-    const SECONDS = 120;
-    const form = $("[data-ms-form]"), input = $("[data-ms-in]"), st = $("[data-ms-st]"), q = $("[data-ms-q]"), qn = $("[data-ms-qn]"), okEl = $("[data-ms-ok]");
-    const clockWrap = $(".ms__clock"), clock = $("[data-ms-clock]"), prog = $("[data-ms-prog]"), res = $("[data-ms-res]"), endBtn = $("[data-ms-end]");
-    let i, correct, left, timer, ended;
-    const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")} left`;
-    function paintClock() { clock.textContent = fmt(left); prog.style.transform = `scaleX(${left / SECONDS})`; }
-    function start() { if (timer || ended) return; timer = setInterval(() => { left--; paintClock(); if (left <= 0) finish(); }, 1000); }
-    function show() { const [s] = SUMS[i % SUMS.length]; q.textContent = `What is ${s}?`; qn.textContent = `Question ${i + 1}`; okEl.textContent = `${correct} correct`; }
-    function reset() { clearInterval(timer); timer = 0; i = 0; correct = 0; left = SECONDS; ended = false; form.hidden = false; res.hidden = true; clockWrap.hidden = false; st.textContent = ""; st.className = "ms__st"; input.value = ""; paintClock(); show(); }
-    function finish() {
-      clearInterval(timer); timer = 0; ended = true;
-      const acc = i ? Math.round(100 * correct / i) : 0;
-      $("[data-ms-ans]").textContent = i; $("[data-ms-acc]").textContent = `${acc}%`; $("[data-ms-cor]").textContent = correct;
-      form.hidden = true; res.hidden = false; clockWrap.hidden = true;
-      log("maths", `Mental maths: ${i} answered, ${acc}% accuracy`);
-    }
-    input.addEventListener("input", start);
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const v = input.value.trim();
-      if (!v) return;
-      const n = Number(v);
-      if (!Number.isFinite(n)) { st.className = "ms__st no"; st.setAttribute("role", "alert"); st.textContent = "Enter the number only, with no %, £ or commas."; return; }
-      start();
-      st.setAttribute("role", "status");
-      const [s, ans] = SUMS[i % SUMS.length], ok = n === ans;
-      if (ok) correct++;
-      st.className = `ms__st ${ok ? "ok" : "no"}`;
-      st.textContent = ok ? "✓ Correct" : `✗ Last answer wrong: ${s} = ${ans}`;
-      i++; input.value = ""; show(); input.focus();
-      log("maths", `Mental maths: ${correct} of ${i} correct`);
+    const box = $("[data-cs]"), opts = $$(".co", box), check = $("[data-cs-check]"), res = $("[data-cs-res]");
+    const verdict = $("[data-cs-verdict]"), again = $("[data-cs-again]"), seg = $("[data-cs-seg]"), segs = $$("i", seg);
+    const RIGHT = "B";
+    let picked = null;
+    const roving = () => opts.forEach((b, j) => { b.tabIndex = (picked ? b.dataset.o === picked : j === 0) ? 0 : -1; });
+    const pick = (o) => { picked = o.dataset.o; opts.forEach((b) => b.setAttribute("aria-checked", b === o)); check.disabled = false; roving(); };
+    opts.forEach((o, i) => {
+      o.addEventListener("click", () => { if (!o.disabled) pick(o); });
+      o.addEventListener("keydown", (e) => {   // a radio group: arrows move the choice
+        const d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        if (!d || o.disabled) return;
+        e.preventDefault(); const n = opts[(i + d + opts.length) % opts.length]; pick(n); n.focus();
+      });
     });
-    endBtn.addEventListener("click", finish);
-    $("[data-ms-again]").addEventListener("click", () => { reset(); input.focus(); });
-    reset();
+    roving();
+    check.addEventListener("click", () => {
+      if (!picked) return;
+      const ok = picked === RIGHT;
+      opts.forEach((b) => {
+        b.disabled = true;
+        const right = b.dataset.o === RIGHT, wrong = b.dataset.o === picked && !ok;
+        b.classList.toggle("is-right", right); b.classList.toggle("is-wrong", wrong);
+        $(".co__n", b).textContent = right ? "Correct answer" : wrong ? "Your answer" : "";
+      });
+      verdict.textContent = ok ? "Correct" : "Not quite"; verdict.className = ok ? "ok" : "no";
+      segs[2].classList.add("on"); seg.setAttribute("aria-valuenow", 3);
+      check.hidden = true; res.hidden = false; again.focus();
+    });
+    again.addEventListener("click", () => {
+      picked = null;
+      opts.forEach((b) => { b.disabled = false; b.classList.remove("is-right", "is-wrong"); b.setAttribute("aria-checked", "false"); $(".co__n", b).textContent = ""; });
+      segs[2].classList.remove("on"); seg.setAttribute("aria-valuenow", 2);
+      check.hidden = false; check.disabled = true; res.hidden = true; roving(); opts[0].focus();
+    });
   }
 
   /* ---------- The route line: transit geometry (vertical runs, 45° switches), drawn 1:1 by scroll ---------- */
