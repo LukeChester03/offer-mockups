@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "home.html"
+        ],
+        "createdAt": "2026-11-22T18:41:42.467Z",
+        "reason": "maintainer request (issue 768 follow-up): demos must be faithful replicas of the real dashboard; tracker board columns holding application cards mirror website/app/dashboard/tracker/components/board"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-11-22T22:31:20.050Z",
+        "reason": "matches the product font in the-offer-engine website"
+      }
+    ]
+  }
+}
