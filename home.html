@@ -402,8 +402,7 @@ input { caret-color: var(--accent-soft); }
 
 
 /* ---------- Pizazz: display type, chips, stats, reveals ---------- */
-/* Accent words: roman, one solid colour. No gradient text, no italic display. */
-h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
+h1 em, h2 em, h3 em, h4 em { font-style: italic; font-weight: 400; background: linear-gradient(100deg, #8fb4ff, #b39bff 60%, #e0d4ff); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .06em; }
 .kick { position: relative; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); font-size: var(--t-1); font-weight: 600; letter-spacing: .02em; }
 .kick::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px rgba(52, 211, 153, .18); }
 .hero__h .w { display: inline-block; overflow: clip; overflow-clip-margin: .2em; padding-bottom: .06em; vertical-align: top; }
@@ -438,9 +437,9 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 .phases li::before { content: counter(ph); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--grad); color: #fff; font-size: .75rem; }
 @media (max-width: 900px) { .phases li + li::after { display: none; } .aca__nums { gap: 4px 20px; } }
 .phases li + li::after { order: -1; content: ""; width: 18px; height: 2px; margin-right: 6px; background: var(--s4); }
-.big5 { font-size: 1.6em; color: var(--accent-soft); }
+.big5 { font-size: 1.6em; font-style: italic; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .08em; }
 .marq { min-width: 0; contain: inline-size; margin-inline: calc(clamp(20px, 4vw, 64px) * -1); overflow: clip; }
-.marq p { width: max-content; font-family: var(--f-d); font-size: clamp(2.5rem, 7vw, 6rem); line-height: 1.1; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1px rgba(203, 213, 225, .45); white-space: nowrap; transform: translateX(var(--mx, 0px)); }
+.marq p { width: max-content; font-family: var(--f-d); font-style: italic; font-size: clamp(2.5rem, 7vw, 6rem); line-height: 1.1; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1px rgba(203, 213, 225, .45); white-space: nowrap; transform: translateX(var(--mx, 0px)); }
 .marq i { font-style: normal; -webkit-text-stroke: 0; color: var(--violet); font-size: .5em; vertical-align: middle; margin-inline: .4em; }
 
 /* Scroll reveals (motion only): lift and unblur as each block enters */
@@ -460,7 +459,7 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 .arr__fig { display: flex; align-items: baseline; gap: 10px; font-family: var(--f-d); font-weight: 500; letter-spacing: -.04em; line-height: .9; }
 .arr__fig span { font-size: clamp(1.75rem, 2.4vw, 2.25rem); color: var(--muted); }
 .arr__fig i { font-style: normal; color: var(--violet); font-size: 1.5rem; }
-.arr__fig b { font-size: clamp(4.5rem, 8vw, 7.5rem); font-weight: 500; color: var(--ink); }
+.arr__fig b { font-size: clamp(4.5rem, 8vw, 7.5rem); font-weight: 500; background: linear-gradient(180deg, #fff, #b7c6ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .arr blockquote { font-family: var(--f-d); font-size: 1.375rem; line-height: 1.25; letter-spacing: -.01em; }
 .arr cite { font-style: normal; color: var(--muted); font-size: .9375rem; }
 .arr cite b { color: var(--ink); font-weight: 600; }
@@ -474,7 +473,7 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 .fares__in { display: grid; gap: clamp(40px, 5vw, 72px); }
 .fares__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px clamp(48px, 7vw, 112px); align-items: end; }
 .fares .sec__h { max-width: 13ch; font-size: clamp(3rem, 6.4vw, 5.75rem); }
-.fares h2 em { color: #3b2fd6; }
+.fares h2 em { background: var(--grad); -webkit-background-clip: text; background-clip: text; }
 .chips--ink li { background: #fff; color: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
 .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .plan { display: grid; gap: 8px; align-content: start; padding: clamp(24px, 3vw, 36px); border-radius: 28px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
