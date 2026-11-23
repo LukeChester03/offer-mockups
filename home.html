@@ -109,7 +109,7 @@ input { caret-color: var(--accent-soft); }
 
 /* ---------- Hero (Bento's): one headline, two actions, the product window above the fold ---------- */
 .hero { position: relative; padding-block: clamp(48px, 7vw, 96px) 0; text-align: center; overflow: hidden; }
-.hero::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108, 62, 246, .3), rgba(59, 126, 246, .14) 55%, transparent); pointer-events: none; }
+.hero::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108, 62, 246, .16), rgba(59, 126, 246, .07) 55%, transparent); pointer-events: none; }
 .hero__h { position: relative; font-family: var(--f-d); font-size: var(--t-7); font-weight: 500; line-height: .88; letter-spacing: -.045em; text-wrap: balance; }
 .hero__p { position: relative; max-width: 38ch; margin: 24px auto 0; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); color: var(--soft); text-wrap: pretty; }
 .hero__go { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
@@ -326,6 +326,7 @@ input { caret-color: var(--accent-soft); }
 .ms__res { display: grid; justify-items: start; gap: 12px; padding: 28px 24px; }
 .ms__res h4 { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; }
 .ms__card { width: 100%; padding: 16px; border-radius: 14px; background: var(--v2-bg); box-shadow: inset 0 0 0 1px var(--v2-border); }
+.pane__d { color: var(--muted); font-size: 1rem; }
 /* Practice: one tile, a tab per Academy drill, with arrows to step through them */
 .tile { display: grid; gap: 16px; min-width: 0; }
 .tabs { position: relative; display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; border-radius: 18px; background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
@@ -341,7 +342,6 @@ input { caret-color: var(--accent-soft); }
 }
 .pane { display: grid; gap: 14px; min-width: 0; }
 .m .pane:not([hidden]) { animation: rise .5s var(--ease); }
-.pane__d { color: var(--soft); font-size: .9375rem; text-wrap: pretty; }
 .pane .shot img { border-radius: 16px; }
 .step-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .step-nav p { font-size: var(--t-1); color: var(--muted); }
@@ -401,11 +401,9 @@ input { caret-color: var(--accent-soft); }
 }
 
 
-/* ---------- Pizazz: display type, chips, stats, reveals ---------- */
+/* ---------- Display type and calm reveals ---------- */
 /* Accent words: roman, one solid colour. No gradient text, no italic display. */
-h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
-.kick { position: relative; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); font-size: var(--t-1); font-weight: 600; letter-spacing: .02em; }
-.kick::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px rgba(52, 211, 153, .18); }
+.hero__h em { font-style: normal; color: var(--accent-soft); }
 .hero__h .w { display: inline-block; overflow: clip; overflow-clip-margin: .2em; padding-bottom: .06em; vertical-align: top; }
 .hero__h .w > span { display: inline-block; }
 .m .hero__h { animation: none; }
@@ -413,79 +411,50 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 .m .hero__h .w:nth-child(2) > span { animation-delay: .09s; }
 .m .hero__h .w:nth-child(3) > span { animation-delay: .18s; }
 @keyframes word { from { transform: translateY(105%) rotate(4deg); } }
-.m .kick { animation: rise .9s var(--ease) backwards; }
-.win { transform-origin: 50% 0; transform: perspective(1600px) rotateX(calc(var(--tilt, 0) * 16deg)) scale(calc(1 - var(--tilt, 0) * .06)); will-change: transform; }
-.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(40px, 6vw, 88px); text-align: left; }
-.stats li { display: grid; gap: 6px; padding: 20px clamp(12px, 2vw, 28px); box-shadow: -1px 0 0 var(--line); }
-.stats li:first-child { box-shadow: none; }
-.stats b { font-family: var(--f-d); font-size: clamp(3rem, 7vw, 6rem); font-weight: 500; letter-spacing: -.04em; line-height: .9; }
-.stats span { color: var(--muted); font-size: var(--t-1); font-weight: 500; }
-@media (max-width: 680px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stats li:nth-child(3) { box-shadow: none; } .stats li:nth-child(n+3) { border-top: 1px solid var(--line); } }
-.note { margin-top: 14px; color: var(--muted); font-size: 1rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-.chips li { padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line); font-size: .9375rem; font-weight: 500; color: var(--soft); }
-.pane__d { display: flex; flex-wrap: wrap; gap: 8px; color: var(--soft); font-size: .9375rem; }
-.pane__d span { padding: 6px 14px; border-radius: 999px; background: var(--s2); box-shadow: inset 0 0 0 1px var(--line); }
-.pane__d b { color: var(--ink); font-weight: 700; }
 
-/* Academy: the second wow. An oversized title that grows into place as it scrolls up, then a marquee of the five drills. */
-.aca { position: relative; overflow: clip; background: radial-gradient(120% 60% at 50% 0%, rgba(108, 62, 246, .22), transparent 60%), var(--field); box-shadow: inset 0 0 0 1px rgba(143, 180, 255, .14); }
+/* Academy: an oversized title that grows into place as it scrolls up. */
+.note { margin-top: 14px; color: var(--muted); font-size: 1rem; }
+.aca { position: relative; overflow: clip; background: var(--field); }
 .aca__big { font-family: var(--f-d); font-size: clamp(3.5rem, 13vw, 11rem); font-weight: 500; letter-spacing: -.045em; line-height: .9; text-wrap: balance; transform: scale(calc(.78 + var(--p, 1) * .22)); opacity: calc(.25 + var(--p, 1) * .75); transform-origin: 50% 100%; }
-.aca__nums { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px; color: var(--muted); font-size: 1.0625rem; }
-.aca__nums b { font-family: var(--f-d); font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; color: var(--ink); letter-spacing: -.03em; margin-right: 6px; }
-.phases { display: flex; flex-wrap: wrap; justify-content: center; gap: 0; counter-reset: ph; }
-.phases li { counter-increment: ph; display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-weight: 600; font-size: .9375rem; }
-.phases li::before { content: counter(ph); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--grad); color: #fff; font-size: .75rem; }
-@media (max-width: 900px) { .phases li + li::after { display: none; } .aca__nums { gap: 4px 20px; } }
-.phases li + li::after { order: -1; content: ""; width: 18px; height: 2px; margin-right: 6px; background: var(--s4); }
-.big5 { font-size: 1.6em; color: var(--accent-soft); }
-.marq { min-width: 0; contain: inline-size; margin-inline: calc(clamp(20px, 4vw, 64px) * -1); overflow: clip; }
-.marq p { width: max-content; font-family: var(--f-d); font-size: clamp(2.5rem, 7vw, 6rem); line-height: 1.1; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1px rgba(203, 213, 225, .45); white-space: nowrap; transform: translateX(var(--mx, 0px)); }
-.marq i { font-style: normal; -webkit-text-stroke: 0; color: var(--violet); font-size: .5em; vertical-align: middle; margin-inline: .4em; }
 
 /* Scroll reveals (motion only): lift and unblur as each block enters */
-.m [data-rv] { opacity: 0; transform: translateY(36px); transition: opacity .9s var(--ease), transform 1.1s var(--ease); }
+.m [data-rv] { opacity: 0; transform: translateY(16px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
 .m [data-rv].in { opacity: 1; transform: none; }
-.m .stats li:nth-child(2), .m .arr li:nth-child(2), .m .plans li:nth-child(2) { transition-delay: .08s; }
-.m .stats li:nth-child(3), .m .arr li:nth-child(3), .m .plans li:nth-child(3) { transition-delay: .16s; }
-.m .stats li:nth-child(4), .m .arr li:nth-child(4) { transition-delay: .24s; }
+.m .arr li:nth-child(2), .m .plans li:nth-child(2) { transition-delay: .08s; }
+.m .arr li:nth-child(3), .m .plans li:nth-child(3) { transition-delay: .16s; }
 .stop--end .stop__name { transform: scale(calc(.7 + var(--p, 1) * .3)); transform-origin: 0 100%; }
 
 /* ---------- Arrivals ---------- */
 .sec { padding-block: clamp(88px, 10vw, 160px); }
 .sec__h { font-family: var(--f-d); font-size: var(--t-6); font-weight: 500; line-height: .92; letter-spacing: -.04em; max-width: 12ch; text-wrap: balance; }
 .sec__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; margin-top: 20px; }
-.arr ol { margin-top: clamp(48px, 6vw, 88px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px clamp(24px, 3vw, 48px); }
+.arr ol { margin-top: clamp(56px, 7vw, 104px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px clamp(24px, 3vw, 48px); }
 .arr li { display: grid; gap: 14px; align-content: start; padding-top: 24px; border-top: 1px solid var(--line); }
 .arr__fig { display: flex; align-items: baseline; gap: 10px; font-family: var(--f-d); font-weight: 500; letter-spacing: -.04em; line-height: .9; }
 .arr__fig span { font-size: clamp(1.75rem, 2.4vw, 2.25rem); color: var(--muted); }
-.arr__fig i { font-style: normal; color: var(--violet); font-size: 1.5rem; }
-.arr__fig b { font-size: clamp(4.5rem, 8vw, 7.5rem); font-weight: 500; color: var(--ink); }
+.arr__fig i { font-style: normal; color: var(--muted); font-size: 1.25rem; }
+.arr__fig b { font-size: clamp(3.5rem, 6vw, 5.5rem); font-weight: 500; color: var(--ink); }
 .arr blockquote { font-family: var(--f-d); font-size: 1.375rem; line-height: 1.25; letter-spacing: -.01em; }
 .arr cite { font-style: normal; color: var(--muted); font-size: .9375rem; }
 .arr cite b { color: var(--ink); font-weight: 600; }
 .arr__k { margin-top: 32px; color: var(--muted); font-size: var(--t-1); }
-@media (max-width: 1100px) { .arr ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .arr ol { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .arr ol { grid-template-columns: 1fr; gap: 56px; } }
 
 /* ---------- Fares ---------- */
 /* A paper-white section: the strongest contrast on the page, so the prices land. */
 .fares { --ink: #0b1020; --muted: #4b5568; --soft: #2a3346; --line: rgba(11, 16, 32, .12); background: #f3f1ec; color: var(--ink); }
 .fares__in { display: grid; gap: clamp(40px, 5vw, 72px); }
 .fares__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px clamp(48px, 7vw, 112px); align-items: end; }
-.fares .sec__h { max-width: 13ch; font-size: clamp(3rem, 6.4vw, 5.75rem); }
-.fares h2 em { color: #3b2fd6; }
-.chips--ink li { background: #fff; color: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
-.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.fares .sec__h { max-width: 13ch; }
+.fares .sec__p { margin-top: 0; }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); }
 .plan { display: grid; gap: 8px; align-content: start; padding: clamp(24px, 3vw, 36px); border-radius: 28px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
 .plan h3 { font-size: 1.0625rem; font-weight: 600; }
-.plan .fare { font-family: var(--f-d); font-size: clamp(4rem, 7vw, 6rem); font-weight: 500; letter-spacing: -.045em; line-height: 1; margin-top: 12px; }
+.plan .fare { font-family: var(--f-d); font-size: clamp(3.5rem, 5.5vw, 4.75rem); font-weight: 500; letter-spacing: -.045em; line-height: 1; margin-top: 12px; }
 .plan__n { color: var(--muted); margin-bottom: 20px; }
 .plan .btn { width: 100%; }
 .fares .btn--quiet { background: #e8e5de; color: var(--ink); }
 .fares .btn--quiet:hover { background: #dcd8cf; }
-.plan--hot { background: var(--bg); color: #f8fafc; box-shadow: 0 30px 60px -30px rgba(76, 52, 180, .6); }
-.plan--hot .plan__n { color: #94a3b8; }
 @media (max-width: 900px) { .fares__head, .plans { grid-template-columns: 1fr; } }
 
 /* ---------- FAQ ---------- */
@@ -542,7 +511,6 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 <main>
 <section class="hero" aria-labelledby="hero-h">
   <div class="wrap">
-    <p class="kick">Graduate &amp; internship recruiting</p>
     <h1 class="hero__h" id="hero-h"><span class="w"><span>Become</span></span> <span class="w"><span>offer</span></span> <span class="w"><span><em>ready.</em></span></span></h1>
     <p class="hero__p">Know your score. Fix your gaps. Land the offer.</p>
     <div class="hero__go">
@@ -559,14 +527,6 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
       </picture>
     </div>
   </div>
-  <div class="wrap">
-    <ul class="stats num" aria-label="At a glance">
-      <li data-rv><b data-count="100">100</b><span>point CV score</span></li>
-      <li data-rv><b data-count="6">6</b><span>readiness areas</span></li>
-      <li data-rv><b data-count="5">5</b><span>ways to practise</span></li>
-      <li data-rv><b data-count="24">24</b><span>real interview cases</span></li>
-    </ul>
-  </div>
 </section>
 
 <section class="route" id="how-it-works" aria-labelledby="route-h">
@@ -582,8 +542,8 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
   </svg>
 
   <div class="wrap route__intro">
-    <h2 class="route__h" id="route-h" data-rv>From track <em>to offer.</em></h2>
-    <p class="route__p" data-rv>The real product, with example data. Go on, touch it.</p>
+    <h2 class="route__h" id="route-h" data-rv>From track to offer.</h2>
+    <p class="route__p" data-rv>The real product. Go on, touch it.</p>
   </div>
 
   <!-- Departs: the one track choice; the readiness replica below reads it -->
@@ -592,7 +552,6 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
     <div class="stop__text">
       <h3 class="stop__name" id="s0">Pick your track</h3>
       <p class="stop__lead" data-who>Graduate Programme: final year &amp; graduates</p>
-      <p class="note">It sets your deadlines and your score weights.</p>
     </div>
     <div class="ui" data-rv>
       <fieldset class="picks" style="margin-top:0">
@@ -611,7 +570,6 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
     <div class="stop__text">
       <h3 class="stop__name" id="s1">CV check</h3>
       <p class="stop__lead">Scored out of 100. Weak bullets rewritten.</p>
-      <ul class="chips" aria-label="What it scores"><li>Bullet Impact</li><li>Relevance</li><li>Ownership</li><li>Structure</li><li>Balance</li></ul>
     </div>
     <div data-rv>
       <figure class="shot"><img src="assets/dash-cv-score.webp" width="1556" height="912" loading="lazy" alt="CV Checker result: 68, Competitive, Graduate Programme. A competitive CV held back by passive language. Top strength: quantified internship bullets with clear personal impact. Biggest weakness: passive ownership language across society roles."></figure>
@@ -624,7 +582,6 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
     <div class="stop__text">
       <h3 class="stop__name" id="s2">Readiness score</h3>
       <p class="stop__lead">Six areas, weighted for your track.</p>
-      <p class="note">Switch track above. Watch the weights move.</p>
     </div>
     <div class="v2 rd" data-ui data-rv>
       <div class="rd__top">
@@ -642,27 +599,25 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
     <span class="stop__dot" aria-hidden="true"></span>
     <div class="aca">
       <div class="aca__head">
-        <h3 class="aca__big" id="s3" data-scale>The <em>Academy</em></h3>
-        <p class="aca__nums num" data-rv><span><b>12</b> stages</span><span><b>5</b> phases</span><span><b>0</b> locked</span></p>
-        <ol class="phases" aria-label="Phases" data-rv><li>Build</li><li>Ship</li><li>Sharpen</li><li>Test</li><li>Convert</li></ol>
+        <h3 class="aca__big" id="s3" data-scale>The Academy</h3>
+        <p class="stop__lead" data-rv>Twelve stages. Nothing locked.</p>
       </div>
       <figure class="shot aca__course"><picture><source media="(max-width: 600px)" srcset="assets/dash-academy-phone.webp" width="1000" height="2413"><img src="assets/dash-academy.webp" width="2208" height="1124" loading="lazy" alt="Academy overview for the Graduate Programme: Stage 1 of 12, Choose your direction and explain your fit, with its four lessons and a Continue lesson 1.1 button, above a course road map of twelve numbered stages grouped into Build, Ship, Sharpen, Test and Convert. 0 stages complete, 12 to go. Nothing is locked."></picture></figure>
 
       <div class="aca__prac" id="practice">
         <div class="aca__ph">
-          <h4 data-rv><span class="big5">5</span> ways to practise</h4>
+          <h4 data-rv>Five ways to practise</h4>
           <div data-rv>
-            <p class="stop__lead">Every session moves your score.</p>
             <!-- PLACEHOLDER COPY: the founders' experience line below is draft wording, still being agreed with the client. -->
             <p class="note">Built from the founders' live recruiting experience.</p>
           </div>
         </div>
-        <div class="marq" aria-hidden="true"><p data-marq>Case studies <i>✦</i> Behavioural <i>✦</i> Psychometric <i>✦</i> Mental maths <i>✦</i> Reasoning <i>✦</i> Case studies <i>✦</i> Behavioural <i>✦</i> Psychometric <i>✦</i> Mental maths <i>✦</i> Reasoning</p></div>
+
     <div class="tile" data-tabs>
       <div class="tabs" role="tablist" aria-label="Academy practice"><button type="button" class="tab" role="tab" id="tab-cases" aria-controls="pane-cases" aria-selected="true">Case studies</button><button type="button" class="tab" role="tab" id="tab-behavioural" aria-controls="pane-behavioural" aria-selected="false" tabindex="-1">Behavioural interviews</button><button type="button" class="tab" role="tab" id="tab-psychometric" aria-controls="pane-psychometric" aria-selected="false" tabindex="-1">Psychometric tests</button><button type="button" class="tab" role="tab" id="tab-maths" aria-controls="pane-maths" aria-selected="false" tabindex="-1">Mental maths</button><button type="button" class="tab" role="tab" id="tab-reasoning" aria-controls="pane-reasoning" aria-selected="false" tabindex="-1">Reasoning tests</button></div>
 
       <div class="pane" role="tabpanel" id="pane-cases" aria-labelledby="tab-cases">
-        <p class="pane__d num"><span><b>24</b> cases</span><span><b>20</b> sectors</span><span>Try question 3</span></p>
+        <p class="pane__d">24 real cases. Try question 3.</p>
         <div class="v2 cs" data-cs data-ui>
           <div class="cs__brief">
             <p class="cs__t">UK dental practice roll-up</p>
@@ -698,17 +653,17 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
       </div>
 
       <div class="pane" role="tabpanel" id="pane-behavioural" aria-labelledby="tab-behavioural" hidden>
-        <p class="pane__d num"><span><b>Top 20</b> questions</span><span><b>509</b> more</span><span>How to prepare each</span></p>
+        <p class="pane__d">The 20 questions you will be asked.</p>
         <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-behavioural-phone.webp" width="1000" height="2366"><img src="assets/dash-behavioural.webp" width="1990" height="1360" loading="lazy" alt="Behavioural questions in the Academy: 6 of 20 prepared, feeding the Interview score. Top 20 tab, with 509 extra questions. Question 1, Tell me about yourself, is open on How to prepare: a 60 to 90 second answer covering where you are now, your most relevant experience, what shaped your interests and why this opportunity is the logical next step. Questions 2 to 4, Walk me through your CV, Why do you want to work in this industry and Why your interest in this firm, are marked Prepared."></picture></figure>
       </div>
 
       <div class="pane" role="tabpanel" id="pane-psychometric" aria-labelledby="tab-psychometric" hidden>
-        <p class="pane__d num"><span><b>7</b> sections</span><span>SHL, Kenexa, Talent Q, Aon cut-e, Cappfinity styles</span><span>Timed or untimed</span></p>
+        <p class="pane__d">Seven sections, in the styles employers use.</p>
         <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-psychometric-phone.webp" width="1000" height="2019"><img src="assets/dash-psychometric.webp" width="1970" height="1240" loading="lazy" alt="Psychometric tests in the Academy, with a Timed and Untimed switch. 4 of 7 sections sat; best scores A 67%, B 45%, C 25% and D 55%, with E marked Next and F and G not sat. Your best sittings average 48%; strongest so far section A at 67%. Next up, section E: Free response (fill in the blank), 20 questions, 20 minutes, Type the figure, with a Start section E button."></picture></figure>
       </div>
 
       <div class="pane" role="tabpanel" id="pane-maths" aria-labelledby="tab-maths" hidden>
-        <p class="pane__d num"><span><b>2</b> minutes</span><span><b>60</b> sums</span><span>No calculator. Try it.</span></p>
+        <p class="pane__d">Two minutes. No calculator. Try it.</p>
         <div class="v2 ms" data-ms data-ui>
           <div class="ms__bar"><strong>Mental maths, easy</strong><span class="ms__clock v2-small"><span class="num" data-ms-clock>2:00 left</span><button type="button" class="v2-btn" data-ms-end>End session</button></span></div>
           <div class="ms__prog" aria-hidden="true"><i data-ms-prog></i></div>
@@ -728,7 +683,7 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
       </div>
 
       <div class="pane" role="tabpanel" id="pane-reasoning" aria-labelledby="tab-reasoning" hidden>
-        <p class="pane__d num"><span><b>2</b> sets</span><span><b>12</b> items each</span><span>Worked solutions</span></p>
+        <p class="pane__d">Numerical, verbal and logical, with worked solutions.</p>
         <figure class="shot"><picture><source media="(max-width: 600px)" srcset="assets/dash-reasoning-phone.webp" width="1000" height="2621"><img src="assets/dash-reasoning.webp" width="2050" height="1520" loading="lazy" alt="Reasoning Set A in the Mixed Reasoning Test: twelve typed-answer items, numerical, verbal and logical, 20 minutes in total (numerical 8, verbal 6, logical 6). Item map N1 to N4, V1 to V4 and L1 to L4, 0 of 12 checked. The Numerical part shows a table of North, South and West team requests and costs, with question A-N1, Across all teams, what percentage of requests were resolved, and a Check answer button."></picture></figure>
       </div>
 
@@ -778,7 +733,7 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 
   <article class="stop stop--end stop--off" data-side="l" aria-labelledby="s6" data-cta>
     <div class="stop__text">
-      <h3 class="stop__name" id="s6" data-scale>Offer<em>.</em></h3>
+      <h3 class="stop__name" id="s6" data-scale>Offer.</h3>
     </div>
     <div class="cta">
       <p class="cta__h">Which one first?</p>
@@ -792,25 +747,20 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 </section>
 
 <section class="wrap sec arr" aria-labelledby="arr-h">
-  <h2 class="sec__h" id="arr-h" data-rv>Students who <em>executed.</em></h2>
+  <h2 class="sec__h" id="arr-h" data-rv>Students who executed.</h2>
   <ol>
     <li data-rv>
-      <p class="arr__fig num"><span>38</span><i>→</i><b data-count="84">84</b></p>
+      <p class="arr__fig num"><span>38</span><i>→</i><b>84</b></p>
       <blockquote>“Goldman, Macquarie and Lazard in my pipeline by week three.”</blockquote>
       <cite><b>Amara</b>, Economics, LSE</cite>
     </li>
     <li data-rv>
-      <p class="arr__fig num"><span>45</span><i>→</i><b data-count="90">90</b></p>
+      <p class="arr__fig num"><span>45</span><i>→</i><b>90</b></p>
       <blockquote>“Less time on my CV, more on cases. That changed everything.”</blockquote>
       <cite><b>James</b>, Engineering, Imperial</cite>
     </li>
     <li data-rv>
-      <p class="arr__fig num"><span>33</span><i>→</i><b data-count="79">79</b></p>
-      <blockquote>“It flagged my answer bank after three video rejections.”</blockquote>
-      <cite><b>Priya</b>, PPE, Oxford</cite>
-    </li>
-    <li data-rv>
-      <p class="arr__fig num"><span>41</span><i>→</i><b data-count="91">91</b></p>
+      <p class="arr__fig num"><span>41</span><i>→</i><b>91</b></p>
       <blockquote>“Three weeks. I only drilled the gaps it flagged.”</blockquote>
       <cite><b>Olivia</b>, Economics, Warwick</cite>
     </li>
@@ -821,12 +771,12 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
 <section class="sec fares" id="pricing" aria-labelledby="price-h">
   <div class="wrap fares__in">
     <div class="fares__head">
-      <h2 class="sec__h" id="price-h" data-rv>One programme. <em>Everything in.</em></h2>
-      <ul class="chips chips--ink" aria-label="Every plan includes" data-rv><li>The Academy</li><li>Psychometric tests</li><li>Case studies</li><li>Interview drills</li><li>Readiness Score</li><li>Application Tracker</li><li>AI CV Checker</li></ul>
+      <h2 class="sec__h" id="price-h" data-rv>One programme.</h2>
+      <p class="sec__p" data-rv>Every plan includes everything: the Academy, practice, the tracker and the CV Checker.</p>
     </div>
     <ol class="plans">
       <li class="plan" data-rv><h3>1-Month Programme</h3><p class="fare num">£59</p><p class="plan__n">1 month of access</p><a class="btn btn--quiet" href="#">Choose 1 month</a></li>
-      <li class="plan plan--hot" data-rv><h3>3-Month Programme</h3><p class="fare num">£139</p><p class="plan__n">3 months of access</p><a class="btn" href="#">Choose 3 months</a></li>
+      <li class="plan" data-rv><h3>3-Month Programme</h3><p class="fare num">£139</p><p class="plan__n">3 months of access</p><a class="btn" href="#">Choose 3 months</a></li>
       <li class="plan" data-rv><h3>12-Month Programme</h3><p class="fare num">£249</p><p class="plan__n">A full recruiting cycle</p><a class="btn btn--quiet" href="#">Choose 12 months</a></li>
     </ol>
   </div>
@@ -1213,37 +1163,25 @@ h1 em, h2 em, h3 em, h4 em { font-style: normal; color: var(--accent-soft); }
     document.fonts && document.fonts.ready.then(rebuild);
   }
 
-  /* ---------- Reveals, count-ups and scroll scrubs ----------
-     One IntersectionObserver reveals blocks and counts numbers up from 0 once; one rAF-throttled scroll
-     handler writes three CSS variables (hero tilt, Academy and Offer scale, marquee drift). Transforms only,
-     so nothing lays out. Reduced motion: everything is shown at rest and nothing is scrubbed. */
+  /* ---------- Calm reveals and the two scroll moments ----------
+     One IntersectionObserver fades blocks in once; one rAF-throttled scroll handler grows the Academy title
+     and the closing "Offer." into place. Transforms only. Reduced motion: everything at rest. */
   {
     const motion = () => !reduce.matches;
-    const count = (el) => {
-      const n = Number(el.dataset.count); if (!motion() || !n) return;
-      const t0 = performance.now(), dur = 1200;
-      const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4); el.textContent = Math.round(n * e); if (k < 1) requestAnimationFrame(step); };
-      el.textContent = "0"; requestAnimationFrame(step);
-    };
     const io = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return;
       e.target.classList.add("in"); io.unobserve(e.target);
-      $$("[data-count]", e.target).forEach(count);
     }), { rootMargin: "0px 0px -12% 0px" });
     $$("[data-rv]").forEach((el) => io.observe(el));
 
-    const win = $(".win"), scales = $$("[data-scale]"), marq = $("[data-marq]");
+    const scales = $$("[data-scale]");
     let q = false;
     const clamp01 = (x) => Math.max(0, Math.min(1, x));
     function scrub() {
       q = false;
-      if (!motion()) { win.style.setProperty("--tilt", 0); scales.forEach((el) => el.style.setProperty("--p", 1)); marq.style.setProperty("--mx", "0px"); return; }
+      if (!motion()) { scales.forEach((el) => el.style.setProperty("--p", 1)); return; }
       const h = innerHeight;
-      const wr = win.getBoundingClientRect();
-      win.style.setProperty("--tilt", (1 - clamp01((h - wr.top) / (h * .75))).toFixed(3));
       scales.forEach((el) => { const r = el.getBoundingClientRect(); el.style.setProperty("--p", clamp01((h - r.top) / (h * .6)).toFixed(3)); });
-      const mr = marq.getBoundingClientRect();
-      if (mr.bottom > 0 && mr.top < h) marq.style.setProperty("--mx", `${(-(h - mr.top) * .35).toFixed(1)}px`);
     }
     const ask = () => { if (!q) { q = true; requestAnimationFrame(scrub); } };
     addEventListener("scroll", ask, { passive: true }); addEventListener("resize", ask); reduce.addEventListener("change", ask);
