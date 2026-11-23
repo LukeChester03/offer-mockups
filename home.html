@@ -151,15 +151,13 @@ input { caret-color: var(--accent-soft); }
 .track .live { fill: none; stroke: url(#routeGrad); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
 .track .head { fill: var(--ink); stroke: var(--violet); stroke-width: 4; }
 
-/* Stops alternate sides. Each one has its own lane column on the outer edge, so the line winds: down one
-   edge beside a stop, across the gap in a wide S, and down the other edge beside the next. */
-.stop { --lw: clamp(48px, 5vw, 80px); --pad: clamp(48px, 6vw, 88px); position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; padding: var(--pad) var(--m); display: grid; column-gap: clamp(32px, 4.5vw, 80px); align-items: start; }
-.stop[data-side="l"] { --lane: calc(var(--m) + var(--lw) / 2); grid-template-columns: var(--lw) minmax(0, 5fr) minmax(0, 7fr); }
-.stop[data-side="r"] { --lane: calc(100% - var(--m) - var(--lw) / 2); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr) var(--lw); }
-.stop[data-side="l"] > .stop__text { grid-column: 2; }
-.stop[data-side="l"] > :last-child { grid-column: 3; }
+/* Stops alternate sides of one straight line down the middle: the text hugs the line, the demo sits across it.
+   The line ends at the Academy; the stops after it (stop--off) keep the two columns but have no line or dot. */
+.stop { --pad: clamp(48px, 6vw, 88px); --lane: 50%; position: relative; z-index: 1; max-width: 1280px; margin-inline: auto; padding: var(--pad) var(--m); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(64px, 8vw, 128px); align-items: start; }
+.stop[data-side="l"] > .stop__text { justify-self: end; }
 .stop[data-side="r"] > .stop__text { grid-column: 2; grid-row: 1; }
 .stop[data-side="r"] > :last-child { grid-column: 1; grid-row: 1; }
+.stop--off[data-side="l"] > .stop__text { justify-self: start; }
 .stop__dot { position: absolute; top: calc(var(--pad) + var(--t-5) * .5); left: var(--lane); width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; background: var(--bg); border: 6px solid var(--s4); transition: border-color .4s, background-color .4s, scale .5s var(--ease); }
 .stop.is-on .stop__dot { border-color: var(--violet); background: var(--ink); scale: 1.12; }
 .stop__text { max-width: 30rem; }
@@ -167,16 +165,17 @@ input { caret-color: var(--accent-soft); }
 .stop__lead { margin-top: 18px; font-size: var(--t-4); font-weight: 500; letter-spacing: -.015em; line-height: 1.3; text-wrap: balance; }
 .stop__text p:not(.stop__lead), .aca__head p:not(.stop__lead), .aca__ph p { margin-top: 12px; color: var(--soft); text-wrap: pretty; }
 
-/* The Academy: the one stop that takes the whole screen. The line leaves its lane, sweeps out to the page edge,
-   runs down the gutter beside the panel and swings back in below it. */
-.stop--wide { --gut: max(var(--m), 64px); --ap: clamp(20px, 4vw, 64px); display: block; max-width: none; padding-inline: var(--gut);
-  --lane: calc(max(0px, (100% - 2 * var(--gut) - 1760px) / 2) + var(--gut) / 2); }
-.stop--wide .stop__dot { top: calc(var(--pad) + var(--ap) + var(--t-6) * .5); }
-.aca { container-type: inline-size; max-width: 1760px; margin-inline: auto; padding: var(--ap); border-radius: 32px; background: var(--field); }
-.aca__head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(32px, 5vw, 96px); align-items: end; }
+/* The Academy: the line's terminus. It runs down the middle into a larger ringed stop just above the panel, the
+   Academy heading sits centred under it, and the panel itself takes the full width of the screen. */
+.stop--wide { --tr: 28px; display: block; max-width: none; }
+.stop--wide .stop__dot { top: calc(var(--pad) + var(--tr)); width: calc(var(--tr) * 2); height: calc(var(--tr) * 2); margin: calc(var(--tr) * -1) 0 0 calc(var(--tr) * -1); border-width: 10px; }
+.stop--wide .stop__dot::after { content: ""; position: absolute; inset: -14px; border-radius: 50%; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--violet) 55%, transparent); opacity: 0; scale: .7; transition: opacity .5s, scale .6s var(--ease); }
+.stop--wide.is-on .stop__dot::after { opacity: 1; scale: 1; }
+.stop--wide .aca { margin-top: calc(var(--tr) * 2 + clamp(24px, 3vw, 40px)); }
+.aca { container-type: inline-size; max-width: 1760px; margin-inline: auto; padding: clamp(20px, 4vw, 64px); border-radius: 32px; background: var(--field); }
+.aca__head { display: grid; justify-items: center; gap: 20px; max-width: 46rem; margin-inline: auto; text-align: center; }
 .aca__head .stop__name { font-size: var(--t-6); }
 .aca__head .stop__lead { margin-top: 0; }
-.aca__head > div { max-width: 44rem; }
 .aca__course { margin-top: clamp(32px, 4vw, 56px); }
 .aca__course img { border-radius: 20px; }
 .aca__prac { margin-top: clamp(56px, 7vw, 112px); display: grid; gap: clamp(24px, 3vw, 40px); }
@@ -184,7 +183,7 @@ input { caret-color: var(--accent-soft); }
 .aca__ph h4 { margin: 0; font-family: var(--f-d); font-size: var(--t-5); font-weight: 500; letter-spacing: -.03em; line-height: 1; text-wrap: balance; }
 .aca__ph > div { max-width: 44rem; }
 .aca__ph p:first-child { margin-top: 0; }
-@container (max-width: 760px) { .aca__head, .aca__ph { grid-template-columns: minmax(0, 1fr); } }
+@container (max-width: 760px) { .aca__ph { grid-template-columns: minmax(0, 1fr); } }
 
 /* A product fragment: the only framed thing on the page, because the product has frames. Always visible. */
 .ui { position: relative; background: var(--s2); border-radius: 20px; padding: 22px; box-shadow: inset 0 0 0 1px var(--line), 0 24px 64px -28px rgba(0, 0, 0, .7); }
@@ -367,28 +366,29 @@ input { caret-color: var(--accent-soft); }
   .ms__body { padding: 64px 32px 48px; }
   .ms__q { font-size: 3.5rem; }
 }
-@media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { gap: 2px; } .bar__col i { width: 24px; } .bar__n { font-size: .75rem; } .rd__n { font-size: 3.5rem; } .ms__meta { gap: 12px; font-size: .8125rem; } .tab { padding: 0 12px; font-size: .875rem; } }
+@media (max-width: 520px) { .bd { grid-auto-columns: calc((100% - 10px) / 2); } .bars { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 8px; } .bar__col { height: 88px; } .rd__n { font-size: 3.5rem; } .ms__meta { gap: 12px; font-size: .8125rem; } .tab { padding: 0 12px; font-size: .875rem; } }
 
-/* Terminus */
-.stop--end .stop__dot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-width: 10px; top: calc(var(--pad) + var(--t-8) * .45); }
+/* The closing stop: the destination, set large, with the two CTAs */
 .stop--end .stop__name { font-size: var(--t-8); letter-spacing: -.04em; line-height: .9; }
-.stop--end[data-side] { grid-template-columns: var(--lw) auto minmax(0, 1fr); }
+.stop--end[data-side] { grid-template-columns: auto minmax(0, 1fr); }
 .stop--end .cta { align-self: end; }
 .cta__h { font-family: var(--f-d); font-size: clamp(2rem, 3.4vw, 3.25rem); font-weight: 500; letter-spacing: -.025em; line-height: 1; margin-bottom: 24px; }
 .cta__row { display: flex; flex-wrap: wrap; gap: 12px; }
 .cta__note { margin-top: 18px; color: var(--soft); }
 
-/* Phones and small tablets: one lane down the left. The Academy keeps the full width: the line runs into
-   its panel at the dot and comes out of the bottom, like a line through a tunnel. */
+/* Phones and small tablets: the line runs down the left instead, and still ends at the Academy's terminus,
+   which sits just above the full-width panel. The stops after it drop the line's inset. */
 @media (max-width: 1023px) {
   .route__intro { grid-template-columns: 1fr; padding-left: calc(var(--m) + 36px); }
   .stop, .stop[data-side] { --lane: calc(var(--m) + 12px); grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding-left: calc(var(--m) + 36px); }
   .stop[data-side] > .stop__text, .stop[data-side] > :last-child { grid-column: 1; grid-row: auto; justify-self: stretch; max-width: none; }
   .stop__dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; border-width: 5px; }
-  .stop--end .stop__dot { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-width: 8px; top: calc(var(--pad) + var(--t-8) * .45); }
-  .stop.stop--wide { --lane: calc(var(--m) + 12px); padding-inline: var(--m); }
-  .stop--wide .stop__dot { top: calc(var(--pad) + 12px); }
-  .aca { margin-top: 48px; border-radius: 24px; }
+  .stop.stop--off { padding-left: var(--m); }
+  .stop.stop--wide { --tr: 20px; padding-left: var(--m); }
+  .stop--wide .stop__dot { border-width: 7px; }
+  .stop--wide .stop__dot::after { inset: -10px; }
+  .aca__head { justify-items: start; text-align: left; margin-inline: 0; }
+  .aca { border-radius: 24px; }
   .ui { padding: 18px; }
   .stop--end .cta .btn { flex: 1 1 100%; }
 }
@@ -687,8 +687,7 @@ input { caret-color: var(--accent-soft); }
     </div>
   </article>
 
-  <article class="stop" data-side="r" id="tracker" aria-labelledby="s5">
-    <span class="stop__dot" aria-hidden="true"></span>
+  <article class="stop stop--off" data-side="r" id="tracker" aria-labelledby="s5">
     <div class="stop__text">
       <h3 class="stop__name" id="s5">Application tracker</h3>
       <p class="stop__lead">Your whole pipeline on one board</p>
@@ -720,8 +719,7 @@ input { caret-color: var(--accent-soft); }
     </div>
   </article>
 
-  <article class="stop stop--end" data-side="l" aria-labelledby="s6" data-cta>
-    <span class="stop__dot" aria-hidden="true"></span>
+  <article class="stop stop--end stop--off" data-side="l" aria-labelledby="s6" data-cta>
     <div class="stop__text">
       <h3 class="stop__name" id="s6">Offer</h3>
     </div>
@@ -1118,40 +1116,20 @@ input { caret-color: var(--accent-soft); }
     $$("[data-step]", tile).forEach((b) => b.addEventListener("click", () => select(cur + Number(b.dataset.step))));
   }
 
-  /* ---------- The route line: a winding road, drawn 1:1 by scroll ----------
-     It runs down a stop's outer lane, past the stop's content, then swings across the gap in a wide S (vertical
-     tangents at both ends) into the next stop's lane. At the Academy it sweeps out to the page edge and runs down
-     the gutter beside the full-width panel. On phones every lane is the same, so it is one straight line that
-     passes under the Academy panel. The curves are sampled into a polyline so scroll position maps to length. */
+  /* ---------- The route line: one straight line down the middle, drawn 1:1 by scroll ----------
+     It runs from the intro through each stop's dot and ends at the Academy's terminus (the last stop with a
+     dot). The stops after the Academy are off the line. On phones the lane is the left edge instead. */
   {
     const route = $(".route"), svg = $(".track", route);
     const ghost = $(".ghost", svg), live = $(".live", svg), head = $(".head", svg);
-    const stops = $$(".stop", route);
+    const stops = $$(".stop", route).filter((s) => $(".stop__dot", s));
     let segs = [], total = 0, stopY = [];
     function build() {
       const box = route.getBoundingClientRect();
-      const P = stops.map((s) => {
-        const r = $(".stop__dot", s).getBoundingClientRect();
-        const kids = [...s.children].filter((c) => !c.classList.contains("stop__dot"));
-        const bottom = Math.max(...kids.map((c) => c.getBoundingClientRect().bottom)) - box.top;
-        const top = Math.min(...kids.map((c) => c.getBoundingClientRect().top)) - box.top;
-        return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top, r: r.height / 2, top, bottom };
-      });
-      stopY = P.map((p) => p.y);
-      const startY = Math.min($(".route__intro", route).getBoundingClientRect().bottom - box.top, P[0].y - 40);
-      const path = [{ x: P[0].x, y: startY }];
-      P.forEach((p, i) => {
-        const prev = path[path.length - 1];
-        if (i && Math.abs(p.x - prev.x) > 1) {
-          const y0 = Math.max(prev.y, P[i - 1].bottom + 24), y1 = Math.max(y0 + 48, Math.min(p.y - p.r - 28, p.top - 20)), k = (y1 - y0) * .55;
-          path.push({ x: prev.x, y: y0 });
-          for (let j = 1, n = 64; j <= n; j++) {
-            const t = j / n, u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, e = t * t * t;
-            path.push({ x: (a + b) * prev.x + (c + e) * p.x, y: a * y0 + b * (y0 + k) + c * (y1 - k) + e * y1 });
-          }
-        }
-        path.push({ x: p.x, y: p.y });
-      });
+      const pts = stops.map((s) => { const r = $(".stop__dot", s).getBoundingClientRect(); return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top }; });
+      stopY = pts.map((p) => p.y);
+      const startY = Math.min($(".route__intro", route).getBoundingClientRect().bottom - box.top, pts[0].y - 40);
+      const path = [{ x: pts[0].x, y: startY }, ...pts];
       segs = []; total = 0;
       for (let i = 1; i < path.length; i++) { const a = path[i - 1], b = path[i], len = Math.hypot(b.x - a.x, b.y - a.y); segs.push({ y0: a.y, y1: b.y, l0: total, l1: total + len }); total += len; }
       const d = path.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
