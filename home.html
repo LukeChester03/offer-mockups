@@ -459,11 +459,82 @@ input { caret-color: var(--accent-soft); }
 .foot nav a:hover { color: var(--ink); text-decoration: underline; }
 .foot p { width: 100%; }
 
+/* ---------- Motion layer ----------
+   Everything below is transform and opacity only, and only under .m (no reduced-motion preference).
+   Scroll reveals hide content only once the script has added .rv, so with no JS nothing is ever hidden.
+   --spring overshoots a touch, like a lightly underdamped spring settling. */
+:root { --spring: cubic-bezier(.34, 1.45, .64, 1); }
+
+/* Scroll reveals: each item rises and fades once; items that enter together are staggered by the script. */
+.rv [data-rv] { opacity: 0; transform: translate3d(0, 32px, 0); transition: opacity .7s cubic-bezier(.2, .7, .3, 1) var(--rv-d, 0ms), transform 1.1s var(--ease) var(--rv-d, 0ms); }
+.rv .stop__name[data-rv], .rv .sec__h[data-rv], .rv .route__h[data-rv] { transform: translate3d(0, 44px, 0); }
+.rv [data-rv].is-in { opacity: 1; transform: none; }
+/* Readiness bars grow from the floor as the replica arrives */
+.rv .rd[data-rv] .bar__col i { transform: scaleY(0); transform-origin: 50% 100%; transition: transform 1s var(--spring) calc(var(--rv-d, 0ms) + 200ms + var(--b, 0) * 70ms); }
+.rv .rd[data-rv].is-in .bar__col i { transform: none; }
+
+/* Hero: the dashboard window lifts in under the headline, then sinks gently as the hero scrolls away */
+.m .win { animation: winIn 1.2s var(--ease) .22s backwards; }
+@keyframes winIn { from { transform: translate3d(0, 64px, 0) scale(.96); } }
+.m .hero::before { animation: breathe 14s ease-in-out infinite alternate; }
+@keyframes breathe { to { scale: 1.12; opacity: .7; } }
+
+/* Route stops: the dot pops with a little overshoot and sends out one ripple when the line reaches it */
+.stop__dot { transition: border-color .4s, background-color .4s, scale .6s var(--spring); }
+.stop__dot::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; box-shadow: 0 0 0 2px var(--violet); opacity: 0; pointer-events: none; }
+.m .stop.is-hit .stop__dot::before { animation: ripple .9s cubic-bezier(.2, .7, .3, 1); }
+@keyframes ripple { from { opacity: .9; transform: scale(.6); } to { opacity: 0; transform: scale(2.2); } }
+.track .head { filter: drop-shadow(0 0 6px rgba(108, 62, 246, .8)); }
+/* The terminus: a bigger pop, a wide ripple, and the Academy panel lights from the top */
+.m .stop--wide.is-hit .stop__dot { animation: arrive .8s var(--spring); }
+.m .stop--wide.is-hit .stop__dot::before { animation: ripple-big 1.4s cubic-bezier(.2, .7, .3, 1); }
+@keyframes arrive { 0% { scale: 1; } 40% { scale: 1.4; } 100% { scale: 1.12; } }
+@keyframes ripple-big { from { opacity: 1; transform: scale(.7); } to { opacity: 0; transform: scale(3.6); } }
+.aca { position: relative; isolation: isolate; }
+.aca::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: radial-gradient(60% 50% at 50% 0, rgba(108, 62, 246, .3), transparent 70%); opacity: 0; }
+.m .stop--wide.is-hit .aca::before { animation: glow 2.4s ease-out; }
+@keyframes glow { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Academy tabs: one selection pill springs between the drills (its own background replaces the tab's) */
+.tabs.has-pill::before { content: ""; position: absolute; left: 0; top: 0; width: var(--pw, 0); height: var(--ph, 0); transform: translate3d(var(--px, 0), var(--py, 0), 0); border-radius: 12px; background: var(--s4); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); pointer-events: none; }
+.tabs.has-pill .tab { position: relative; z-index: 1; }
+.tabs.has-pill .tab[aria-selected="true"], .tabs.has-pill .tab[aria-selected="true"]:hover { background: transparent; box-shadow: none; }
+/* The incoming drill slides in from the side you moved towards */
+.m .pane:not([hidden]) { animation: paneIn .55s var(--ease); }
+@keyframes paneIn { from { opacity: 0; transform: translate3d(var(--dx, 0), 10px, 0); } }
+
+/* Replica details: picks, sums and answers land with a small spring */
+.m .co[aria-checked="true"] .co__k, .m .co.is-right .co__k { animation: tick .4s var(--spring); }
+@keyframes tick { 0% { scale: .7; } 100% { scale: 1; } }
+.m .ms__q.is-new { animation: qIn .4s var(--ease); }
+.m .ms__st.is-new { animation: qIn .3s var(--ease); }
+@keyframes qIn { from { opacity: 0; transform: translate3d(0, 10px, 0); } }
+.m .faq details[open] p { animation: qIn .45s var(--ease); }
+
+/* Hover and press: a small lift on hover (pointer devices only), the existing scale on press */
+.btn, .opt, .bar, .arw svg, .faq summary i, .mark i, .board-t tbody th, .co__k { transition-property: transform, translate, scale, background-color, filter, box-shadow, border-color, color; }
+@media (hover: hover) {
+  .m .btn:hover { translate: 0 -2px; }
+  .m .opt:hover, .m .bar:hover { translate: 0 -2px; }
+  .m .co:hover:not(:disabled) .co__k { scale: 1.08; }
+  .m .arw[data-step="1"]:hover svg { translate: 2px 0; }
+  .m .arw[data-step="-1"]:hover svg { translate: -2px 0; }
+  .m .ac--drag:hover:not(.is-lifted) { scale: 1.02; }
+  .m .stop .shot img, .m .aca__course img { transition: scale .7s var(--ease); }
+  .m .stop .shot:hover img, .m .aca__course:hover img { scale: 1.012; }
+  .m .board-t tbody tr:hover th { translate: 6px 0; }
+  .m .faq summary:hover i { scale: 1.15; }
+  .m .mark:hover i { scale: 1.2; }
+  .btn, .opt, .bar, .arw svg, .faq summary i, .mark i, .board-t tbody th, .co__k { transition-duration: .35s; transition-timing-function: var(--ease); }
+}
+@media print { .rv [data-rv] { opacity: 1 !important; transform: none !important; } .rv .bar__col i { transform: none !important; } }
+
 /* ---------- Accessibility preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important; transition-duration: .2s !important; }
   .btn:active, .opt:active, .link:active, .faq summary:active, .v2-btn:active, .bar:active, .co:active, .cs__go:active, .tab:active, .arw:active { transform: none; }
   .ac--drag.is-lifted { scale: 1; }
+  .btn, .opt, .bar, .arw svg, .faq summary i, .mark i, .board-t tbody th, .shot img { translate: none !important; scale: none !important; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -890,8 +961,8 @@ input { caret-color: var(--accent-soft); }
     const t = TRACKS[id];
     weights = t.w;
     const score = Math.round(VALUES.reduce((s, v, i) => s + (v ?? 0) * t.w[i], 0) / 100);
-    t.w.forEach((w, i) => firstTrack ? wSprings[i].set(w) : wSprings[i].to(w));
-    firstTrack ? scoreSpring.set(score) : scoreSpring.to(score);
+    t.w.forEach((w, i) => firstTrack ? wSprings[i].set(w) : wSprings[i].to(w, { response: .4 }));
+    firstTrack ? scoreSpring.set(score) : scoreSpring.to(score, { response: .4 });
     $("[data-who]").textContent = `${t.name}: ${t.who}`;
     $("[data-pts]").textContent = t.pts;
     $("[data-rs-track]").textContent = `${t.name} weightings`;
@@ -1064,7 +1135,8 @@ input { caret-color: var(--accent-soft); }
     const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")} left`;
     function paintClock() { clock.textContent = fmt(left); prog.style.transform = `scaleX(${left / SECONDS})`; }
     function start() { if (timer || ended) return; timer = setInterval(() => { left--; paintClock(); if (left <= 0) finish(); }, 1000); }
-    function show() { const [s] = SUMS[i % SUMS.length]; q.textContent = `What is ${s}?`; qn.textContent = `Question ${i + 1}`; okEl.textContent = `${correct} correct`; }
+    const renew = (el) => { el.classList.remove("is-new"); void el.offsetWidth; el.classList.add("is-new"); };
+    function show() { const [s] = SUMS[i % SUMS.length]; q.textContent = `What is ${s}?`; renew(q); if (st.textContent) renew(st); qn.textContent = `Question ${i + 1}`; okEl.textContent = `${correct} correct`; }
     function reset() { clearInterval(timer); timer = 0; i = 0; correct = 0; left = SECONDS; ended = false; form.hidden = false; res.hidden = true; clockWrap.hidden = false; st.textContent = ""; st.className = "ms__st"; input.value = ""; paintClock(); show(); }
     function finish() {
       clearInterval(timer); timer = 0; ended = true;
@@ -1097,13 +1169,24 @@ input { caret-color: var(--accent-soft); }
     const tile = $("[data-tabs]"), tabs = $$('[role="tab"]', tile), panes = tabs.map((t) => $("#" + t.getAttribute("aria-controls")));
     const label = $("[data-step-label]", tile);
     let cur = 0;
-    function select(i, focus) {
-      cur = (i + tabs.length) % tabs.length;
+    /* The selection pill: four springs (x, y, width, height), so a quick second click retargets it mid-flight. */
+    const strip = $(".tabs", tile), pv = [0, 0, 0, 0], PK = ["--px", "--py", "--pw", "--ph"];
+    const pill = PK.map((k, n) => new Spring(0, { response: .38, damping: .86, eps: .2 }, (x) => { pv[n] = x; strip.style.setProperty(k, `${x}px`); }));
+    const placePill = (animate) => { const t = tabs[cur], v = [t.offsetLeft, t.offsetTop, t.offsetWidth, t.offsetHeight]; pill.forEach((s, n) => animate ? s.to(v[n]) : s.set(v[n])); };
+    strip.classList.add("has-pill"); placePill(false);
+    new ResizeObserver(() => placePill(false)).observe(strip);
+    document.fonts && document.fonts.ready.then(() => placePill(false));
+    function select(i, focus, dir) {
+      const next = (i + tabs.length) % tabs.length;
+      if (next === cur && !focus) return;
+      tile.style.setProperty("--dx", `${(dir ?? Math.sign(next - cur)) * 32}px`);
+      cur = next;
       tabs.forEach((t, j) => { const on = j === cur; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; panes[j].hidden = !on; });
       label.textContent = `${cur + 1} of ${tabs.length}: ${tabs[cur].textContent}`;
       const strip = tabs[cur].parentElement, t = tabs[cur];   // keep the chosen tab in view without moving the page
       if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2, behavior: reduce.matches ? "auto" : "smooth" });
       if (focus) t.focus({ preventScroll: true });
+      placePill(true);
     }
     tabs.forEach((t, i) => {
       t.addEventListener("click", () => select(i));
@@ -1113,7 +1196,7 @@ input { caret-color: var(--accent-soft); }
         e.preventDefault(); select(to, true);
       });
     });
-    $$("[data-step]", tile).forEach((b) => b.addEventListener("click", () => select(cur + Number(b.dataset.step))));
+    $$("[data-step]", tile).forEach((b) => b.addEventListener("click", () => select(cur + Number(b.dataset.step), false, Number(b.dataset.step))));
   }
 
   /* ---------- The route line: one straight line down the middle, drawn 1:1 by scroll ----------
@@ -1147,7 +1230,18 @@ input { caret-color: var(--accent-soft); }
       if (reduce.matches) { draw(total); stops.forEach((s) => s.classList.add("is-on")); return; }
       const y = innerHeight * .62 - route.getBoundingClientRect().top;
       draw(lenAtY(y));
-      stops.forEach((s, i) => s.classList.toggle("is-on", y >= stopY[i] - 2));
+      stops.forEach((s, i) => {
+        const on = y >= stopY[i] - 2;
+        if (on === s.classList.contains("is-on")) return;
+        s.classList.toggle("is-on", on);
+        if (on && primed) hit(s);   // the line just reached this stop: pop and ripple
+      });
+      primed = true;
+    }
+    let primed = false;
+    function hit(s) {
+      s.classList.remove("is-hit"); void s.offsetWidth; s.classList.add("is-hit");
+      clearTimeout(s._hit); s._hit = setTimeout(() => s.classList.remove("is-hit"), 2500);
     }
     let queued = false;
     const frame = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; update(); }); };
@@ -1157,6 +1251,68 @@ input { caret-color: var(--accent-soft); }
     new ResizeObserver(() => requestAnimationFrame(rebuild)).observe(route);
     reduce.addEventListener("change", rebuild);
     document.fonts && document.fonts.ready.then(rebuild);
+  }
+
+  /* ---------- Scroll reveals ----------
+     Each item rises and fades in once when it reaches the viewport. Items that arrive in the same frame are
+     staggered 90ms apart in reading order, so a stop builds name, lead, body, then its demo. Once in, the
+     item is handed back (attribute removed) so its own transitions take over again. */
+  const RV = [".route__intro > *", ".stop__text > *", ".stop > .ui", ".stop > .v2", ".stop > div > .shot", ".bd .col",
+    ".aca__head > *", ".aca__course", ".aca__ph > *", ".tile", ".cta > *",
+    ".arr .sec__h", ".arr li", ".fares__head > *", ".board-t tbody tr", ".faq .sec__h", ".faq details"];
+  const rd = $(".rd");
+  const countUp = () => {   // the readiness score and its weights count up as the replica arrives
+    if (reduce.matches) return;
+    scoreEl.removeAttribute("aria-live");
+    const score = Math.round(VALUES.reduce((s, v, i) => s + (v ?? 0) * weights[i], 0) / 100);
+    scoreSpring.set(0).to(score, { response: 1.1 });
+    wSprings.forEach((s, i) => s.set(0).to(weights[i], { response: 1.1 }));
+    setTimeout(() => scoreEl.setAttribute("aria-live", "polite"), 2000);
+  };
+  if (root.classList.contains("m") && "IntersectionObserver" in window) {
+    const items = $$(RV.join(","));
+    bars.forEach((b, i) => b.style.setProperty("--b", i));
+    const done = (el) => { el.removeAttribute("data-rv"); el.classList.remove("is-in"); el.style.removeProperty("--rv-d"); };
+    const show = (el, d) => {
+      el.style.setProperty("--rv-d", `${d}ms`); el.classList.add("is-in");
+      if (el === rd) setTimeout(countUp, d + 150);
+      setTimeout(() => done(el), d + 1500);
+    };
+    const io = new IntersectionObserver((entries) => {
+      const ins = entries.filter((e) => e.isIntersecting).map((e) => e.target)
+        .sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+      ins.forEach((el, k) => { io.unobserve(el); show(el, Math.min(k, 6) * 90); });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    items.forEach((el) => { el.setAttribute("data-rv", ""); io.observe(el); });
+    root.classList.add("rv");
+    const all = () => { io.disconnect(); items.forEach(done); root.classList.remove("rv", "m"); };
+    reduce.addEventListener("change", () => { if (reduce.matches) all(); });
+    addEventListener("beforeprint", all);
+  }
+
+  /* ---------- Depth: the dashboard screenshots drift slightly faster than the page ----------
+     The hero window sinks a little as the hero scrolls away; the stop and Academy screenshots move up to
+     ±28px (±10px on phones) against their text. Reads first, then writes, once per frame, visible ones only. */
+  if (root.classList.contains("m")) {
+    const win = $(".win"), hero = $(".hero");
+    const layers = [...$$(".stop > div:not(.stop__text)").filter((d) => $(".shot", d)), $(".aca__course")].filter(Boolean);
+    const vis = new Set(), cur = new Map();
+    const seen = new IntersectionObserver((es) => es.forEach((e) => { e.isIntersecting ? vis.add(e.target) : vis.delete(e.target); tick(); }));
+    layers.forEach((l) => { seen.observe(l); cur.set(l, 0); });
+    let heroOn = true;
+    new IntersectionObserver(([e]) => { heroOn = e.isIntersecting; }).observe(hero);
+    let q = false;
+    const paint = () => {
+      q = false;
+      if (reduce.matches) { win.style.translate = ""; layers.forEach((l) => { l.style.translate = ""; }); return; }
+      const vh = innerHeight, amp = innerWidth < 1024 ? 10 : 28;
+      const next = [...vis].map((l) => { const r = l.getBoundingClientRect(), c = r.top + r.height / 2 - cur.get(l); return [l, -Math.max(-1, Math.min(1, (c - vh / 2) / vh)) * amp]; });
+      if (heroOn) win.style.translate = `0 ${Math.min(scrollY, vh) * .12}px`;
+      next.forEach(([l, v]) => { cur.set(l, v); l.style.translate = `0 ${v.toFixed(1)}px`; });
+    };
+    const tick = () => { if (!q) { q = true; requestAnimationFrame(paint); } };
+    addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
+    reduce.addEventListener("change", tick);
   }
 })();
 </script>
