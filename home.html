@@ -109,7 +109,11 @@ input { caret-color: var(--accent-soft); }
 /* ---------- Hero (Bento's): one headline, two actions, the product window above the fold ---------- */
 .hero { position: relative; padding-block: clamp(48px, 7vw, 96px) 0; text-align: center; overflow: hidden; }
 .hero::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(1100px, 140vw); aspect-ratio: 2; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(108, 62, 246, .3), rgba(59, 126, 246, .14) 55%, transparent); pointer-events: none; }
-.hero__h { position: relative; font-family: var(--f-d); font-size: var(--t-7); font-weight: 850; line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+.hero__h { position: relative; font-family: var(--f-d); font-size: clamp(2.375rem, 9.2vw, 7.5rem); font-weight: 850; line-height: .92; letter-spacing: -.045em; text-wrap: balance; }
+/* One sentence per line; the second in the accent gradient, as on the live site */
+.hero__h > span { display: block; }
+.hero__g { padding-bottom: .06em; background: linear-gradient(90deg, var(--accent), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (prefers-contrast: more) { .hero__g { background: none; color: var(--ink); } }
 .hero__p { position: relative; max-width: 38ch; margin: 24px auto 0; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); color: var(--soft); text-wrap: pretty; }
 .hero__go { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
 .hero__go .btn { min-width: 200px; }
@@ -430,6 +434,10 @@ input { caret-color: var(--accent-soft); }
 /* ---------- Arrivals ---------- */
 .sec { padding-block: clamp(88px, 10vw, 160px); }
 .sec__h { font-family: var(--f-d); font-size: var(--t-6); font-weight: 800; line-height: .95; letter-spacing: -.04em; max-width: 12ch; text-wrap: balance; }
+/* The closing statement before the plans: the terminus scale, tight to the pricing field below */
+.close { padding-bottom: clamp(56px, 6vw, 96px); }
+.close__h { font-size: clamp(3.25rem, 9vw, 7.5rem); line-height: .9; letter-spacing: -.045em; max-width: 9ch; }
+.close .sec__p { margin-top: 28px; }
 .sec__p { color: var(--soft); font-size: 1.1875rem; max-width: 46ch; margin-top: 20px; }
 .arr ol { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 96px); }
 .arr li { padding-block: 32px; display: grid; gap: 16px; align-content: start; }
@@ -598,7 +606,7 @@ input { caret-color: var(--accent-soft); }
 <main>
 <section class="hero" aria-labelledby="hero-h">
   <div class="wrap">
-    <h1 class="hero__h" id="hero-h">Become offer ready</h1>
+    <h1 class="hero__h" id="hero-h"><span>Stop Preparing.</span> <span class="hero__g">Start Executing.</span></h1>
     <p class="hero__p">The Offer Engine scores you across six areas of graduate and internship recruiting, then tells you exactly what to do next.</p>
     <div class="hero__go">
       <a class="btn" href="#cv-check">Check My CV for Free</a>
@@ -858,6 +866,12 @@ input { caret-color: var(--accent-soft); }
   </ol>
 </section>
 
+<section class="wrap sec close" aria-labelledby="close-h">
+  <h2 class="sec__h close__h" id="close-h">Become offer ready</h2>
+  <!-- PLACEHOLDER COPY: line under Become Offer Ready, awaiting client wording -->
+  <p class="sec__p">Choose the access length that fits your recruiting season, and start today.</p>
+</section>
+
 <section class="sec fares" id="pricing" aria-labelledby="price-h">
   <div class="wrap fares__in">
     <div class="fares__head">
@@ -868,7 +882,7 @@ input { caret-color: var(--accent-soft); }
       <div class="incl">
         <h3 class="incl__h">Every plan includes</h3>
         <ul class="incl__l">
-          <li>The Offer Engine Academy<small>A 12-week structured programme with lessons, worked examples and knowledge checks</small></li>
+          <li>The Offer Engine Academy<small>A 12-stage structured programme with lessons, worked examples and knowledge checks</small></li>
           <li>Psychometric tests, case studies and interview drills</li>
           <li>Live Readiness Score, Application Tracker and AI CV Checker</li>
           <li>Full access for the length of your plan</li>
@@ -1292,7 +1306,7 @@ input { caret-color: var(--accent-soft); }
      item is handed back (attribute removed) so its own transitions take over again. */
   const RV = [".route__intro > *", ".stop__text > *", ".stop > .ui", ".stop > .v2", ".stop > div > .shot", ".bd .col",
     ".aca__head > *", ".aca__course", ".aca__ph > *", ".tile", ".cta > *",
-    ".arr .sec__h", ".arr li", ".fares__head > *", ".incl", ".plan", ".faq .sec__h", ".faq details"];
+    ".arr .sec__h", ".close > *", ".arr li", ".fares__head > *", ".incl", ".plan", ".faq .sec__h", ".faq details"];
   const rd = $(".rd");
   const countUp = () => {   // the readiness score and its weights count up as the replica arrives
     if (reduce.matches) return;
